@@ -2,8 +2,12 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
 import DnDFlow from '../components/Editor'
+import printNodes from '../scripts/sumOp';
 
 export default function Home() {
+
+  console.log(printNodes());
+
   return (
     <div className={styles.container}>
       <Head>
