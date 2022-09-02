@@ -1,42 +1,45 @@
 import { Paper, Stack, TextField } from '@mui/material'
 import { Box } from '@mui/system'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { Handle, Position } from 'react-flow-renderer'
+import { Handle, Position, updateEdge } from 'react-flow-renderer'
+
+import store from '../../../store/store.ts'
+import create from 'zustand'
 
 const operations = [
-{
-	operation:'add',
-	symbol: '+'
-},
-{
-	operation:'sub',
-	symbol: '-'
-},
-{
-	operation:'mul',
-	symbol: '*'
-},
-{
-	operation:'div',
-	symbol: '/'
-}
+	{
+		operation: 'add',
+		symbol: '+',
+	},
+	{
+		operation: 'sub',
+		symbol: '-',
+	},
+	{
+		operation: 'mul',
+		symbol: '*',
+	},
+	{
+		operation: 'div',
+		symbol: '/',
+	},
 ]
-const initialInputs = {
-	a: 15,
-	b: 12,
-	result:0,
-}
 
-function MathNode({ data }) {
+const initialInputs = new Object({
+	a: 12,
+	b: 3,
+	result: 15
+})
 
-
-
+function MathNode() {
 	const [inputs, setInputs] = useState(initialInputs)
 
-	useEffect(()=>{
-		setInputs(inp => inp.result = inp.a + inp.b)
-	},[inputs])
-
+	const handleChange = event => {
+		setInputs(
+			inp => (inputs[event.target.name] = parseInt(event.target.value))
+		)
+		setInputs({ ...inputs, result:inputs.a+inputs.b})
+	}
 
 	return (
 		<>
@@ -81,9 +84,8 @@ function MathNode({ data }) {
 						spacing={1.1}>
 						<TextField
 							value={inputs.a}
-							onChange={(event)=>{
-								setInputs(inp => inp.a = event.target.value)
-							}}
+							name='a'
+							onChange={handleChange}
 							sx={{
 								'& label': {
 									color: '#2051ab',
@@ -105,14 +107,14 @@ function MathNode({ data }) {
 							}}
 							size='small'
 							className='nodrag'
+							hiddenLabel
 							label='First Number'
 							inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
 						/>
 						<TextField
 							value={inputs.b}
-							onChange={(event)=>{
-								setInputs(inp => inp.b = event.target.value)
-							}}
+							name='b'
+							onChange={handleChange}
 							sx={{
 								'& label': {
 									color: '#2051ab',

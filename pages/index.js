@@ -6,7 +6,6 @@ import printNodes from '../scripts/sumOp';
 
 export default function Home() {
 
-  console.log(printNodes());
 
   return (
     <div className={styles.container}>

@@ -9,14 +9,20 @@ import create from 'zustand'
 
 import Sidebar from '../Sidebar'
 
-
-
 let id = 0
 const getId = () => `dndnode_${id++}`
 
 const DnDFlow = () => {
 	const useBoundStore = create(store)
-	const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } = useBoundStore()
+	const {
+		nodes,
+		edges,
+		nodeTypes,
+		onNodesChange,
+		onEdgesChange,
+		onConnect,
+		setNodes,
+	} = useBoundStore()
 	const reactFlowWrapper = useRef(null)
 	const [reactFlowInstance, setReactFlowInstance] = useState(null)
 
@@ -25,11 +31,13 @@ const DnDFlow = () => {
 		event.dataTransfer.dropEffect = 'move'
 	}, [])
 
+	
 	const onDrop = useCallback(
 		event => {
 			event.preventDefault()
 
 			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
+			console.log(reactFlowInstance.toObject())
 			const type = event.dataTransfer.getData('application/reactflow')
 			const model = event.dataTransfer.getData('application/reactflow/model')
 
@@ -59,6 +67,7 @@ const DnDFlow = () => {
 			<ReactFlowProvider>
 				<div className='reactflow-wrapper' ref={reactFlowWrapper}>
 					<ReactFlow
+						nodeTypes={nodeTypes}
 						nodes={nodes}
 						edges={edges}
 						deleteKeyCode={['Backspace', 'Delete']}
