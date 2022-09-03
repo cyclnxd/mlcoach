@@ -10,7 +10,7 @@ import create from 'zustand'
 import Sidebar from '../Sidebar'
 
 let id = 0
-const getId = () => `dndnode_${id++}`
+const getId = (type) => `${type}_${id++}`
 
 const DnDFlow = () => {
 	const useBoundStore = create(store)
@@ -37,7 +37,10 @@ const DnDFlow = () => {
 			event.preventDefault()
 
 			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
+<<<<<<< HEAD
 			//console.log(reactFlowInstance.toObject())
+=======
+>>>>>>> 69ac93388c28aca007eafe4138884e784e41a896
 			const type = event.dataTransfer.getData('application/reactflow')
 			const model = event.dataTransfer.getData('application/reactflow/model')
 			const data = event.dataTransfer.getData('application/reactflow/data')
@@ -50,7 +53,7 @@ const DnDFlow = () => {
 				y: event.clientY - reactFlowBounds.top,
 			})
 			const newNode = {
-				id: getId(),
+				id: getId(type),
 				type,
 				model,
 				position,

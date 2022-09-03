@@ -1,6 +1,6 @@
 import { Paper, Stack, TextField } from '@mui/material'
 import { Box } from '@mui/system'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState, useRef } from 'react'
 import { Handle, Position, updateEdge } from 'react-flow-renderer'
 
 import store from '../../../store/store.ts'
@@ -28,11 +28,12 @@ const operations = [
 const initialInputs = new Object({
 	a: 12,
 	b: 3,
-	result: 15
+	result: 15,
 })
 
 function MathNode({data}) {
 	const [inputs, setInputs] = useState(initialInputs)
+
 
 	const handleChange = event => {
 		 
