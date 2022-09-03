@@ -1,9 +1,10 @@
 import React, { memo } from 'react'
 
 const Sidebar = () => {
-	const onDragStart = (event, nodeType, model) => {
+	const onDragStart = (event, nodeType, model, data) => {
 		event.dataTransfer.setData('application/reactflow', nodeType)
 		event.dataTransfer.setData('application/reactflow/model', model)
+		event.dataTransfer.setData('application/reactflow/data', data)
 		event.dataTransfer.effectAllowed = 'move'
 	}
 
@@ -28,7 +29,13 @@ const Sidebar = () => {
 				className='dndnode'
 				onDragStart={event => onDragStart(event, 'mathNode', 'Conv2d')}
 				draggable>
-				Default Node2
+				Math Operation
+			</div>
+			<div
+				className='dndnode'
+				onDragStart={event => onDragStart(event, 'variableInput', 'Input', 0)}
+				draggable>
+				Variable Input
 			</div>
 			<div
 				className='dndnode output'

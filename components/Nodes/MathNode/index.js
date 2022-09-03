@@ -31,16 +31,15 @@ const initialInputs = new Object({
 	result: 15
 })
 
-function MathNode() {
+function MathNode({data}) {
 	const [inputs, setInputs] = useState(initialInputs)
 
 	const handleChange = event => {
-		setInputs(
-			inp => (inputs[event.target.name] = parseInt(event.target.value))
-		)
-		setInputs({ ...inputs, result:inputs.a+inputs.b})
+		 
 	}
-
+	useEffect(() => {
+        setInputs({ ...inputs, result: inputs.a + parseInt(store.getState().realVar) })
+    })
 	return (
 		<>
 			<Paper
@@ -82,6 +81,7 @@ function MathNode() {
 							paddingTop: '88px',
 						}}
 						spacing={1.1}>
+							{store.getState().realVar}
 						<TextField
 							value={inputs.a}
 							name='a'

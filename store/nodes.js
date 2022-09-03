@@ -5,12 +5,14 @@ const initialNodes= [
     id: '1',
     type: 'input',
     data: { label: 'Input' },
+    variable: 0,
     position: { x: 250, y: 25 },
   },
 
   {
     id: '2',
     data: { label: 'Default' },
+ 
     position: { x: 100, y: 125 },
   },
   {
