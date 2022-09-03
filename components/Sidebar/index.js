@@ -20,7 +20,7 @@ const Sidebar = () => {
 			</div>
 			<div
 				className='dndnode'
-				onDragStart={event => onDragStart(event, 'default')}
+				onDragStart={event => onDragStart(event, 'defaultNode')}
 				draggable>
 				Default Node
 			</div>
