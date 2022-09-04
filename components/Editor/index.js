@@ -7,10 +7,8 @@ import ReactFlow, {
 import store from '../../store/store.ts'
 import create from 'zustand'
 
-import Sidebar from '../Sidebar'
-
 let id = 0
-const getId = (type) => `${type}_${id++}`
+const getId = type => `${type}_${id++}`
 
 const DnDFlow = () => {
 	const useBoundStore = create(store)
@@ -31,7 +29,6 @@ const DnDFlow = () => {
 		event.dataTransfer.dropEffect = 'move'
 	}, [])
 
-	
 	const onDrop = useCallback(
 		event => {
 			event.preventDefault()
@@ -53,7 +50,7 @@ const DnDFlow = () => {
 				type,
 				model,
 				position,
-				data: { label: `${type} node`,},
+				data: { label: `${type} node` },
 			}
 
 			setNodes(newNode)
@@ -66,6 +63,7 @@ const DnDFlow = () => {
 			<ReactFlowProvider>
 				<div className='reactflow-wrapper' ref={reactFlowWrapper}>
 					<ReactFlow
+
 						nodeTypes={nodeTypes}
 						nodes={nodes}
 						edges={edges}
@@ -78,12 +76,13 @@ const DnDFlow = () => {
 						onDragOver={onDragOver}
 						fitView>
 						<Controls />
-						<Background style={{
-							backgroundColor: '#555',
-						}} />
+						<Background
+							style={{
+								backgroundColor: '#1a192b',
+							}}
+						/>
 					</ReactFlow>
 				</div>
-				<Sidebar />
 			</ReactFlowProvider>
 		</div>
 	)

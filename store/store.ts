@@ -24,9 +24,8 @@ const nodeTypes = {
 	mathNode: MathNode,
 	variableInput: variableInput,
 	fileUpload: fileUpload,
-	DefaultNode:DefaultNode
+	startNode: StartNode,
 }
-import  {DefaultNode}  from '../components/Nodes/DefaultNode'
 
 
 type RFState = {

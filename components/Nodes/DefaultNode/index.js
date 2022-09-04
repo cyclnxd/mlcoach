@@ -3,12 +3,14 @@ import React, { memo, useState, useEffect } from 'react'
 import store from '../../../store/store.ts'
 import { Handle } from 'react-flow-renderer'
 
-export function DefaultNode({ data }) {
+export function DefaultNode({ id, data }) {
 	const [input, setInput] = useState('')
 
 	useEffect(() => {
-		console.log(store.getState().fileMap[store.getState().edges[0].source])
-	} )
+		if (store.getState().edges[0]) {
+			console.log(store.getState().fileMap[store.getState().edges[0].source])
+		}
+	})
 
 	return (
 		<>
