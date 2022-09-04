@@ -1,5 +1,4 @@
 import create from 'zustand/vanilla'
-import { useEffect } from 'react'
 import {
 	Connection,
 	Edge,
@@ -15,15 +14,16 @@ import {
 } from 'react-flow-renderer'
 
 import initialNodes from './nodes'
-import initialEdges from './edges'
 import MathNode from '../components/Nodes/MathNode'
-import variableInput from '../components/Nodes/MathNode/variableInput'
 import StartNode from '../components/Nodes/TestNode'
+import variableInput from '../components/Nodes/MathNode/variableInput'
+
 
 const nodeTypes = {
 	mathNode: MathNode,
 	variableInput: variableInput,
 	startNode: StartNode,
+
 }
 
 
@@ -45,7 +45,7 @@ type RFState = {
 
 const store = create<RFState>((set, get) => ({
 	nodes: initialNodes,
-	edges: initialEdges,
+	edges: [],
 	nodeTypes: nodeTypes,
 	result: 0,
 	dummyVar: 0,

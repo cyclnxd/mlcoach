@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid'
 import Papa from 'papaparse'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid'
-import { input } from '@tensorflow/tfjs-node'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
@@ -22,6 +21,7 @@ function StartNode({ data }) {
 		Papa.parse(newFile, {
 			complete: result => {
 				setFileData(result)
+				console.log(result)
 			},
 			header: true,
 		})
@@ -73,7 +73,7 @@ function StartNode({ data }) {
 											Please upload a CSV file.
 										</Box>
 										<input
-                    style={{display: 'none'}}
+        
 											id='contained-button-file'
 											type='file'
 											accept={ACCEPTED_FILE_FORMATS}
@@ -83,9 +83,6 @@ function StartNode({ data }) {
 												readFile(inputRef.current.files[0])
 											}}
 										/>
-                    <Button onClick={()=>{inputRef.current}}>
-
-                    </Button>
 									</div>
 								</>
 							) : (
