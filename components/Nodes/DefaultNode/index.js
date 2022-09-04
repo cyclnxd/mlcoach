@@ -1,14 +1,14 @@
 import { Box, Grid, IconButton, TextField, Typography } from '@mui/material'
 import React, { memo, useState, useEffect } from 'react'
-
+import store from '../../../store/store.ts'
 import { Handle } from 'react-flow-renderer'
 
 export function DefaultNode({ data }) {
 	const [input, setInput] = useState('')
 
 	useEffect(() => {
-		data.states = input
-	}, [data, input])
+		console.log(store.getState().fileMap[store.getState().edges[0].source])
+	} )
 
 	return (
 		<>

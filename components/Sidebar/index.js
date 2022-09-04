@@ -21,7 +21,7 @@ const Sidebar = () => {
 			</div>
 			<div
 				className='dndnode'
-				onDragStart={event => onDragStart(event, 'defaultNode')}
+				onDragStart={event => onDragStart(event, 'DefaultNode')}
 				draggable>
 				Default Node
 			</div>
@@ -30,6 +30,12 @@ const Sidebar = () => {
 				onDragStart={event => onDragStart(event, 'mathNode', 'Conv2d')}
 				draggable>
 				Math Operation
+			</div>
+			<div
+				className='dndnode'
+				onDragStart={event => onDragStart(event, 'fileUpload', 'File')}
+				draggable>
+				File Upload
 			</div>
 			<div
 				className='dndnode'

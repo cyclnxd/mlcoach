@@ -37,10 +37,6 @@ const DnDFlow = () => {
 			event.preventDefault()
 
 			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
-<<<<<<< HEAD
-			//console.log(reactFlowInstance.toObject())
-=======
->>>>>>> 69ac93388c28aca007eafe4138884e784e41a896
 			const type = event.dataTransfer.getData('application/reactflow')
 			const model = event.dataTransfer.getData('application/reactflow/model')
 			const data = event.dataTransfer.getData('application/reactflow/data')
@@ -57,8 +53,7 @@ const DnDFlow = () => {
 				type,
 				model,
 				position,
-				data: { label: `${type} node`,
-						data : parseInt(data) },
+				data: { label: `${type} node`,},
 			}
 
 			setNodes(newNode)
