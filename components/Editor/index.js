@@ -43,7 +43,7 @@ const DnDFlow = () => {
 			if (typeof type === 'undefined' || !type) {
 				return
 			}
-
+			console.log(reactFlowInstance.toObject())
 			const position = reactFlowInstance.project({
 				x: event.clientX - reactFlowBounds.left,
 				y: event.clientY - reactFlowBounds.top,
@@ -78,7 +78,9 @@ const DnDFlow = () => {
 						onDragOver={onDragOver}
 						fitView>
 						<Controls />
-						<Background />
+						<Background style={{
+							backgroundColor: '#555',
+						}} />
 					</ReactFlow>
 				</div>
 				<Sidebar />

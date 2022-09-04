@@ -1,25 +1,13 @@
-import { Node } from 'react-flow-renderer';
+import { FileUpload } from '@mui/icons-material'
+import { Node } from 'react-flow-renderer'
 
-const initialNodes= [
-  {
-    id: '1',
-    type: 'input',
-    data: { label: 'Input' },
-    variable: 0,
-    position: { x: 250, y: 25 },
-  },
+const initialNodes = [
+	{
+		id: '1',
+		type: 'startNode',
+		data: { label: 'File' },
+		position: { x: 380, y: 100 },
+	},
 
-  {
-    id: '2',
-    data: { label: 'Default' },
- 
-    position: { x: 100, y: 125 },
-  },
-  {
-    id: '3',
-    type: 'output',
-    data: { label: 'Output' },
-    position: { x: 250, y: 250 },
-  },
-];
-export default initialNodes 
+]
+export default initialNodes
