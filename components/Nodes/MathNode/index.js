@@ -1,10 +1,8 @@
 import { Paper, Stack, TextField } from '@mui/material'
-import { Box } from '@mui/system'
-import { memo, useCallback, useEffect, useState, useRef } from 'react'
-import { Handle, Position, updateEdge } from 'react-flow-renderer'
+import { memo, useEffect, useState } from 'react'
+import { Handle, Position} from 'react-flow-renderer'
 
 import store from '../../../store/store.ts'
-import create from 'zustand'
 
 const operations = [
 	{
@@ -39,7 +37,7 @@ function MathNode({data}) {
 		 
 	}
 	useEffect(() => {
-        setInputs({ ...inputs, result: inputs.a + parseInt(store.getState().realVar) })
+        setInputs({ ...inputs, a: parseInt(store.getState().realVar) })
     })
 	return (
 		<>

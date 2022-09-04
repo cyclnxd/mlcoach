@@ -46,7 +46,7 @@ type RFState = {
 
 const store = create<RFState>((set, get) => ({
 	nodes: initialNodes,
-	edges: initialEdges,
+	edges: [],
 	nodeTypes: nodeTypes,
 	globalNodeStates: [],
 	fileMap: new Map(),
@@ -71,42 +71,15 @@ const store = create<RFState>((set, get) => ({
 		})
 		
 	},
-	onStore : (data: number) =>{
-		set({
-			dummyVar : data
-		})
-
-	}
+	storeFile : (nodeId, file: JSON) => {
+		get().fileMap[nodeId] = file; 
+	},
+	
 }))
 
-function UpdateVar(connection, data){
-	if(connection.source !== "") store.getState().realVar = data
-	else store.getState().realVar = 0
-}
+
 
 const { getState, setState, subscribe, destroy } = store
 
-function setDataNode(connection) {
-	var handleData
-	getState().nodes.map(node => {
-		if (node.id === connection.source) {
-			handleData = node.data.states
-		}
-		
-	})
-	getState().nodes.map(node => {
-		if (node.id === connection.target) {
-			node.data = {
-				...node.data,
-				states: handleData,
-			}
-
-			setState({
-				nodes: [...getState().nodes, node],
-			})
-		}
-	})
-
-}
 
 export default store
