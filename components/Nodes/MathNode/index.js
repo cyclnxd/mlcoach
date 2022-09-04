@@ -39,7 +39,7 @@ function MathNode({data}) {
 		 
 	}
 	useEffect(() => {
-        setInputs({ ...inputs, result: inputs.a + parseInt(store.getState().realVar) })
+        setInputs({ ...inputs, a: parseInt(store.getState().realVar) })
     })
 	return (
 		<>
