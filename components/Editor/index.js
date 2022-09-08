@@ -3,6 +3,7 @@ import ReactFlow, {
 	ReactFlowProvider,
 	Controls,
 	Background,
+	onNodeClick,
 } from 'react-flow-renderer'
 import store from '../../store/store.ts'
 import create from 'zustand'
@@ -20,6 +21,7 @@ const DnDFlow = () => {
 		onEdgesChange,
 		onConnect,
 		setNodes,
+		onNodeClick
 	} = useBoundStore()
 	const reactFlowWrapper = useRef(null)
 	const [reactFlowInstance, setReactFlowInstance] = useState(null)
@@ -74,6 +76,7 @@ const DnDFlow = () => {
 						onInit={setReactFlowInstance}
 						onDrop={onDrop}
 						onDragOver={onDragOver}
+						onNodeClick = {onNodeClick}
 						fitView>
 						<Controls />
 						<Background

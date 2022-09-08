@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, memo } from 'react'
+import React, { useState, useRef, useEffect, memo ,render} from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -12,12 +12,12 @@ const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
 const MAX_ROWS = 5
 
-function FileUpload({ id }) {
+function FileUpload({ id }, {}) {
 	const [fileData, setFileData] = useState()
 	const [gridRows, setGridRows] = useState([])
 	const [gridColumns, setGridColumns] = useState([])
 	const inputRef = useRef()
-
+	 
 	const readFile = newFile => {
 		Papa.parse(newFile, {
 			complete: result => {
@@ -26,8 +26,10 @@ function FileUpload({ id }) {
 			header: true,
 		})
 	}
+ 
 
 	useEffect(() => {
+		
 		if (fileData !== undefined) {
 			const numRows =
 				fileData.data.length > MAX_ROWS ? MAX_ROWS : fileData.data.length
@@ -51,85 +53,83 @@ function FileUpload({ id }) {
 	}, [fileData])
 
 	return (
-		<Grid>
-			<Handle
-				type='File'
-				position={Position.Right}
-				style={{
-					top: '90%',
-					width: '15px',
-					height: '15px',
-					backgroundColor: '#a85d0d',
-				}}
-				isConnectable={true}
-			/>
-			{fileData === undefined ? (
-				<>
-					<Paper
-						elevation={24}
+		<>
+			<Grid container spacing={0.5} direction='column' alignItems='flex-start'>
+				<Grid
+					container
+					direction='row'
+					justifyContent='center'
+					alignItems='center'>
+					<Box
 						sx={{
-							width: 250,
-							height: 250,
-							backgroundColor: '#31',
-							padding: '18px',
+							backgroundColor: '#21415E',
+							border: '0.5px solid #627F9A',
+							padding: 5,
+							minHeight: '100px',
+							color: 'white',
 						}}>
-						<div style={{}}>
-							<Box style={{ marginBottom: '10px' }}>
-								Please upload a CSV file.
-							</Box>
-							<input
-								style={{ display: 'none' }}
-								id='contained-button-file'
-								type='file'
-								accept={ACCEPTED_FILE_FORMATS}
-								ref={inputRef}
-								onChange={() => {
-									readFile(inputRef.current.files[0])
-								}}
-							/>
-							<label htmlFor='contained-button-file' style={{ top: '50%' }}>
-								<Button
-									variant='contained'
-									style={{
-										backgroundColor: '#6FEF8D',
-										display: 'flex',
-										alignSelf: 'center',
-										borderRadius: '5px',
-									}}
-									component='span'>
-									Upload
-								</Button>
-							</label>
-						</div>
-					</Paper>
-				</>
-			) : (
-				<>
-					{' '}
-					<Paper
-
-						elevation={24}
+						<Grid>
+							{fileData === undefined ? (
+								<>
+									<div style={{}}>
+										<Box style={{ marginBottom: '10px' }}>
+											Please upload a CSV file.
+										</Box>
+										<input
+        
+											id='contained-button-file'
+											type='file'
+											accept={ACCEPTED_FILE_FORMATS}
+											ref={inputRef}
+											className='nodrag'
+											onChange={() => {
+												readFile(inputRef.current.files[0])
+											}}
+										/>
+									</div>
+								</>
+							) : (
+								<>
+									<Box>Uploaded successful.</Box>
+									<Button onClick={() => {}}>View File</Button>
+									<div
+										style={{
+											height: 300,
+											width: '100%',
+											backgroundColor: '#21415E',
+											borderRadius: '3px',
+										}}>
+										<DataGrid rows={gridRows} columns={gridColumns} />
+									</div>
+								</>
+							)}
+						</Grid>
+					</Box>
+					<Box
 						sx={{
-							width: '100%',
-							height: '100%',
-							backgroundColor: '#3131',
-							padding: '18px',
+							height: 100,
+							width: 15,
+							backgroundColor: '#21415E',
+							borderRadius: '0px 15px 15px 0px',
 						}}>
-						<Box>Uploaded successful.</Box>
-						<Button onClick={() => {}}>Upload new File</Button>
-						<div
+						<Handle
+							type='source'
+							position='right'
+							id='a'
 							style={{
-								height: 250,
-								width: '100%',
-								backgroundColor: '#21415E',
-								borderRadius: '3px',
-							}}>
-							<DataGrid className='nodrag' rows={gridRows} columns={gridColumns} />
-						</div>
-					</Paper>
-				</>
-			)}
-		</Grid>
+								width: '20px',
+								top: '60%',
+								height: '70px',
+								background: 'none',
+								border: 'none',
+							}}
+							isConnectable={true}
+						/>
+					</Box>
+				</Grid>
+			</Grid>
+		 
+		</>
 	)
 }
 

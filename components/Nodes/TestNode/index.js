@@ -28,6 +28,7 @@ function StartNode({ data }) {
 	}
 
 	useEffect(() => {
+		console.log(1)
 		if (fileData !== undefined) {
 			const numRows =
 				fileData.data.length > MAX_ROWS ? MAX_ROWS : fileData.data.length

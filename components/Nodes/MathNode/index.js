@@ -36,9 +36,7 @@ function MathNode({data}) {
 	const handleChange = event => {
 		 
 	}
-	useEffect(() => {
-        setInputs({ ...inputs, a: parseInt(store.getState().realVar) })
-    })
+ 
 	return (
 		<>
 			<Paper

@@ -4,8 +4,10 @@ import DnDFlow from '../components/Editor'
 import { Footer } from '../components/Footer'
 import Header from '../components/Header'
 import { Stack } from '@mui/material'
-
+import store from '../store/store.ts'
+import { useEffect } from 'react'
 export default function Editor() {
+
 	return (
 		<>
 			<Head>
@@ -21,7 +23,7 @@ export default function Editor() {
 				width='100vw'>
 				<Header />
 				<DnDFlow />
-				<Footer />
+				<Footer/>
 			</Stack>
 		</>
 	)
