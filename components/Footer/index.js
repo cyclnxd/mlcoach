@@ -60,7 +60,7 @@ function Footer() {
 					width: '100%',
 					border: '1px solid #413f66',
 				}}
-			>	<DataGrid rows={prevRows.current} columns={	prevCol.current} />
+			>{store.getState().clickedNode !== -1 ? (	<DataGrid rows={prevRows.current} columns={	prevCol.current} />) : <></>}
 		 	 
 				</Box>
 		</Grid2>
