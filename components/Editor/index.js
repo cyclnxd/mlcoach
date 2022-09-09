@@ -3,13 +3,11 @@ import ReactFlow, {
 	ReactFlowProvider,
 	Controls,
 	Background,
-	onNodeClick,
 } from 'react-flow-renderer'
 import store from '../../store/store.ts'
 import create from 'zustand'
+import ToolModal from '../Modal'
 
-let id = 0
-const getId = type => `${type}_${id++}`
 
 const DnDFlow = () => {
 	const useBoundStore = create(store)
@@ -20,46 +18,25 @@ const DnDFlow = () => {
 		onNodesChange,
 		onEdgesChange,
 		onConnect,
-		setNodes,
 		onNodeClick,
-		onPaneClick
+		onPaneClick,
+		handleModal,
+		modalOpen
 	} = useBoundStore()
 	const reactFlowWrapper = useRef(null)
 	const [reactFlowInstance, setReactFlowInstance] = useState(null)
+
+
+	const handleContextMenu = (e) => {
+		e.preventDefault()
+		handleModal(true)
+	}
 
 	const onDragOver = useCallback(event => {
 		event.preventDefault()
 		event.dataTransfer.dropEffect = 'move'
 	}, [])
 
-	const onDrop = useCallback(
-		event => {
-			event.preventDefault()
-
-			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect()
-			const type = event.dataTransfer.getData('application/reactflow')
-			const model = event.dataTransfer.getData('application/reactflow/model')
-			const data = event.dataTransfer.getData('application/reactflow/data')
-			if (typeof type === 'undefined' || !type) {
-				return
-			}
-			console.log(reactFlowInstance.toObject())
-			const position = reactFlowInstance.project({
-				x: event.clientX - reactFlowBounds.left,
-				y: event.clientY - reactFlowBounds.top,
-			})
-			const newNode = {
-				id: getId(type),
-				type,
-				model,
-				position,
-				data: { label: `${type} node` },
-			}
-
-			setNodes(newNode)
-		},
-		[reactFlowInstance, setNodes]
-	)
 
 	return (
 		<div className='dndflow'>
@@ -75,12 +52,14 @@ const DnDFlow = () => {
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
 						onInit={setReactFlowInstance}
-						onDrop={onDrop}
 						onDragOver={onDragOver}
 						onNodeClick = {onNodeClick}
 						onPaneClick = {onPaneClick}
-						fitView>
+						fitView
+						onContextMenu={(e) => handleContextMenu(e)}
+						>
 						<Controls />
+						<ToolModal open={modalOpen} handleModal={handleModal} />
 						<Background
 							style={{
 								backgroundColor: '#1a192b',

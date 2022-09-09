@@ -11,12 +11,7 @@ import {
 	OnConnect,
 	applyNodeChanges,
 	applyEdgeChanges,
-	
- 
 } from 'react-flow-renderer'
-import onNodeClick from 'react-flow-renderer'
-import onPaneClick from 'react-flow-renderer'
-import { subscribeWithSelector } from 'zustand/middleware'
 import initialNodes from './nodes'
 import MathNode from '../components/Nodes/MathNode'
 import StartNode from '../components/Nodes/TestNode'
@@ -33,6 +28,7 @@ const nodeTypes = {
 
 
 type RFState = {
+	modalOpen: boolean
 	nodes: Node[]
 	edges: Edge[]
 	globalNodeStates: any[]
@@ -46,11 +42,13 @@ type RFState = {
 	onNodeClick: any
 	storeFile: any
 	clickedNode: any
+	handleModal: any
 }
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 
 const store = create<RFState>((set, get) => ({
+	modalOpen: false,
 	nodes: initialNodes,
 	edges: [],
 	nodeTypes: nodeTypes,
@@ -94,11 +92,13 @@ const store = create<RFState>((set, get) => ({
 	storeFile : (nodeId, file: JSON) => {
 		get().fileMap[nodeId] = file; 
 	},
+	handleModal: (state) => {
+		set({
+			modalOpen: state,
+		})
+	}
 }))
  
-
-
-const { getState, setState, subscribe, destroy } = store
 
  
 
