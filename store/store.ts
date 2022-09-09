@@ -11,9 +11,11 @@ import {
 	OnConnect,
 	applyNodeChanges,
 	applyEdgeChanges,
+	
  
 } from 'react-flow-renderer'
 import onNodeClick from 'react-flow-renderer'
+import onPaneClick from 'react-flow-renderer'
 import { subscribeWithSelector } from 'zustand/middleware'
 import initialNodes from './nodes'
 import MathNode from '../components/Nodes/MathNode'
@@ -40,6 +42,7 @@ type RFState = {
 	onNodesChange: OnNodesChange
 	onEdgesChange: OnEdgesChange
 	onConnect: OnConnect
+	onPaneClick: any
 	onNodeClick: any
 	storeFile: any
 	clickedNode: any
@@ -53,8 +56,14 @@ const store = create<RFState>((set, get) => ({
 	nodeTypes: nodeTypes,
 	globalNodeStates: [],
 	fileMap: new Map(),
-	clickedNode: undefined,
-
+	clickedNode: -1,
+	
+	onPaneClick : (event: React.MouseEvent) =>{
+		set({
+			//panele tıkladığında clicked node -1 yapıyor.
+			clickedNode : -1
+		})
+	},
 	onNodeClick: (event: React.MouseEvent, node: Node) =>{
 		set({
 			clickedNode: node.id 
