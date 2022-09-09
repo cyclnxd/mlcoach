@@ -21,7 +21,8 @@ const DnDFlow = () => {
 		onEdgesChange,
 		onConnect,
 		setNodes,
-		onNodeClick
+		onNodeClick,
+		onPaneClick
 	} = useBoundStore()
 	const reactFlowWrapper = useRef(null)
 	const [reactFlowInstance, setReactFlowInstance] = useState(null)
@@ -77,6 +78,7 @@ const DnDFlow = () => {
 						onDrop={onDrop}
 						onDragOver={onDragOver}
 						onNodeClick = {onNodeClick}
+						onPaneClick = {onPaneClick}
 						fitView>
 						<Controls />
 						<Background
