@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import create from 'zustand'
 import store from '../../store/store.ts'
-const MAX_ROWS = 5
+const MAX_ROWS = 400
 function Footer() {
 	//store da seçilen node tutmak için
 	const [selectedNode, setSelectedNode] = useState()
@@ -30,7 +30,11 @@ function Footer() {
 		//satır ve sutünlar okunuyor
 			// console.log(store.getState().fileMap[1])
 		if (store.getState().fileMap[selectedNode] !== undefined) {
-			const numRows = store.getState().fileMap[selectedNode].data.length
+			//max satır sayısını belirliyor
+			let numRows;
+			if(store.getState().fileMap[selectedNode].data.length > MAX_ROWS){ numRows = MAX_ROWS;}
+			else{ numRows = store.getState().fileMap[selectedNode].data.length;}
+
 			const newCols = []
 			for (
 				var i = 0;
