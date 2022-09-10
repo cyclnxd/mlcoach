@@ -22,7 +22,13 @@ function Footer() {
 		state => store.getState().clickedNode
 	)
 	useEffect(() => {
+		//footer da tıklanan node boşsa ilk dosya yüklenen nodun datalarını gösterdiği için bunu ekledim
+		if(store.getState().clickedNode === -1) {
+			prevCol.current = []; prevRows.current = [];
+		 }
+		else{
 		//satır ve sutünlar okunuyor
+			// console.log(store.getState().fileMap[1])
 		if (store.getState().fileMap[selectedNode] !== undefined) {
 			const numRows = store.getState().fileMap[selectedNode].data.length
 			const newCols = []
@@ -44,10 +50,10 @@ function Footer() {
 			//kaydediliyor
 			setGridColumns(newCols)
 			setGridRows(newRows)
-
 			prevRows.current = newRows
 			prevCol.current = newCols
 		}
+	}
 	}, [selectedNode])
 	return (
 		<Grid2

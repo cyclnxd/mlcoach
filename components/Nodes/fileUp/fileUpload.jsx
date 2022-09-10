@@ -10,12 +10,9 @@ import { Paper, Stack, TextField } from '@mui/material'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
-const MAX_ROWS = 5
 
 function FileUpload({ id }, { }) {
 	const [fileData, setFileData] = useState()
-	const [gridRows, setGridRows] = useState([])
-	const [gridColumns, setGridColumns] = useState([])
 	const inputRef = useRef()
 
 	const readFile = newFile => {
@@ -27,28 +24,7 @@ function FileUpload({ id }, { }) {
 		})
 	}
 
-
 	useEffect(() => {
-
-		if (fileData !== undefined) {
-			const numRows =
-				fileData.data.length > MAX_ROWS ? MAX_ROWS : fileData.data.length
-			const newCols = []
-			for (var i = 0; i < fileData.meta.fields.length; i++) {
-				newCols.push({
-					field: fileData.meta.fields[i],
-					headerName: fileData.meta.fields[i],
-				})
-			}
-			const newRows = []
-			for (var j = 1; j < numRows; j++) {
-				const newRow = fileData.data[j]
-				newRows.push({ ...newRow, id: j })
-			}
-			setGridColumns(newCols)
-			setGridRows(newRows)
-		}
-		//   localStorage.setItem(`${props.nodeId}_data`, JSON.stringify(fileData));
 		store.getState().storeFile(id, fileData)
 	}, [fileData])
 
@@ -71,34 +47,34 @@ function FileUpload({ id }, { }) {
 						<Grid>
 							{fileData === undefined ? (
 								<><div style={{}}>
-									 
-								<Button variant="contained" component="label" sx={{
-									height: 25,
-									width: "100%",
-									backgroundColor: '#402f51',
-									borderRadius: '15px 0px 15px 0px',
-								}} >Upload new file
-									<input
 
-										id='contained-button-file'
-										type='file'
-										hidden accept={ACCEPTED_FILE_FORMATS}
-										ref={inputRef}
-										className='nodrag'
-										onChange={() => {
-											readFile(inputRef.current.files[0])
-										}}
-									/>
-								</Button>
-							</div>
-									 
+									<Button variant="contained" component="label" sx={{
+										height: 25,
+										width: "100%",
+										backgroundColor: '#402f51',
+										borderRadius: '15px 0px 15px 0px',
+									}} >Upload new file
+										<input
+
+											id='contained-button-file'
+											type='file'
+											hidden accept={ACCEPTED_FILE_FORMATS}
+											ref={inputRef}
+											className='nodrag'
+											onChange={() => {
+												readFile(inputRef.current.files[0])
+											}}
+										/>
+									</Button>
+								</div>
+
 								</>
 							) : (
 								<>
 									<Box>Uploaded successful.</Box>
 									<Box style={{ marginBottom: '15px' }} />
 									<div style={{}}>
-									 
+
 										<Button variant="contained" component="label" sx={{
 											height: 25,
 											width: "100%",

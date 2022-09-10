@@ -8,7 +8,6 @@ import create from 'zustand'
 function ToolItem({ index, title, desc, input, output, group, type }) {
 	const { setNodes, handleModal } = create(store)()
 	const id = useId()
-
 	const onSelectItem = (e, nodeGroup) => {
 		if (typeof type === 'undefined' || !type) {
 			return
