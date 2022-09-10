@@ -20,6 +20,7 @@ const DnDFlow = () => {
 		onConnect,
 		onNodeClick,
 		onPaneClick,
+		onNodesDelete,
 		handleModal,
 		modalOpen
 	} = useBoundStore()
@@ -48,6 +49,7 @@ const DnDFlow = () => {
 						nodes={nodes}
 						edges={edges}
 						deleteKeyCode={['Backspace', 'Delete']}
+						onNodesDelete={onNodesDelete}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}

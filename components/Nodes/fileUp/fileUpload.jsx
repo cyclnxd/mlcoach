@@ -1,17 +1,15 @@
-import React, { useState, useRef, useEffect, memo, render } from 'react'
+import React, { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Papa from 'papaparse'
-import { DataGrid } from '@mui/x-data-grid'
 import store from '../../../store/store.ts'
-import { Handle, Position } from 'react-flow-renderer'
-import { Paper, Stack, TextField } from '@mui/material'
+import { Handle} from 'react-flow-renderer'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
 
-function FileUpload({ id }, { }) {
+function FileUpload({ id }) {
 	const [fileData, setFileData] = useState()
 	const inputRef = useRef()
 
@@ -26,7 +24,7 @@ function FileUpload({ id }, { }) {
 
 	useEffect(() => {
 		store.getState().storeFile(id, fileData)
-	}, [fileData])
+	}, [fileData, id])
 
 	return (
 		<>
@@ -46,46 +44,23 @@ function FileUpload({ id }, { }) {
 						}}>
 						<Grid>
 							{fileData === undefined ? (
-								<><div style={{}}>
-
-									<Button variant="contained" component="label" sx={{
-										height: 25,
-										width: "100%",
-										backgroundColor: '#402f51',
-										borderRadius: '15px 0px 15px 0px',
-									}} >Upload new file
-										<input
-
-											id='contained-button-file'
-											type='file'
-											hidden accept={ACCEPTED_FILE_FORMATS}
-											ref={inputRef}
-											className='nodrag'
-											onChange={() => {
-												readFile(inputRef.current.files[0])
-											}}
-										/>
-									</Button>
-								</div>
-
-								</>
-							) : (
 								<>
-									<Box>Uploaded successful.</Box>
-									<Box style={{ marginBottom: '15px' }} />
 									<div style={{}}>
-
-										<Button variant="contained" component="label" sx={{
-											height: 25,
-											width: "100%",
-											backgroundColor: '#402f51',
-											borderRadius: '15px 0px 15px 0px',
-										}} >	Upload new file
+										<Button
+											variant='contained'
+											component='label'
+											sx={{
+												height: 25,
+												width: '100%',
+												backgroundColor: '#402f51',
+												borderRadius: '15px 0px 15px 0px',
+											}}>
+											Upload new file
 											<input
-
 												id='contained-button-file'
 												type='file'
-												hidden accept={ACCEPTED_FILE_FORMATS}
+												hidden
+												accept={ACCEPTED_FILE_FORMATS}
 												ref={inputRef}
 												className='nodrag'
 												onChange={() => {
@@ -94,7 +69,36 @@ function FileUpload({ id }, { }) {
 											/>
 										</Button>
 									</div>
-
+								</>
+							) : (
+								<>
+									<Box>Uploaded successful.</Box>
+									<Box style={{ marginBottom: '15px' }} />
+									<div style={{}}>
+										<Button
+											variant='contained'
+											component='label'
+											sx={{
+												height: 25,
+												width: '100%',
+												backgroundColor: '#402f51',
+												borderRadius: '15px 0px 15px 0px',
+											}}>
+											{' '}
+											Upload new file
+											<input
+												id='contained-button-file'
+												type='file'
+												hidden
+												accept={ACCEPTED_FILE_FORMATS}
+												ref={inputRef}
+												className='nodrag'
+												onChange={() => {
+													readFile(inputRef.current.files[0])
+												}}
+											/>
+										</Button>
+									</div>
 								</>
 							)}
 						</Grid>
@@ -122,7 +126,6 @@ function FileUpload({ id }, { }) {
 					</Box>
 				</Grid>
 			</Grid>
-
 		</>
 	)
 }

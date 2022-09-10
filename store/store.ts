@@ -18,7 +18,6 @@ import StartNode from '../components/Nodes/TestNode'
 import variableInput from '../components/Nodes/MathNode/variableInput'
 import fileUpload from '../components/Nodes/fileUp/fileUpload'
 
-
 const nodeTypes = {
 	mathNode: MathNode,
 	variableInput: variableInput,
@@ -26,18 +25,18 @@ const nodeTypes = {
 	startNode: StartNode,
 }
 
-
 type RFState = {
 	modalOpen: boolean
 	nodes: Node[]
 	edges: Edge[]
 	globalNodeStates: any[]
 	nodeTypes: any
-	fileMap: any
+	fileMap: {}
 	setNodes: (node: Node) => void
 	onNodesChange: OnNodesChange
 	onEdgesChange: OnEdgesChange
 	onConnect: OnConnect
+	onNodesDelete: any
 	onPaneClick: any
 	onNodeClick: any
 	storeFile: any
@@ -53,20 +52,19 @@ const store = create<RFState>((set, get) => ({
 	edges: [],
 	nodeTypes: nodeTypes,
 	globalNodeStates: [],
-	fileMap: new Map(),
+	fileMap: {},
 	clickedNode: -1,
-	
-	onPaneClick : (event: React.MouseEvent) =>{
+
+	onPaneClick: (event: React.MouseEvent) => {
 		set({
 			//panele tıkladığında clicked node -1 yapıyor.
-			clickedNode : -1
+			clickedNode: -1,
 		})
 	},
-	onNodeClick: (event: React.MouseEvent, node: Node) =>{
+	onNodeClick: (event: React.MouseEvent, node: Node) => {
 		set({
-			clickedNode: node.id 
+			clickedNode: node.id,
 		})
-		
 	},
 	setNodes: (node: Node) => {
 		set({
@@ -87,19 +85,22 @@ const store = create<RFState>((set, get) => ({
 		set({
 			edges: addEdge(connection, get().edges),
 		})
-		
 	},
-	storeFile : (nodeId, file: JSON) => {
-		get().fileMap[nodeId] = file; 
+	storeFile: (nodeId, file: JSON) => {
+		get().fileMap[nodeId] = file
 	},
-	handleModal: (state) => {
+	onNodesDelete: changes => {
+		delete get().fileMap[changes[0].id]
+		set({
+			nodes: applyNodeChanges(changes, get().nodes),
+		})
+		console.log(get().fileMap)
+	},
+	handleModal: state => {
 		set({
 			modalOpen: state,
 		})
-	}
+	},
 }))
- 
-
- 
 
 export default store
