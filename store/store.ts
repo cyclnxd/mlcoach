@@ -16,12 +16,14 @@ import initialNodes from './nodes'
 import MathNode from '../components/Nodes/MathNode'
 import StartNode from '../components/Nodes/TestNode'
 import variableInput from '../components/Nodes/MathNode/variableInput'
-import fileUpload from '../components/Nodes/fileUp/fileUpload'
+import FileUpload from '../components/Nodes/FileUpload'
+import FilterNode from '../components/Nodes/FilterNode'
 
 const nodeTypes = {
 	mathNode: MathNode,
 	variableInput: variableInput,
-	fileUpload: fileUpload,
+	fileUpload: FileUpload,
+	filterNode: FilterNode,
 	startNode: StartNode,
 }
 
@@ -54,7 +56,6 @@ const store = create<RFState>((set, get) => ({
 	globalNodeStates: [],
 	fileMap: {},
 	clickedNode: -1,
-
 	onPaneClick: (event: React.MouseEvent) => {
 		set({
 			//panele tıkladığında clicked node -1 yapıyor.
@@ -90,11 +91,9 @@ const store = create<RFState>((set, get) => ({
 		get().fileMap[nodeId] = file
 	},
 	onNodesDelete: changes => {
-		delete get().fileMap[changes[0].id]
-		set({
-			nodes: applyNodeChanges(changes, get().nodes),
-		})
-		console.log(get().fileMap)
+		if (get().fileMap.hasOwnProperty(changes[0].id)) {
+			delete get().fileMap[changes[0].id]
+		}
 	},
 	handleModal: state => {
 		set({
