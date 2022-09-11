@@ -7,9 +7,9 @@ import ReactFlow, {
 import store from '../../store/store.ts'
 import create from 'zustand'
 import ToolModal from '../Modal'
+import ConnectionLine from '../ConnectionLine'
 
-
-const DnDFlow = () => {
+const Flow = () => {
 	const useBoundStore = create(store)
 	const {
 		nodes,
@@ -22,13 +22,12 @@ const DnDFlow = () => {
 		onPaneClick,
 		onNodesDelete,
 		handleModal,
-		modalOpen
+		modalOpen,
 	} = useBoundStore()
 	const reactFlowWrapper = useRef(null)
 	const [reactFlowInstance, setReactFlowInstance] = useState(null)
 
-
-	const handleContextMenu = (e) => {
+	const handleContextMenu = e => {
 		e.preventDefault()
 		handleModal(true)
 	}
@@ -38,40 +37,44 @@ const DnDFlow = () => {
 		event.dataTransfer.dropEffect = 'move'
 	}, [])
 
-
 	return (
-		<div className='dndflow'>
-			<ReactFlowProvider>
-				<div className='reactflow-wrapper' ref={reactFlowWrapper}>
-					<ReactFlow
-
-						nodeTypes={nodeTypes}
-						nodes={nodes}
-						edges={edges}
-						deleteKeyCode={['Backspace', 'Delete']}
-						onNodesDelete={onNodesDelete}
-						onNodesChange={onNodesChange}
-						onEdgesChange={onEdgesChange}
-						onConnect={onConnect}
-						onInit={setReactFlowInstance}
-						onDragOver={onDragOver}
-						onNodeClick = {onNodeClick}
-						onPaneClick = {onPaneClick}
-						fitView
-						onContextMenu={(e) => handleContextMenu(e)}
-						>
-						<Controls />
-						<ToolModal open={modalOpen} handleModal={handleModal} />
-						<Background
-							style={{
-								backgroundColor: '#1a192b',
-							}}
-						/>
-					</ReactFlow>
-				</div>
-			</ReactFlowProvider>
-		</div>
+		<ReactFlowProvider>
+			<div className='reactflow-wrapper' ref={reactFlowWrapper}>
+				<ReactFlow
+					nodeTypes={nodeTypes}
+					nodes={nodes}
+					edges={edges}
+					deleteKeyCode={['Backspace', 'Delete']}
+					onNodesDelete={onNodesDelete}
+					onNodesChange={onNodesChange}
+					onEdgesChange={onEdgesChange}
+					onConnect={onConnect}
+					onInit={setReactFlowInstance}
+					onDragOver={onDragOver}
+					onNodeClick={onNodeClick}
+					onPaneClick={onPaneClick}
+					connectionLineComponent={ConnectionLine}
+					fitView
+					defaultEdgeOptions={{
+						animated: true,
+						style: {
+							strokeWidth: 2,
+							strokeOpacity: 0.5,
+							cursor: 'pointer',
+						},
+					}}
+					onPaneContextMenu={e => handleContextMenu(e)}>
+					<Controls />
+					<ToolModal open={modalOpen} handleModal={handleModal} />
+					<Background
+						style={{
+							backgroundColor: '#1a192b',
+						}}
+					/>
+				</ReactFlow>
+			</div>
+		</ReactFlowProvider>
 	)
 }
 
-export default memo(DnDFlow)
+export default memo(Flow)
