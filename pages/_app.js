@@ -1,14 +1,19 @@
 import '../styles/globals.css'
-import '../components/Nodes/fileUp/fileUpload.css'
 import { createTheme, ThemeProvider } from '@mui/material'
 
 const darkTheme = createTheme({
 	palette: {
 		primary: {
 			main: '#1a192b',
+			surface: '#222138',
 			contrastText: '#fff',
-			light: '#413f66',
+			light: '#403f69',
+			darkLight: '#333154',
+			darkText: '#c5cbd2',
 		},
+	},
+	typography: {
+		fontFamily: ['Roboto Mono', 'monospace'].join(','),
 	},
 })
 function MyApp({ Component, pageProps }) {

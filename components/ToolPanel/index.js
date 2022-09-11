@@ -19,7 +19,7 @@ const nodeTypes = [
 	},
 	{
 		title: 'Filter',
-		type: 'filter',
+		type: 'filterNode',
 		group: 'transform',
 		desc: 'Grouping and filtering data on a given column name.',
 		input: 'DataFrame',
@@ -39,7 +39,9 @@ function TabPanel(props) {
 			{...other}>
 			{value === index && (
 				<Box sx={{ p: 3 }}>
-					<Typography sx={{ flexGrow: 1 }}>{children}</Typography>
+					<Typography component={'div'} sx={{ flexGrow: 1 }}>
+						{children}
+					</Typography>
 				</Box>
 			)}
 		</div>
@@ -76,7 +78,7 @@ export default function ToolPanel() {
 				<Tabs
 					orientation='vertical'
 					variant='scrollable'
-					textColor='primary.contrastText'
+					textColor='inherit'
 					indicatorColor='secondary'
 					value={nodeGroups.indexOf(value)}
 					onChange={(_, newValue) => handleChange(_, nodeGroups[newValue])}
@@ -113,7 +115,7 @@ export default function ToolPanel() {
 									<ToolItem
 										key={idx}
 										index={idx}
-										group = {node.group}
+										group={node.group}
 										title={node.title}
 										type={node.type}
 										desc={node.desc}

@@ -8,12 +8,11 @@ const initialNodes = [
 		data: { label: 'File' },
 		position: { x: 380, y: 100 },
 	},
-{
-	id: '2',
-	type: 'fileUpload',
-	data: { label: 'File' },
-	position: { x: 200, y: 100 },
-}
-
+	{
+		id: '2',
+		type: 'fileUpload',
+		data: { label: 'File' },
+		position: { x: 150, y: 100 },
+	},
 ]
 export default initialNodes
