@@ -41,6 +41,7 @@ const Header = () => {
 			position='static'
 			sx={{
 				borderBottom: '1px solid #413f66',
+				height: '55px',
 			}}>
 			<Container maxWidth='xl'>
 				<Toolbar
