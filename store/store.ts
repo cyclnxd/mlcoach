@@ -13,18 +13,12 @@ import {
 	applyEdgeChanges,
 } from 'react-flow-renderer'
 import initialNodes from './nodes'
-import MathNode from '../components/Nodes/MathNode'
-import StartNode from '../components/Nodes/TestNode'
-import variableInput from '../components/Nodes/MathNode/variableInput'
 import FileUpload from '../components/Nodes/FileUpload'
 import FilterNode from '../components/Nodes/FilterNode'
 
 const nodeTypes = {
-	mathNode: MathNode,
-	variableInput: variableInput,
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
-	startNode: StartNode,
 }
 
 type RFState = {
@@ -88,12 +82,14 @@ const store = create<RFState>((set, get) => ({
 		})
 	},
 	storeFile: (nodeId, file: JSON) => {
-		get().fileMap[nodeId] = file
+		set({
+			fileMap: { ...get().fileMap, [nodeId]: file },
+		})
 	},
 	onNodesDelete: changes => {
-		if (get().fileMap.hasOwnProperty(changes[0].id)) {
-			delete get().fileMap[changes[0].id]
-		}
+		set({
+			fileMap: { ...get().fileMap, [changes[0].id]: undefined },
+		})
 	},
 	handleModal: state => {
 		set({

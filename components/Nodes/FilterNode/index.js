@@ -2,12 +2,10 @@ import React, { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
-import Papa from 'papaparse'
 import store from '../../../store/store.ts'
 import { Handle } from 'react-flow-renderer'
 import { Card, Stack, Typography } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
-import Zoom from '@mui/material/Zoom'
 
 function FilterNode({ id, selected }) {
 	const [fileMetaData, setFileMetaData] = useState(null)
@@ -54,12 +52,9 @@ function FilterNode({ id, selected }) {
 					color: 'white',
 					justifyContent: 'center',
 					alignItems: 'center',
-				}}
-				style={
-					selected
-						? { border: '0.5px solid #403f69' }
-						: { border: '0.5px solid #333154' }
-				}>
+					border: '0.5px solid ',
+					borderColor: `${selected ? 'primary.light' : 'primary.darkLight'}`,
+				}}>
 				<Stack spacing={0}>
 					<HeaderLayout title='Filter' onDelete={handleDelete} />
 					<Box
@@ -100,25 +95,22 @@ function FilterNode({ id, selected }) {
 									component={'div'}
 									fontSize={9}
 									sx={{
-										color: '#c5cbd2',
+										color: 'primary.darkText',
 									}}>
 									allowed types csv, excel
 								</Typography>
 							</>
 						) : (
 							<Stack spacing={2} alignItems='center' justifyContent='center'>
-								<Typography fontSize='12px' color='#c5cbd2'>
+								<Typography fontSize='12px' color='primary.darkText'>
 									<strong>name: </strong>
 									{fileMetaData.name}
 								</Typography>
-								<Typography fontSize='12px' color='#c5cbd2'>
+								<Typography fontSize='12px' color='primary.darkText'>
 									<strong>size: </strong>
 									{fileMetaData.size} bytes
 								</Typography>
-								<Typography
-									fontSize='12px'
-									color='#c5cbd2'
-									textOverflow='ellipsis'>
+								<Typography fontSize='12px' color='primary.darkText'>
 									<strong>type: </strong>
 									{fileMetaData.type}
 								</Typography>

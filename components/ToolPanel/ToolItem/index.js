@@ -33,29 +33,30 @@ function ToolItem({ index, title, desc, input, output, group, type }) {
 							flexGrow: 1,
 							padding: '10px 10px 8px 10px',
 						}}>
-						<Stack spacing={3} alignItems='start' justifyContent='center'>
+						<Stack spacing={1} alignItems='start' justifyContent='center'>
 							<Typography
 								variant='body1'
 								color='primary.contrastText'
 								fontWeight='700'
-								marginBottom='-10px'>
+								marginBottom='10px'>
 								{title}
 							</Typography>
 							<Typography
-								fontSize='12px'
-								color='#c5cbd2'
+								fontSize='10px'
+								color='primary.darkText'
 								sx={{
 									minHeight: '57px',
 									maxHeight: '57px',
-									textOverflow: 'clip',
 									overflow: 'clip',
 								}}>
 								{desc}
 							</Typography>
 							<Typography
-								fontSize='11px'
-								color='#c5cbd2'
-								textOverflow='ellipsis'>
+								fontSize='10px'
+								color='primary.darkText'
+								sx={{
+									maxHeight: '25px',
+								}}>
 								<strong>Inputs:</strong> {input} <br />
 								<strong>Output:</strong> {output}
 							</Typography>

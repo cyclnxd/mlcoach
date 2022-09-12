@@ -8,6 +8,7 @@ import store from '../../store/store.ts'
 import create from 'zustand'
 import ToolModal from '../Modal'
 import ConnectionLine from '../ConnectionLine'
+import { Box } from '@mui/system'
 
 const Flow = () => {
 	const useBoundStore = create(store)
@@ -57,6 +58,7 @@ const Flow = () => {
 					fitView
 					defaultEdgeOptions={{
 						animated: true,
+
 						style: {
 							strokeWidth: 2,
 							strokeOpacity: 0.5,
@@ -66,11 +68,16 @@ const Flow = () => {
 					onPaneContextMenu={e => handleContextMenu(e)}>
 					<Controls />
 					<ToolModal open={modalOpen} handleModal={handleModal} />
-					<Background
-						style={{
-							backgroundColor: '#1a192b',
-						}}
-					/>
+					<Box
+						sx={{
+							backgroundColor: 'primary.main',
+						}}>
+						<Background
+							style={{
+								backgroundColor: 'inherit',
+							}}
+						/>
+					</Box>
 				</ReactFlow>
 			</div>
 		</ReactFlowProvider>

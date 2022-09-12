@@ -33,10 +33,14 @@ body {
 	flex-shrink: 0;
 	resize: vertical;
 	max-height: 80vh;
-	min-height: 65vh;
+	min-height: 55vh;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
 	stroke: #8682dd !important;
 	stroke-opacity: 1 !important;
+}
+
+.react-flow__edge {
+	pointer-events: all !important;
 }
