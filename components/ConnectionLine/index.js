@@ -18,7 +18,7 @@ const ConnectionLine = ({
 		}
 	}
 	return (
-		<g>
+		<>
 			<path
 				fill='none'
 				stroke='#c5cbd2'
@@ -30,8 +30,7 @@ const ConnectionLine = ({
 					{ x: targetX, y: targetY }
 				)}
 			/>
-			<circle cx={targetX} cy={targetY} fill='#fff' r={1} />
-		</g>
+		</>
 	)
 }
 

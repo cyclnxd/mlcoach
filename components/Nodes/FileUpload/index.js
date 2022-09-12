@@ -47,12 +47,9 @@ function FileUpload({ id, selected }) {
 					color: 'white',
 					justifyContent: 'center',
 					alignItems: 'center',
-				}}
-				style={
-					selected
-						? { border: '0.5px solid #403f69' }
-						: { border: '0.5px solid #333154' }
-				}>
+					border: '0.5px solid ',
+					borderColor: `${selected ? 'primary.light' : 'primary.darkLight'}`,
+				}}>
 				<Stack spacing={0}>
 					<HeaderLayout title='File' onDelete={handleDelete} />
 					<Box
@@ -94,25 +91,22 @@ function FileUpload({ id, selected }) {
 									component={'div'}
 									fontSize={9}
 									sx={{
-										color: '#c5cbd2',
+										color: 'primary.darkText',
 									}}>
 									allowed types csv, excel
 								</Typography>
 							</>
 						) : (
 							<Stack spacing={2} alignItems='center' justifyContent='center'>
-								<Typography fontSize='12px' color='#c5cbd2'>
+								<Typography fontSize='12px' color='primary.darkText'>
 									<strong>name: </strong>
 									{fileMetaData.name}
 								</Typography>
-								<Typography fontSize='12px' color='#c5cbd2'>
+								<Typography fontSize='12px' color='primary.darkText'>
 									<strong>size: </strong>
 									{fileMetaData.size} bytes
 								</Typography>
-								<Typography
-									fontSize='12px'
-									color='#c5cbd2'
-									textOverflow='ellipsis'>
+								<Typography fontSize='12px' color='primary.darkText'>
 									<strong>type: </strong>
 									{fileMetaData.type}
 								</Typography>
