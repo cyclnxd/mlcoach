@@ -25,6 +25,14 @@ const nodeTypes = [
 		input: 'DataFrame',
 		output: 'DataFrame',
 	},
+	{
+		title: 'Slice',
+		type: 'sliceNode',
+		group: 'transform',
+		desc: 'Slicing data frames given indexes',
+		input: 'DataFrame',
+		output: 'DataFrame',
+	}
 ]
 
 function TabPanel(props) {

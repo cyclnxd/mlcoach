@@ -18,12 +18,13 @@ import StartNode from '../components/Nodes/TestNode'
 import variableInput from '../components/Nodes/MathNode/variableInput'
 import FileUpload from '../components/Nodes/FileUpload'
 import FilterNode from '../components/Nodes/FilterNode'
-
+import SliceNode from '../components/Nodes/SliceNode'
 const nodeTypes = {
 	mathNode: MathNode,
 	variableInput: variableInput,
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
+	sliceNode : SliceNode,
 	startNode: StartNode,
 }
 
@@ -34,6 +35,8 @@ type RFState = {
 	globalNodeStates: any[]
 	nodeTypes: any
 	fileMap: {}
+	connectionSource: any
+	connectionTarget: any
 	setNodes: (node: Node) => void
 	onNodesChange: OnNodesChange
 	onEdgesChange: OnEdgesChange
@@ -55,6 +58,8 @@ const store = create<RFState>((set, get) => ({
 	nodeTypes: nodeTypes,
 	globalNodeStates: [],
 	fileMap: {},
+	connectionSource: '-1',
+	connectionTarget: '-1',
 	clickedNode: -1,
 	onPaneClick: (event: React.MouseEvent) => {
 		set({
@@ -73,16 +78,20 @@ const store = create<RFState>((set, get) => ({
 		})
 	},
 	onNodesChange: (changes: NodeChange[]) => {
+	  
 		set({
 			nodes: applyNodeChanges(changes, get().nodes),
 		})
 	},
 	onEdgesChange: (changes: EdgeChange[]) => {
+
 		set({
 			edges: applyEdgeChanges(changes, get().edges),
 		})
 	},
 	onConnect: (connection: Connection) => {
+		get().connectionSource = connection.source
+		get().connectionTarget = connection.target
 		set({
 			edges: addEdge(connection, get().edges),
 		})
