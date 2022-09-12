@@ -17,43 +17,48 @@ function Footer() {
 	// sayfayı yeniden render almadan store içerisinde ki verileri subscribe ile çekip komponentin içerisine usestate veya benzeri hook ile kaydedersek useef rahatlıkla çalışıyor o yüzden bu var :D
 	store.subscribe(() => {
 		setSelectedNode(store.getState().clickedNode)
-		setFileMap(store.getState().fileMap[store.getState().clickedNode])
+		console.log(store.getState().fileMap[store.getState().clickedNode])
+		setFileMap(
+			store.getState().fileMap[store.getState().clickedNode]
+				? store.getState().fileMap[store.getState().clickedNode]
+				: undefined
+		)
 	})
 	useEffect(() => {
 		//footer da tıklanan node boşsa ilk dosya yüklenen nodun datalarını gösterdiği için bunu ekledim
-		if (store.getState().clickedNode === -1) {
-			prevCol.current = []
-			prevRows.current = []
-		} else {
-			//satır ve sutünlar okunuyor
-			// console.log(store.getState().fileMap[1])
-			if (fileMap !== undefined) {
-				//max satır sayısını belirliyor
-				let numRows
 
-				numRows = fileMap.data.length
+		//satır ve sutünlar okunuyor
+		if (fileMap !== undefined) {
+			//max satır sayısını belirliyor
+			let numRows
+			numRows = fileMap.data.length
 
-				const newCols = []
-				for (var i = 0; i < fileMap.meta.fields.length; i++) {
-					newCols.push({
-						field: fileMap.meta.fields[i],
-						headerName: fileMap.meta.fields[i],
-						flex: 1,
-						maxWidth: 200,
-						minWidth: 200,
-					})
-				}
-				const newRows = []
-				for (var j = 1; j < numRows; j++) {
-					const newRow = fileMap.data[j]
-					newRows.push({ ...newRow, id: j })
-				}
-				//kaydediliyor
-				setGridColumns(newCols)
-				setGridRows(newRows)
-				prevRows.current = newRows
-				prevCol.current = newCols
+			const newCols = []
+			for (var i = 0; i < fileMap.meta.fields.length; i++) {
+				newCols.push({
+					field: fileMap.meta.fields[i],
+					headerName: fileMap.meta.fields[i],
+					flex: 1,
+					maxWidth: 200,
+					minWidth: 200,
+				})
 			}
+			const newRows = []
+			for (var j = 1; j < numRows; j++) {
+				const newRow = fileMap.data[j]
+				newRows.push({ ...newRow, id: j })
+			}
+			//kaydediliyor
+			setGridColumns(newCols)
+			setGridRows(newRows)
+			prevRows.current = newRows
+			prevCol.current = newCols
+		} else {
+			//eğer dosya map undefined ise önceki satır ve sutünları gösteriyor
+			setGridColumns([])
+			setGridRows([])
+			prevRows.current = []
+			prevCol.current = []
 		}
 	}, [fileMap, selectedNode])
 	return (
@@ -83,6 +88,7 @@ function Footer() {
 							color: 'primary.contrastText',
 							m: 1,
 							fontWeight: 'bold',
+							letterSpacing: 1.5,
 						}}>
 						OUTPUT
 					</Typography>

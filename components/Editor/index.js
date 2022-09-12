@@ -78,6 +78,17 @@ const Flow = () => {
 							}}
 						/>
 					</Box>
+					<Box
+						sx={{
+							position: 'absolute',
+							bottom: 0,
+							right: 0,
+							width: '52px',
+							height: '15px',
+							backgroundColor: 'primary.main',
+							zIndex: 9999,
+						}}
+					/>
 				</ReactFlow>
 			</div>
 		</ReactFlowProvider>
