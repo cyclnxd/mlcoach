@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
-import {TextField} from '@mui/material'
+import { TextField } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import store from '../../../store/store.ts'
 import { Handle } from 'react-flow-renderer'
@@ -15,48 +15,78 @@ function SliceNode({ id, selected }) {
 	const [connectionSource, setConnectionSource] = useState()
 	const [connectionTarget, setConnectionTarget] = useState()
 	const [fileData, setFileData] = useState()
-	const startTextHandle = (event) => { 
-		if(event.target.value === NaN){ 
+	const startTextHandle = event => {
+		if (event.target.value === NaN) {
 			setStartSliceRef(0)
-			 prevSSlice.current = 0
-			}
+			prevSSlice.current = 0
+		}
 
 		setStartSliceRef(parseInt(event.target.value))
 	}
-	const endTextHandle =(event) => {
-		if(event.target.value === NaN) {
-			setEndSliceRef(-1) 
-			prevESlice.current  = -1}
-			setEndSliceRef(parseInt(event.target.value))
-		 
+	const endTextHandle = event => {
+		if (event.target.value === NaN) {
+			setEndSliceRef(-1)
+			prevESlice.current = -1
+		}
+		setEndSliceRef(parseInt(event.target.value))
 	}
 	const handleDelete = () => {
-		store.getState().onNodesChange([{ id: id, type: 'remove' }])
+		store.getState().onNodesChange([{ id, type: 'remove' }])
 		setConnectionSource('-1')
 	}
-	store.subscribe(
-		() => {
-			setConnectionSource(store.getState().connectionSource)
-			setConnectionTarget(store.getState().connectionTarget)
-
-		},
-	)
-	useEffect(() => {	prevSSlice.current = startSliceRef
+	store.subscribe(() => {
+		setConnectionSource(store.getState().connectionSource)
+		setConnectionTarget(store.getState().connectionTarget)
+	})
+	useEffect(() => {
+		prevSSlice.current = startSliceRef
 		prevESlice.current = endSliceRef
-		if (connectionTarget === id) {
-			if (connectionSource !== '-1') {
-			 
-				setFileData(store.getState().fileMap[connectionSource].data.slice(prevSSlice.current,prevESlice.current))
-				 let file = {data : store.getState().fileMap[connectionSource].data.slice(prevSSlice.current,prevESlice.current),
-							 meta : store.getState().fileMap[connectionSource].meta}
-				store.getState().storeFile(id,file )
-				// console.log(fileData.data)
-			 
-			}
+		console.log(
+			Object.values(store.getState().edges).find(item => item.target === id)[
+				'source'
+			]
+		)
+		if (
+			Object.values(store.getState().edges).find(item => item.target === id)
+		) {
+			//console.log(Object.values(store.getState().edges).map(item => item.source))
+			//  let file = {data : store.getState().fileMap[Object.values(store.getState().edges).find(item => item.source)].data.slice(prevSSlice.current,prevESlice.current),
+			//              meta : store.getState().fileMap[Object.values(store.getState().edges).find(item => item.source)].meta}
+			// store.getState().storeFile(id,file )
+			// console.log(fileData.data)
 		}
- 
+
 		// store.getState().storeFile(id, fileData)
-	}, [connectionSource, connectionTarget,  endSliceRef,startSliceRef])
+	}, [startSliceRef, endSliceRef, id])
+	// useEffect(() => {
+	// 	prevSSlice.current = startSliceRef
+	// 	prevESlice.current = endSliceRef
+	// 	if (connectionTarget === id) {
+	// 		if (connectionSource !== '-1') {
+	// 			setFileData(
+	// 				store
+	// 					.getState()
+	// 					.fileMap[connectionSource].data.slice(
+	// 						prevSSlice.current,
+	// 						prevESlice.current
+	// 					)
+	// 			)
+	// 			let file = {
+	// 				data: store
+	// 					.getState()
+	// 					.fileMap[connectionSource].data.slice(
+	// 						prevSSlice.current,
+	// 						prevESlice.current
+	// 					),
+	// 				meta: store.getState().fileMap[connectionSource].meta,
+	// 			}
+	// 			store.getState().storeFile(id, file)
+	// 			// console.log(fileData.data)
+	// 		}
+	// 	}
+
+	// 	// store.getState().storeFile(id, fileData)
+	// }, [connectionSource, connectionTarget, endSliceRef, id, startSliceRef])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -96,7 +126,7 @@ function SliceNode({ id, selected }) {
 						? { border: '0.5px solid #403f69' }
 						: { border: '0.5px solid #333154' }
 				}>
-				<Stack spacing={0}>
+				<Stack spacing={1}>
 					<HeaderLayout title='Slice' onDelete={handleDelete} />
 					<Box
 						sx={{
@@ -106,35 +136,49 @@ function SliceNode({ id, selected }) {
 							alignItems: 'center',
 							padding: '10px',
 							gap: '10px',
+							width: '200px',
+							'.MuiOutlinedInput-root': {
+								color: 'primary.contrastText',
+								fontSize: '12px',
+							},
+							'& label': {
+								color: 'primary.contrastText',
+								fontSize: '12px',
+							},
+							'& label.Mui-focused': {
+								color: 'primary.contrastText',
+							},
+							'& .MuiInput-underline:after': {
+								borderBottomColor: 'green',
+							},
+							'& .MuiOutlinedInput-root': {
+								'& fieldset': {
+									borderColor: 'primary.darkLight',
+								},
+								'&:hover fieldset': {
+									borderColor: 'primary.light',
+								},
+								'&.Mui-focused fieldset': {
+									borderColor: 'primary.light',
+								},
+							},
 						}}>
-						<Box sx={{
-							height: '150px',
-							width: '100px'
-						}}>
-							 <TextField
-								id="outlined-name"
-								label="Start"
-								sx={{
-
-									height:'25px',
-									backgroundColor: 'primary.light'
-								}}
-								onChange={startTextHandle}
-							/>
-							 <TextField
-								id="outlined-name"
-								label="End"
-								sx={{	
-									marginTop: '50px',
-									height:'25px',
-									backgroundColor: 'primary.light'
-								}}
-								onChange={endTextHandle}
-								
-							/>
-
-						</Box>
-
+						<TextField
+							id='outlined-name'
+							label='Start'
+							className='nodrag'
+							size='small'
+							type='number'
+							onChange={startTextHandle}
+						/>
+						<TextField
+							id='outlined-name'
+							label='End'
+							className='nodrag'
+							size='small'
+							type='number'
+							onChange={endTextHandle}
+						/>
 					</Box>
 				</Stack>
 			</Card>

@@ -83,8 +83,8 @@ const Flow = () => {
 							position: 'absolute',
 							bottom: 0,
 							right: 0,
-							width: '52px',
-							height: '15px',
+							width: '3.6rem',
+							height: '1.95rem',
 							backgroundColor: 'primary.main',
 							zIndex: 9999,
 						}}

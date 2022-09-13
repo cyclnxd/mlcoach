@@ -17,7 +17,6 @@ function Footer() {
 	// sayfayı yeniden render almadan store içerisinde ki verileri subscribe ile çekip komponentin içerisine usestate veya benzeri hook ile kaydedersek useef rahatlıkla çalışıyor o yüzden bu var :D
 	store.subscribe(() => {
 		setSelectedNode(store.getState().clickedNode)
-		console.log(store.getState().fileMap[store.getState().clickedNode])
 		setFileMap(
 			store.getState().fileMap[store.getState().clickedNode]
 				? store.getState().fileMap[store.getState().clickedNode]

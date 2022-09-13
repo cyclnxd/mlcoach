@@ -19,7 +19,7 @@ import SliceNode from '../components/Nodes/SliceNode'
 const nodeTypes = {
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
-	sliceNode : SliceNode,
+	sliceNode: SliceNode,
 }
 
 type RFState = {
@@ -72,22 +72,20 @@ const store = create<RFState>((set, get) => ({
 		})
 	},
 	onNodesChange: (changes: NodeChange[]) => {
-	  
 		set({
 			nodes: applyNodeChanges(changes, get().nodes),
 		})
 	},
 	onEdgesChange: (changes: EdgeChange[]) => {
-
 		set({
 			edges: applyEdgeChanges(changes, get().edges),
 		})
 	},
 	onConnect: (connection: Connection) => {
-		get().connectionSource = connection.source
-		get().connectionTarget = connection.target
 		set({
 			edges: addEdge(connection, get().edges),
+			connectionSource: connection.source,
+			connectionTarget: connection.target,
 		})
 	},
 	storeFile: (nodeId, file: JSON) => {
