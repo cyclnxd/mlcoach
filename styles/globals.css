@@ -44,3 +44,7 @@ body {
 .react-flow__edge {
 	pointer-events: all !important;
 }
+
+.react-flow__attribution {
+	display: none;
+}

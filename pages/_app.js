@@ -16,6 +16,7 @@ const darkTheme = createTheme({
 		fontFamily: ['Roboto Mono', 'monospace'].join(','),
 	},
 })
+
 function MyApp({ Component, pageProps }) {
 	return (
 		<ThemeProvider theme={darkTheme}>

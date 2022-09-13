@@ -64,7 +64,7 @@ const nodeTypes = [
 		desc: 'Slicing data frames given indexes',
 		input: 'DataFrame',
 		output: 'DataFrame',
-	}
+	},
 ]
 
 function TabPanel(props) {
@@ -148,7 +148,7 @@ export default function ToolPanel() {
 					<Grid2
 						container
 						spacing={{ xs: 2, md: 3 }}
-						columns={{ xs: 4, sm: 8, md: 12 }}>
+						columns={{ xs: 2, sm: 2, md: 8 }}>
 						{nodeTypes.map(
 							(node, idx) =>
 								(node.group === group || group === 'all') && (
