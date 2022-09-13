@@ -41,23 +41,29 @@ function SliceNode({ id, selected }) {
 	useEffect(() => {
 		prevSSlice.current = startSliceRef
 		prevESlice.current = endSliceRef
-		console.log(
-			Object.values(store.getState().edges).find(item => item.target === id)[
-				'source'
-			]
-		)
+		 
 		if (
 			Object.values(store.getState().edges).find(item => item.target === id)
 		) {
-			//console.log(Object.values(store.getState().edges).map(item => item.source))
-			//  let file = {data : store.getState().fileMap[Object.values(store.getState().edges).find(item => item.source)].data.slice(prevSSlice.current,prevESlice.current),
-			//              meta : store.getState().fileMap[Object.values(store.getState().edges).find(item => item.source)].meta}
-			// store.getState().storeFile(id,file )
-			// console.log(fileData.data)
+			if(Object.values(store.getState().edges).find(item => item.target === id)['source'])
+			{
+			const index =	Object.values(store.getState().edges).find(item => item.target === id)['source'] 
+			
+
+			let file = {
+				data: store.getState().fileMap[index].data.slice(
+						prevSSlice.current,
+						prevESlice.current
+					),
+				meta: store.getState().fileMap[index].meta,
+			}
+			store.getState().storeFile(id,file )
+	
+		}
 		}
 
 		// store.getState().storeFile(id, fileData)
-	}, [startSliceRef, endSliceRef, id])
+	}, [startSliceRef, endSliceRef])
 	// useEffect(() => {
 	// 	prevSSlice.current = startSliceRef
 	// 	prevESlice.current = endSliceRef
