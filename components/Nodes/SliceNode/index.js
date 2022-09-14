@@ -4,7 +4,7 @@ import { TextField } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import store from '../../../store/store.ts'
 import { Handle } from 'react-flow-renderer'
-import { Card, Stack, Typography } from '@mui/material'
+import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 
 function SliceNode({ id, selected }) {
@@ -12,9 +12,7 @@ function SliceNode({ id, selected }) {
 	const [endSliceRef, setEndSliceRef] = useState(-1)
 	const prevSSlice = useRef(startSliceRef)
 	const prevESlice = useRef(endSliceRef)
-	const [connectionSource, setConnectionSource] = useState()
-	const [connectionTarget, setConnectionTarget] = useState()
-	const [fileData, setFileData] = useState()
+
 	const startTextHandle = event => {
 		if (event.target.value === NaN) {
 			setStartSliceRef(0)
@@ -32,67 +30,28 @@ function SliceNode({ id, selected }) {
 	}
 	const handleDelete = () => {
 		store.getState().onNodesChange([{ id, type: 'remove' }])
-		setConnectionSource('-1')
 	}
-	store.subscribe(() => {
-		setConnectionSource(store.getState().connectionSource)
-		setConnectionTarget(store.getState().connectionTarget)
-	})
+
 	useEffect(() => {
 		prevSSlice.current = startSliceRef
 		prevESlice.current = endSliceRef
-		 
-		if (
-			Object.values(store.getState().edges).find(item => item.target === id)
-		) {
-			if(Object.values(store.getState().edges).find(item => item.target === id)['source'])
-			{
-			const index =	Object.values(store.getState().edges).find(item => item.target === id)['source'] 
-			
+		// checking if the user has created a valid edge between two nodes
+		const edge = Object.values(store.getState().edges).find(
+			item => item.target === id
+		)
+		const index = edge !== undefined ? edge.source : undefined
 
-			let file = {
-				data: store.getState().fileMap[index].data.slice(
-						prevSSlice.current,
-						prevESlice.current
-					),
+		// if the user has created a valid edge, then we update the fileMap
+		if (index !== undefined) {
+			const file = {
+				data: store
+					.getState()
+					.fileMap[index].data.slice(prevSSlice.current, prevESlice.current),
 				meta: store.getState().fileMap[index].meta,
 			}
-			store.getState().storeFile(id,file )
-	
+			store.getState().storeFile(id, file)
 		}
-		}
-
-		// store.getState().storeFile(id, fileData)
-	}, [startSliceRef, endSliceRef])
-	// useEffect(() => {
-	// 	prevSSlice.current = startSliceRef
-	// 	prevESlice.current = endSliceRef
-	// 	if (connectionTarget === id) {
-	// 		if (connectionSource !== '-1') {
-	// 			setFileData(
-	// 				store
-	// 					.getState()
-	// 					.fileMap[connectionSource].data.slice(
-	// 						prevSSlice.current,
-	// 						prevESlice.current
-	// 					)
-	// 			)
-	// 			let file = {
-	// 				data: store
-	// 					.getState()
-	// 					.fileMap[connectionSource].data.slice(
-	// 						prevSSlice.current,
-	// 						prevESlice.current
-	// 					),
-	// 				meta: store.getState().fileMap[connectionSource].meta,
-	// 			}
-	// 			store.getState().storeFile(id, file)
-	// 			// console.log(fileData.data)
-	// 		}
-	// 	}
-
-	// 	// store.getState().storeFile(id, fileData)
-	// }, [connectionSource, connectionTarget, endSliceRef, id, startSliceRef])
+	}, [startSliceRef, endSliceRef, id])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>

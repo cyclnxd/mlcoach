@@ -13,16 +13,16 @@ function ToolItem({ index, title, desc, input, output, group, type }) {
 		if (typeof type === 'undefined' || !type) {
 			return
 		}
-		for (let i = 0; i < 20; i++) {
-			let id = uuidv4()
-			let newNode = {
-				id,
-				type,
-				position: { x: 200, y: 100 },
-				data: { label: title, group: nodeGroup },
-			}
-			setNodes(newNode)
+
+		const id = uuidv4()
+		const newNode = {
+			id,
+			type,
+			position: { x: 200, y: 100 },
+			data: { label: title, group: nodeGroup },
 		}
+		setNodes(newNode)
+
 		handleModal(false)
 	}
 
