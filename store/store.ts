@@ -1,4 +1,5 @@
 import create from 'zustand/vanilla'
+import { useMemo } from 'react'
 import {
 	Connection,
 	Edge,
@@ -96,9 +97,17 @@ const store = create<RFState>((set, get) => ({
 		})
 	},
 	onNodesDelete: changes => {
-		set({
-			fileMap: { ...get().fileMap, [changes[0].id]: undefined },
-		})
+		if (changes.length > 0) {
+			let newFileMap = get().fileMap
+			changes.forEach(change => {
+				if (change.id in newFileMap) {
+					delete newFileMap[change.id]
+				}
+			})
+			set({
+				fileMap: newFileMap,
+			})
+		}
 	},
 	handleModal: state => {
 		set({

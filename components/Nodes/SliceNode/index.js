@@ -1,65 +1,57 @@
-import React, { useState, useRef, useEffect, memo } from "react";
-import Box from "@mui/material/Box";
-import { TextField } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import store from "../../../store/store.ts";
-import { Handle } from "react-flow-renderer";
-import { Card, Stack, Typography } from "@mui/material";
-import HeaderLayout from "../HeaderLayout";
+import React, { useState, useRef, useEffect, memo } from 'react'
+import Box from '@mui/material/Box'
+import { TextField } from '@mui/material'
+import Grid from '@mui/material/Grid'
+import store from '../../../store/store.ts'
+import { Handle } from 'react-flow-renderer'
+import { Card, Stack } from '@mui/material'
+import HeaderLayout from '../HeaderLayout'
 
 function SliceNode({ id, selected }) {
-  const [startSliceRef, setStartSliceRef] = useState(0);
-  const [endSliceRef, setEndSliceRef] = useState(-1);
-  const prevSSlice = useRef(startSliceRef);
-  const prevESlice = useRef(endSliceRef);
+	const [startSliceRef, setStartSliceRef] = useState(0)
+	const [endSliceRef, setEndSliceRef] = useState(-1)
+	const prevSSlice = useRef(startSliceRef)
+	const prevESlice = useRef(endSliceRef)
 
-  const startTextHandle = (event) => {
-    if (event.target.value === NaN) {
-      setStartSliceRef(0);
-      prevSSlice.current = 0;
-    }
+	const startTextHandle = event => {
+		if (event.target.value === NaN) {
+			setStartSliceRef(0)
+			prevSSlice.current = 0
+		}
 
-    setStartSliceRef(parseInt(event.target.value));
-  };
-  const endTextHandle = (event) => {
-    if (event.target.value === NaN) {
-      setEndSliceRef(-1);
-      prevESlice.current = -1;
-    }
-    setEndSliceRef(parseInt(event.target.value));
-  };
-  const handleDelete = () => {
-    store.getState().onNodesChange([{ id, type: "remove" }]);
-  };
+		setStartSliceRef(parseInt(event.target.value))
+	}
+	const endTextHandle = event => {
+		if (event.target.value === NaN) {
+			setEndSliceRef(-1)
+			prevESlice.current = -1
+		}
+		setEndSliceRef(parseInt(event.target.value))
+	}
+	const handleDelete = () => {
+		store.getState().onNodesChange([{ id, type: 'remove' }])
+	}
 
-  useEffect(() => {
-    prevSSlice.current = startSliceRef;
-    prevESlice.current = endSliceRef;
+	useEffect(() => {
+		prevSSlice.current = startSliceRef
+		prevESlice.current = endSliceRef
+		// checking if the user has created a valid edge between two nodes
+		const edge = Object.values(store.getState().edges).find(
+			item => item.target === id
+		)
+		const index = edge !== undefined ? edge.source : undefined
 
-    if (
-      Object.values(store.getState().edges).find((item) => item.target === id)
-    ) {
-      if (
-        Object.values(store.getState().edges).find(
-          (item) => item.target === id
-        )["source"]
-      ) {
-        const index = Object.values(store.getState().edges).find(
-          (item) => item.target === id
-        )["source"];
-
-        let file = {
-          data: store
-            .getState()
-            .fileMap[index].data.slice(prevSSlice.current, prevESlice.current),
-          meta: store.getState().fileMap[index].meta,
-        };
-        store.getState().storeFile(id, file);
-      }
-    }
-
-    // store.getState().storeFile(id, fileData)
-  }, [startSliceRef, endSliceRef, selected]);
+		// if the user has created a valid edge, then we update the fileMap
+		if (index !== undefined) {
+			const file = {
+				data: store
+					.getState()
+					.fileMap[index].data.slice(prevSSlice.current, prevESlice.current),
+				meta: store.getState().fileMap[index].meta,
+			}
+			store.getState().storeFile(id, file)
+		}
+	}, [startSliceRef, endSliceRef, id])
 
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">

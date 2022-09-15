@@ -4,14 +4,17 @@ import { Card, CardActionArea, Stack, Typography } from '@mui/material'
 import { useId } from 'react'
 import store from '../../../store/store.ts'
 import create from 'zustand'
+import { v4 as uuidv4 } from 'uuid'
 
 function ToolItem({ index, title, desc, input, output, group, type }) {
 	const { setNodes, handleModal } = create(store)()
-	const id = useId()
+
 	const onSelectItem = (e, nodeGroup) => {
 		if (typeof type === 'undefined' || !type) {
 			return
 		}
+
+		const id = uuidv4()
 		const newNode = {
 			id,
 			type,
@@ -19,6 +22,7 @@ function ToolItem({ index, title, desc, input, output, group, type }) {
 			data: { label: title, group: nodeGroup },
 		}
 		setNodes(newNode)
+
 		handleModal(false)
 	}
 

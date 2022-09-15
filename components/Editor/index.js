@@ -1,9 +1,5 @@
-import React, { useState, useRef, useCallback, memo } from 'react'
-import ReactFlow, {
-	ReactFlowProvider,
-	Controls,
-	Background,
-} from 'react-flow-renderer'
+import React, { useState, useRef, useCallback, memo, useMemo } from 'react'
+import ReactFlow, { Controls, Background } from 'react-flow-renderer'
 import store from '../../store/store.ts'
 import create from 'zustand'
 import ToolModal from '../Modal'
@@ -25,8 +21,6 @@ const Flow = () => {
 		handleModal,
 		modalOpen,
 	} = useBoundStore()
-	const reactFlowWrapper = useRef(null)
-	const [reactFlowInstance, setReactFlowInstance] = useState(null)
 
 	const handleContextMenu = e => {
 		e.preventDefault()
@@ -39,48 +33,43 @@ const Flow = () => {
 	}, [])
 
 	return (
-		<ReactFlowProvider>
-			<div className='reactflow-wrapper' ref={reactFlowWrapper}>
-				<ReactFlow
-					nodeTypes={nodeTypes}
-					nodes={nodes}
-					edges={edges}
-					deleteKeyCode={['Backspace', 'Delete']}
-					onNodesDelete={onNodesDelete}
-					onNodesChange={onNodesChange}
-					onEdgesChange={onEdgesChange}
-					onConnect={onConnect}
-					onInit={setReactFlowInstance}
-					onDragOver={onDragOver}
-					onNodeClick={onNodeClick}
-					onPaneClick={onPaneClick}
-					connectionLineComponent={ConnectionLine}
-					fitView
-					defaultEdgeOptions={{
-						animated: true,
+		<ReactFlow
+			nodeTypes={useMemo(() => nodeTypes, [nodeTypes])}
+			nodes={useMemo(() => nodes, [nodes])}
+			edges={useMemo(() => edges, [edges])}
+			deleteKeyCode={['Backspace', 'Delete']}
+			onNodesDelete={onNodesDelete}
+			onNodesChange={useMemo(() => onNodesChange, [onNodesChange])}
+			onEdgesChange={useMemo(() => onEdgesChange, [onEdgesChange])}
+			onConnect={onConnect}
+			onDragOver={onDragOver}
+			onNodeClick={onNodeClick}
+			onPaneClick={onPaneClick}
+			connectionLineComponent={ConnectionLine}
+			fitView
+			defaultEdgeOptions={{
+				animated: true,
 
-						style: {
-							strokeWidth: 2,
-							strokeOpacity: 0.5,
-							cursor: 'pointer',
-						},
+				style: {
+					strokeWidth: 2,
+					strokeOpacity: 0.5,
+					cursor: 'pointer',
+				},
+			}}
+			onPaneContextMenu={e => handleContextMenu(e)}>
+			<Controls />
+			<ToolModal open={modalOpen} handleModal={handleModal} />
+			<Box
+				sx={{
+					backgroundColor: 'primary.main',
+				}}>
+				<Background
+					style={{
+						backgroundColor: 'inherit',
 					}}
-					onPaneContextMenu={e => handleContextMenu(e)}>
-					<Controls />
-					<ToolModal open={modalOpen} handleModal={handleModal} />
-					<Box
-						sx={{
-							backgroundColor: 'primary.main',
-						}}>
-						<Background
-							style={{
-								backgroundColor: 'inherit',
-							}}
-						/>
-					</Box>
-				</ReactFlow>
-			</div>
-		</ReactFlowProvider>
+				/>
+			</Box>
+		</ReactFlow>
 	)
 }
 
