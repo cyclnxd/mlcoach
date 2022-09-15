@@ -23,23 +23,19 @@ function DropColumnNode({ id, selected }) {
     selectHolder.delete(item);
   };
   useEffect(() => {
-    if (
-      Object.values(store.getState().edges).find((item) => item.target === id)
-    ) {
-      if (
-        Object.values(store.getState().edges).find(
-          (item) => item.target === id
-        )["source"]
-      ) {
-        setSourceState(1);
-        const index = Object.values(store.getState().edges).find(
-          (item) => item.target === id
-        )["source"];
-        let file = {
-          data: structuredClone(store.getState().fileMap[index].data),
-          meta: structuredClone(store.getState().fileMap[index].meta),
-        };
+    const edge = Object.values(store.getState().edges).find(
+        item => item.target === id
+    )
+    const index = edge !== undefined ? edge.source : undefined
 
+    // if the user has created a valid edge, then we update the fileMap
+    if (index !== undefined) {
+        const file = {
+            data: structuredClone(store
+                .getState()
+                .fileMap[index].data),
+            meta: structuredClone(store.getState().fileMap[index].meta),
+        }
         setKeys(Object.keys(file.data[0]));
         for (var row in file.data) {
           for (const column of selectHolder) {
@@ -47,9 +43,8 @@ function DropColumnNode({ id, selected }) {
           }
         }
         store.getState().storeFile(id, file);
-      }
+        store.getState().storeFile(id, file)
     }
-
     // store.getState().storeFile(id, fileData)
   }, [sourceState, selected, selectHolder]);
 

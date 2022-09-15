@@ -51,7 +51,7 @@ function SliceNode({ id, selected }) {
 			}
 			store.getState().storeFile(id, file)
 		}
-	}, [startSliceRef, endSliceRef, id])
+	}, [startSliceRef, endSliceRef, id,selected])
 
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">
