@@ -13,7 +13,7 @@ const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
 
 function FileUpload({ id, selected }) {
-	const [nodeState, setNodeState] = useState(true)
+	
 	const [fileMetaData, setFileMetaData] = useState(null)
 	const [fileData, setFileData] = useState()
 	const inputRef = useRef()

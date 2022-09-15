@@ -24,8 +24,6 @@ function Footer() {
 		)
 	})
 	useEffect(() => {
-		//footer da tıklanan node boşsa ilk dosya yüklenen nodun datalarını gösterdiği için bunu ekledim
-
 		//satır ve sutünlar okunuyor
 		if (fileMap !== undefined) {
 			//max satır sayısını belirliyor

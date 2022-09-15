@@ -9,20 +9,36 @@ import FormControl from "@mui/material/FormControl";
 import Chip from "@mui/material/Chip";
 
 function DropColumnNode({ id, selected }) {
-  const [sourceState, setSourceState] = useState(0);
-  const [keys, setKeys] = useState([]);
-  const [selectHolder, setSelectedHolder] = useState(new Set());
-  const chips = [];
+  const [fileMap, setFileMap] = useState()
+  // store the columns of DataFrame
+  const [keys, setKeys] = useState([])
+  // store the selected unique columns  
+  const [selectHolder, setSelectedHolder] = useState(new Set())
+  // used for show which columns selected to delete
+  const chips = []
+  // used to delete file stored in global storage when a node is deleted
   const handleDelete = () => {
-    store.getState().onNodesChange([{ id, type: "remove" }]);
+    store.getState().onNodesChange([{ id, type: "remove" }])
   };
+  // takes the selected columns and adds it to end of the Set structure
   const HandleOption = (event) => {
-    setSelectedHolder((item) => item.add(event.target.value));
+    setSelectedHolder((item) => item.add(event.target.value))
   };
+  // deletes the selected column from holder of unique columns
   const handleChipDelete = (item) => () => {
-    selectHolder.delete(item);
+    selectHolder.delete(item)
   };
+
+  store.subscribe(() => {
+		setFileMap(
+			store.getState().fileMap[id]
+				? store.getState().fileMap[id]
+				: undefined
+		)
+	})
+
   useEffect(() => {
+    // checking if the user has created a valid edge between two nodes
     const edge = Object.values(store.getState().edges).find(
         item => item.target === id
     )
@@ -30,23 +46,26 @@ function DropColumnNode({ id, selected }) {
 
     // if the user has created a valid edge, then we update the fileMap
     if (index !== undefined) {
+      // structuredClone() used for deep cloning of file source 
         const file = {
             data: structuredClone(store
                 .getState()
                 .fileMap[index].data),
             meta: structuredClone(store.getState().fileMap[index].meta),
         }
+        // store the all column to the keys state
         setKeys(Object.keys(file.data[0]));
+        // deletes the selected columns from the file
         for (var row in file.data) {
           for (const column of selectHolder) {
             delete file.data[row][column];
           }
         }
+        // sends all deleted columns to the global storage
         store.getState().storeFile(id, file);
-        store.getState().storeFile(id, file)
     }
     // store.getState().storeFile(id, fileData)
-  }, [sourceState, selected, selectHolder]);
+  }, [fileMap,selected, selectHolder]);
 
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">

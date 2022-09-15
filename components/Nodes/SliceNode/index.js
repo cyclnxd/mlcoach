@@ -1,57 +1,65 @@
-import React, { useState, useRef, useEffect, memo } from 'react'
-import Box from '@mui/material/Box'
-import { TextField } from '@mui/material'
-import Grid from '@mui/material/Grid'
-import store from '../../../store/store.ts'
-import { Handle } from 'react-flow-renderer'
-import { Card, Stack } from '@mui/material'
-import HeaderLayout from '../HeaderLayout'
+import React, { useState, useRef, useEffect, memo } from "react";
+import Box from "@mui/material/Box";
+import { TextField } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import store from "../../../store/store.ts";
+import { Handle } from "react-flow-renderer";
+import { Card, Stack } from "@mui/material";
+import HeaderLayout from "../HeaderLayout";
 
 function SliceNode({ id, selected }) {
-	const [startSliceRef, setStartSliceRef] = useState(0)
-	const [endSliceRef, setEndSliceRef] = useState(-1)
-	const prevSSlice = useRef(startSliceRef)
-	const prevESlice = useRef(endSliceRef)
+  //holding slicing index values
+  const [startSliceRef, setStartSliceRef] = useState(0);
+  const [endSliceRef, setEndSliceRef] = useState(-1);
+  //used for getting previous selected index
+  const prevSSlice = useRef(startSliceRef);
+  const prevESlice = useRef(endSliceRef);
+  // takes an event from text field and updates the startSliceRef state 
+  // if event target value is NaN then saves all element from source
+  const startTextHandle = (event) => {
+    event.target.value === NaN
+      ? () => {
+          setStartSliceRef(0);
+          prevSSlice.current = 0;
+        }
+      : setStartSliceRef(parseInt(event.target.value));
+  };
+  // takes an event from text field and updates the endSliceRef state 
+  // if event target value is NaN then saves all element from source
+  const endTextHandle = (event) => {
+    event.target.value === NaN
+      ? () => {
+          setEndSliceRef(-1);
+          prevESlice.current = -1;
+        }
+      : setEndSliceRef(parseInt(event.target.value));
+  };
+  // used to delete file stored in global storage when a node is deleted
+  const handleDelete = () => {
+    store.getState().onNodesChange([{ id, type: "remove" }]);
+  };
 
-	const startTextHandle = event => {
-		if (event.target.value === NaN) {
-			setStartSliceRef(0)
-			prevSSlice.current = 0
-		}
+  useEffect(() => {
+    // get previous value of SliceRefs
+    prevSSlice.current = startSliceRef;
+    prevESlice.current = endSliceRef;
+    // checking if the user has created a valid edge between two nodes
+    const edge = Object.values(store.getState().edges).find(
+      (item) => item.target === id
+    );
+    const index = edge !== undefined ? edge.source : undefined;
 
-		setStartSliceRef(parseInt(event.target.value))
-	}
-	const endTextHandle = event => {
-		if (event.target.value === NaN) {
-			setEndSliceRef(-1)
-			prevESlice.current = -1
-		}
-		setEndSliceRef(parseInt(event.target.value))
-	}
-	const handleDelete = () => {
-		store.getState().onNodesChange([{ id, type: 'remove' }])
-	}
-
-	useEffect(() => {
-		prevSSlice.current = startSliceRef
-		prevESlice.current = endSliceRef
-		// checking if the user has created a valid edge between two nodes
-		const edge = Object.values(store.getState().edges).find(
-			item => item.target === id
-		)
-		const index = edge !== undefined ? edge.source : undefined
-
-		// if the user has created a valid edge, then we update the fileMap
-		if (index !== undefined) {
-			const file = {
-				data: store
-					.getState()
-					.fileMap[index].data.slice(prevSSlice.current, prevESlice.current),
-				meta: store.getState().fileMap[index].meta,
-			}
-			store.getState().storeFile(id, file)
-		}
-	}, [startSliceRef, endSliceRef, id,selected])
+    // if the user has created a valid edge, then we update the fileMap
+    if (index !== undefined) {
+      const file = {
+        data: store
+          .getState()
+          .fileMap[index].data.slice(prevSSlice.current, prevESlice.current),
+        meta: store.getState().fileMap[index].meta,
+      };
+      store.getState().storeFile(id, file);
+    }
+  }, [startSliceRef, endSliceRef, id, selected]);
 
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">
