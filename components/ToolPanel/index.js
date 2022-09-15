@@ -50,10 +50,10 @@ const nodeTypes = [
 		output: 'DataFrame',
 	},
 	{
-		title: 'Filter',
-		type: 'filterNode',
+		title: 'Transpose',
+		type: 'transposeNode',
 		group: 'transform',
-		desc: 'Grouping and filtering data on a given column name.',
+		desc: 'Transposing data',
 		input: 'DataFrame',
 		output: 'DataFrame',
 	},
