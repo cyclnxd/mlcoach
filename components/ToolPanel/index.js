@@ -50,10 +50,10 @@ const nodeTypes = [
 		output: 'DataFrame',
 	},
 	{
-		title: 'Transpose',
-		type: 'transposeNode',
+		title: 'Drop Column',
+		type: 'dropColNode',
 		group: 'transform',
-		desc: 'Transposing data',
+		desc: 'Dropping column of dataframe',
 		input: 'DataFrame',
 		output: 'DataFrame',
 	},

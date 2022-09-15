@@ -16,12 +16,12 @@ import initialNodes from './nodes'
 import FileUpload from '../components/Nodes/FileUpload'
 import FilterNode from '../components/Nodes/FilterNode'
 import SliceNode from '../components/Nodes/SliceNode'
-import TransposeNode from '../components/Nodes/TransposeNode'
+import DropColumn from '../components/Nodes/DropColumnNode'
 const nodeTypes = {
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
 	sliceNode: SliceNode,
-	transposeNode:TransposeNode,
+	dropColNode:DropColumn,
 }
 
 type RFState = {
