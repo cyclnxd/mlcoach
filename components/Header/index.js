@@ -1,4 +1,3 @@
-import * as React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -11,13 +10,14 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
+import { memo, useState } from 'react'
 
 const pages = ['Editor']
 const settings = ['Logout']
 
-const Header = () => {
-	const [anchorElNav, setAnchorElNav] = React.useState(null)
-	const [anchorElUser, setAnchorElUser] = React.useState(null)
+const Header = ({ height }) => {
+	const [anchorElNav, setAnchorElNav] = useState(null)
+	const [anchorElUser, setAnchorElUser] = useState(null)
 
 	const handleOpenNavMenu = event => {
 		setAnchorElNav(event.currentTarget)
@@ -41,14 +41,14 @@ const Header = () => {
 			position='static'
 			sx={{
 				borderBottom: '1px solid #413f66',
-				height: '55px',
+				height,
 			}}>
 			<Container maxWidth='xl'>
 				<Toolbar
 					disableGutters
 					variant='dense'
 					sx={{
-						height: '55px',
+						height,
 					}}>
 					<Typography
 						variant='h6'
@@ -166,4 +166,4 @@ const Header = () => {
 		</AppBar>
 	)
 }
-export default Header
+export default memo(Header)

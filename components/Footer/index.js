@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, memo } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import store from '../../store/store.ts'
 import { Stack } from '@mui/system'
@@ -146,4 +146,4 @@ function Footer() {
 	)
 }
 
-export { Footer }
+export default memo(Footer)

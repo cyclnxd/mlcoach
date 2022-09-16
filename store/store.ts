@@ -13,7 +13,6 @@ import {
 	applyNodeChanges,
 	applyEdgeChanges,
 } from 'react-flow-renderer'
-import initialNodes from './nodes'
 import FileUpload from '../components/Nodes/FileUpload'
 import FilterNode from '../components/Nodes/FilterNode'
 import SliceNode from '../components/Nodes/SliceNode'
@@ -49,7 +48,7 @@ type RFState = {
 
 const store = create<RFState>((set, get) => ({
 	modalOpen: false,
-	nodes: initialNodes,
+	nodes: [],
 	edges: [],
 	nodeTypes: nodeTypes,
 	globalNodeStates: [],
@@ -98,22 +97,20 @@ const store = create<RFState>((set, get) => ({
 		})
 	},
 	storeFile: (nodeId, file: JSON) => {
-		let currentNodeEdges = get().edges.find(edge => edge.source === nodeId)
-		if (currentNodeEdges !== undefined) {
-			let sourceNode = get().nodes.find(
-				node => node.id === currentNodeEdges!.source
-			)
-			let targetNode = get().nodes.find(
-				node => node.id === currentNodeEdges!.target
-			)
-			get().setNodes({
-				...sourceNode,
-				data: { ...sourceNode!.data, current: uuidv4() },
-			} as Node)
-			get().setNodes({
-				...targetNode,
-				data: { ...targetNode!.data, current: uuidv4() },
-			} as Node)
+		let currentNodeEdges = get().edges.filter(edge => edge.source === nodeId)
+		if (currentNodeEdges) {
+			currentNodeEdges.forEach(element => {
+				let sourceNode = get().nodes.find(node => node.id === element!.source)
+				let targetNode = get().nodes.find(node => node.id === element!.target)
+				get().setNodes({
+					...sourceNode,
+					data: { ...sourceNode!.data, current: uuidv4() },
+				} as Node)
+				get().setNodes({
+					...targetNode,
+					data: { ...targetNode!.data, current: uuidv4() },
+				} as Node)
+			})
 		}
 		set({
 			fileMap: { ...get().fileMap, [nodeId]: file },
@@ -130,12 +127,13 @@ const store = create<RFState>((set, get) => ({
 			...targetNode,
 			data: { ...targetNode!.data, current: uuidv4() },
 		} as Node)
+
+		get().onNodesDelete([targetNode])
 	},
 	onNodesDelete: changes => {
-		let newFileMap = get().fileMap
 		changes.forEach(change => {
-			if (change.id in newFileMap) {
-				delete newFileMap[change.id]
+			if (change.id in get().fileMap) {
+				delete get().fileMap[change.id]
 			}
 		})
 	},

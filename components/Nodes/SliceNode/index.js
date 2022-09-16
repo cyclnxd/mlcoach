@@ -61,7 +61,7 @@ function SliceNode({ id, selected, data }) {
 				setError('data source has no data')
 			}
 		} else {
-			setError('connect a data source to select columns')
+			setError('connect a data source to slice data')
 		}
 	}, [startSliceRef, endSliceRef, id, selected, data])
 

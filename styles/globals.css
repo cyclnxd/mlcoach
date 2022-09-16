@@ -6,6 +6,7 @@
 
 html,
 body {
+	background-color: #222138;
 	height: 100vh;
 	width: 100vw;
 	padding: 0;
@@ -31,8 +32,8 @@ body {
 	flex-grow: 1;
 	flex-shrink: 0;
 	resize: vertical;
-	max-height: 80vh;
 	min-height: 55vh;
+	max-height: 92vh;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
