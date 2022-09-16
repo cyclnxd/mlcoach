@@ -88,15 +88,7 @@ export default function Editor() {
 						justifyContent: 'center',
 						alignItems: 'center',
 					}}>
-					{isRender ? (
-						<Footer onDelete={handleDelete} />
-					) : (
-						<div
-							style={{
-								display: 'none',
-							}}
-						/>
-					)}
+					<Footer onDelete={handleDelete} isDisplay={isRender} />
 				</div>
 			</GridLayout>
 		</>

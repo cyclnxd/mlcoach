@@ -53,9 +53,6 @@ body {
 	position: relative;
 	transition: none !important;
 }
-.react-grid-item {
-	transition-property: left, top;
-}
 .react-grid-item.cssTransforms {
 	transition-property: transform;
 }

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, memo } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import store from '../../store/store.ts'
 import StormIcon from '@mui/icons-material/Storm'
-function Footer({ onDelete }) {
+function Footer({ onDelete, isDisplay }) {
 	//store da seçilen node tutmak için
 	const [selectedNode, setSelectedNode] = useState()
 	const [fileMap, setFileMap] = useState()
@@ -67,6 +67,7 @@ function Footer({ onDelete }) {
 				width: '100%',
 				border: '1px solid',
 				borderColor: 'primary.light',
+				display: isDisplay ? 'block' : 'none',
 			}}>
 			<Stack
 				sx={{

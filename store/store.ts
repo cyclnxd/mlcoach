@@ -36,6 +36,7 @@ type RFState = {
 	onEdgesChange: OnEdgesChange
 	onEdgesDelete: any
 	onConnect: OnConnect
+	changeNodeState: any
 	onNodesDelete: any
 	onPaneClick: any
 	onNodeClick: any
@@ -89,7 +90,7 @@ const store = create<RFState>((set, get) => ({
 		} as Node)
 		get().setNodes({
 			...targetNode,
-			data: { ...targetNode!.data, current: uuidv4() },
+			data: { ...targetNode?.data, current: uuidv4() },
 		} as Node)
 
 		set({
@@ -99,35 +100,14 @@ const store = create<RFState>((set, get) => ({
 	storeFile: (nodeId, file: JSON) => {
 		let currentNodeEdges = get().edges.filter(edge => edge.source === nodeId)
 		if (currentNodeEdges) {
-			currentNodeEdges.forEach(element => {
-				let sourceNode = get().nodes.find(node => node.id === element!.source)
-				let targetNode = get().nodes.find(node => node.id === element!.target)
-				get().setNodes({
-					...sourceNode,
-					data: { ...sourceNode!.data, current: uuidv4() },
-				} as Node)
-				get().setNodes({
-					...targetNode,
-					data: { ...targetNode!.data, current: uuidv4() },
-				} as Node)
-			})
+			get().changeNodeState(currentNodeEdges)
 		}
 		set({
 			fileMap: { ...get().fileMap, [nodeId]: file },
 		})
 	},
 	onEdgesDelete: (edges: Edge[]) => {
-		let sourceNode = get().nodes.find(node => node.id === edges[0].source)
-		let targetNode = get().nodes.find(node => node.id === edges[0].target)
-		get().setNodes({
-			...sourceNode,
-			data: { ...sourceNode!.data, current: uuidv4() },
-		} as Node)
-		get().setNodes({
-			...targetNode,
-			data: { ...targetNode!.data, current: uuidv4() },
-		} as Node)
-
+		const [sourceNode, targetNode] = get().changeNodeState(edges)
 		get().onNodesDelete([targetNode])
 	},
 	onNodesDelete: changes => {
@@ -141,6 +121,23 @@ const store = create<RFState>((set, get) => ({
 		set({
 			modalOpen: state,
 		})
+	},
+	changeNodeState: edges => {
+		var sourceNode
+		var targetNode
+		edges.forEach(edge => {
+			let sourceNode = get().nodes.find(node => node.id === edge.source)
+			let targetNode = get().nodes.find(node => node.id === edge.target)
+			get().setNodes({
+				...sourceNode,
+				data: { ...sourceNode!.data, current: uuidv4() },
+			} as Node)
+			get().setNodes({
+				...targetNode,
+				data: { ...targetNode?.data, current: uuidv4() },
+			} as Node)
+		})
+		return [sourceNode, targetNode]
 	},
 }))
 

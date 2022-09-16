@@ -41,14 +41,14 @@ const Header = ({ height = 75 }) => {
 			position='static'
 			sx={{
 				borderBottom: '1px solid #413f66',
-				height,
+				height: height || '75px',
 			}}>
 			<Container maxWidth='xl'>
 				<Toolbar
 					disableGutters
 					variant='dense'
 					sx={{
-						height,
+						height: height || '75px',
 					}}>
 					<Typography
 						variant='h6'
