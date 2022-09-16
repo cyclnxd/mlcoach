@@ -2,9 +2,10 @@ import Head from 'next/head'
 import Flow from '../components/Editor'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { Stack } from '@mui/material'
+import { CircularProgress, Stack, Zoom } from '@mui/material'
 import GridLayout from 'react-grid-layout'
 import { useEffect, useState } from 'react'
+import { Box } from '@mui/system'
 const layout = [
 	{ i: 'a', x: 0, y: 0, w: 12, h: 1, static: true },
 	{ i: 'b', x: 0, y: 1, w: 12, h: 8, static: true },
@@ -15,6 +16,12 @@ export default function Editor() {
 		width: undefined,
 		height: undefined,
 	})
+	const [loading, setLoading] = useState(true)
+	const [isRender, setIsRender] = useState(true)
+
+	const handleDelete = () => {
+		setIsRender(!isRender)
+	}
 
 	useEffect(() => {
 		// only execute all the code below in client side
@@ -51,6 +58,11 @@ export default function Editor() {
 				<Footer />
 				
 			</Stack> */}
+			{/* {loading ? (
+				<Box sx={{ display: 'flex' }}>
+					<CircularProgress />
+				</Box>
+			) : ( )}*/}
 			<GridLayout
 				className='layout'
 				layout={layout}
@@ -60,13 +72,15 @@ export default function Editor() {
 				maxRows={windowSize.height}
 				rowHeight={windowSize.height / 12}
 				width={windowSize.width}
-				margin={[0, 0]}>
+				margin={[0, 0]}
+				useCSSTransforms={true}>
 				<div key='a'>
 					<Header height={windowSize.height / 12} />
 				</div>
 				<div key='b'>
-					<Flow />
+					<Flow handleDelete={handleDelete} />
 				</div>
+
 				<div
 					key='c'
 					style={{
@@ -74,7 +88,15 @@ export default function Editor() {
 						justifyContent: 'center',
 						alignItems: 'center',
 					}}>
-					<Footer />
+					{isRender ? (
+						<Footer onDelete={handleDelete} />
+					) : (
+						<div
+							style={{
+								display: 'none',
+							}}
+						/>
+					)}
 				</div>
 			</GridLayout>
 		</>

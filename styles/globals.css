@@ -48,3 +48,25 @@ body {
 .react-flow__attribution {
 	display: none;
 }
+
+.react-grid-layout {
+	position: relative;
+	transition: none !important;
+}
+.react-grid-item {
+	transition-property: left, top;
+}
+.react-grid-item.cssTransforms {
+	transition-property: transform;
+}
+.react-grid-item.react-grid-placeholder {
+	background: #8682dd !important;
+	opacity: 0.2 !important;
+	transition: transform 200ms ease !important;
+	z-index: 2;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}

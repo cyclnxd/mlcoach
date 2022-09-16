@@ -1,9 +1,9 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Stack } from '@mui/material'
 import React, { useState, useEffect, useRef, memo } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import store from '../../store/store.ts'
-import { Stack } from '@mui/system'
-function Footer() {
+import StormIcon from '@mui/icons-material/Storm'
+function Footer({ onDelete }) {
 	//store da seçilen node tutmak için
 	const [selectedNode, setSelectedNode] = useState()
 	const [fileMap, setFileMap] = useState()
@@ -77,18 +77,37 @@ function Footer() {
 					sx={{
 						borderBottom: '1px solid',
 						borderColor: 'primary.light',
+						fontWeight: 'bold',
+						letterSpacing: 1.5,
+						color: 'primary.contrastText',
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent: 'space-between',
 					}}>
 					<Typography
 						fontSize={13}
 						component='div'
+						color='inherit'
 						sx={{
-							color: 'primary.contrastText',
 							m: 1,
-							fontWeight: 'bold',
-							letterSpacing: 1.5,
 						}}>
 						OUTPUT
 					</Typography>
+					<StormIcon
+						onClick={onDelete}
+						fontSize='inherit'
+						color='inherit'
+						sx={{
+							m: 1,
+							cursor: 'pointer',
+							opacity: 0.5,
+							'&:hover': {
+								color: 'primary.darkText',
+								opacity: 1,
+							},
+						}}
+					/>
 				</Box>
 				{store.getState().clickedNode !== -1 && prevRows.current.length > 0 ? (
 					<DataGrid

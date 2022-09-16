@@ -4,9 +4,10 @@ import store from '../../store/store.ts'
 import create from 'zustand'
 import ToolModal from '../Modal'
 import ConnectionLine from '../ConnectionLine'
-import { Box } from '@mui/system'
+import { Box, Stack } from '@mui/system'
+import { Button } from '@mui/material'
 
-const Flow = () => {
+const Flow = ({ handleDelete }) => {
 	const useBoundStore = create(store)
 	const {
 		nodes,
@@ -59,6 +60,37 @@ const Flow = () => {
 				},
 			}}
 			onPaneContextMenu={e => handleContextMenu(e)}>
+			<Stack
+				direction='row'
+				spacing={2}
+				sx={{
+					position: 'absolute',
+					top: '10px',
+					left: '10px',
+					zIndex: 1000,
+					fontSize: '0.8rem',
+				}}>
+				<Button
+					variant='contained'
+					sx={{
+						backgroundColor: 'primary.darkLight',
+						color: 'primary.contrastText',
+					}}
+					size='small'
+					onClick={handleDelete}>
+					Output Panel
+				</Button>
+				<Button
+					variant='contained'
+					sx={{
+						backgroundColor: 'primary.darkLight',
+						color: 'primary.contrastText',
+					}}
+					size='small'
+					onClick={() => handleModal(true)}>
+					ToolBox
+				</Button>
+			</Stack>
 			<Controls />
 			<ToolModal open={modalOpen} handleModal={handleModal} />
 			<Box
