@@ -1,5 +1,5 @@
 import create from 'zustand/vanilla'
-import { useMemo } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import {
 	Connection,
 	Edge,
@@ -22,7 +22,7 @@ const nodeTypes = {
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
 	sliceNode: SliceNode,
-	dropColNode:DropColumn,
+	dropColNode: DropColumn,
 }
 
 type RFState = {
@@ -32,11 +32,10 @@ type RFState = {
 	globalNodeStates: any[]
 	nodeTypes: any
 	fileMap: {}
-	connectionSource: any
-	connectionTarget: any
 	setNodes: (node: Node) => void
 	onNodesChange: OnNodesChange
 	onEdgesChange: OnEdgesChange
+	onEdgesDelete: any
 	onConnect: OnConnect
 	onNodesDelete: any
 	onPaneClick: any
@@ -55,16 +54,14 @@ const store = create<RFState>((set, get) => ({
 	nodeTypes: nodeTypes,
 	globalNodeStates: [],
 	fileMap: {},
-	connectionSource: '-1',
-	connectionTarget: '-1',
 	clickedNode: -1,
-	onPaneClick: (event: React.MouseEvent) => {
+	onPaneClick: (_: any) => {
 		set({
 			//panele tıkladığında clicked node -1 yapıyor.
 			clickedNode: -1,
 		})
 	},
-	onNodeClick: (event: React.MouseEvent, node: Node) => {
+	onNodeClick: (_: any, node: Node) => {
 		set({
 			clickedNode: node.id,
 		})
@@ -85,29 +82,62 @@ const store = create<RFState>((set, get) => ({
 		})
 	},
 	onConnect: (connection: Connection) => {
+		let sourceNode = get().nodes.find(node => node.id === connection.source)
+		let targetNode = get().nodes.find(node => node.id === connection.target)
+		get().setNodes({
+			...sourceNode,
+			data: { ...sourceNode!.data, current: uuidv4() },
+		} as Node)
+		get().setNodes({
+			...targetNode,
+			data: { ...targetNode!.data, current: uuidv4() },
+		} as Node)
+
 		set({
 			edges: addEdge(connection, get().edges),
-			connectionSource: connection.source,
-			connectionTarget: connection.target,
 		})
 	},
 	storeFile: (nodeId, file: JSON) => {
+		let currentNodeEdges = get().edges.find(edge => edge.source === nodeId)
+		if (currentNodeEdges !== undefined) {
+			let sourceNode = get().nodes.find(
+				node => node.id === currentNodeEdges!.source
+			)
+			let targetNode = get().nodes.find(
+				node => node.id === currentNodeEdges!.target
+			)
+			get().setNodes({
+				...sourceNode,
+				data: { ...sourceNode!.data, current: uuidv4() },
+			} as Node)
+			get().setNodes({
+				...targetNode,
+				data: { ...targetNode!.data, current: uuidv4() },
+			} as Node)
+		}
 		set({
 			fileMap: { ...get().fileMap, [nodeId]: file },
 		})
 	},
+	onEdgesDelete: (edges: Edge[]) => {
+		let sourceNode = get().nodes.find(node => node.id === edges[0].source)
+		let targetNode = get().nodes.find(node => node.id === edges[0].target)
+		get().setNodes({
+			...sourceNode,
+			data: { ...sourceNode!.data, current: uuidv4() },
+		} as Node)
+		get().setNodes({
+			...targetNode,
+			data: { ...targetNode!.data, current: uuidv4() },
+		} as Node)
+	},
 	onNodesDelete: changes => {
-		if (changes.length > 0) {
-			let newFileMap = get().fileMap
-			changes.forEach(change => {
-				if (change.id in newFileMap) {
-					delete newFileMap[change.id]
-				}
-			})
-			set({
-				fileMap: newFileMap,
-			})
-		}
+		let newFileMap = get().fileMap
+		changes.forEach(change => {
+			if (change.id in newFileMap) {
+				delete newFileMap[change.id]
+			}
+		})
 	},
 	handleModal: state => {
 		set({

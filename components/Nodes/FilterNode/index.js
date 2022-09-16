@@ -12,10 +12,6 @@ function FilterNode({ id, selected }) {
 	const [fileData, setFileData] = useState()
 	const inputRef = useRef()
 
-	const handleDelete = () => {
-		store.getState().onNodesChange([{ id: id, type: 'remove' }])
-	}
-
 	useEffect(() => {
 		store.getState().storeFile(id, fileData)
 	}, [fileData, id])
@@ -56,7 +52,7 @@ function FilterNode({ id, selected }) {
 					borderColor: `${selected ? 'primary.light' : 'primary.darkLight'}`,
 				}}>
 				<Stack spacing={0}>
-					<HeaderLayout title='Filter' onDelete={handleDelete} />
+					<HeaderLayout title='Filter' id={id} />
 					<Box
 						sx={{
 							display: 'flex',

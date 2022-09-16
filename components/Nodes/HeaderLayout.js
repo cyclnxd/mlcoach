@@ -2,8 +2,12 @@ import React from 'react'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import StormIcon from '@mui/icons-material/Storm'
 import { Box, Typography } from '@mui/material'
-
-function HeaderLayout({ title, onDelete }) {
+import store from '../../store/store.ts'
+function HeaderLayout({ title, id }) {
+	const handleDelete = () => {
+		store.getState().onNodesChange([{ id, type: 'remove' }])
+		store.getState().onNodesDelete([{ id, type: 'remove' }])
+	}
 	return (
 		<Box
 			sx={{
@@ -27,7 +31,7 @@ function HeaderLayout({ title, onDelete }) {
 				{title}
 			</Typography>
 			<StormIcon
-				onClick={onDelete}
+				onClick={handleDelete}
 				className='nodrag'
 				fontSize='inherit'
 				color='inherit'

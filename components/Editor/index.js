@@ -18,6 +18,7 @@ const Flow = () => {
 		onNodeClick,
 		onPaneClick,
 		onNodesDelete,
+		onEdgesDelete,
 		handleModal,
 		modalOpen,
 	} = useBoundStore()
@@ -39,6 +40,7 @@ const Flow = () => {
 			edges={useMemo(() => edges, [edges])}
 			deleteKeyCode={['Backspace', 'Delete']}
 			onNodesDelete={onNodesDelete}
+			onEdgesDelete={onEdgesDelete}
 			onNodesChange={useMemo(() => onNodesChange, [onNodesChange])}
 			onEdgesChange={useMemo(() => onEdgesChange, [onEdgesChange])}
 			onConnect={onConnect}

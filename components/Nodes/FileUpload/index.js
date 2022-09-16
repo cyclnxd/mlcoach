@@ -13,14 +13,9 @@ const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
 
 function FileUpload({ id, selected }) {
-	
 	const [fileMetaData, setFileMetaData] = useState(null)
 	const [fileData, setFileData] = useState()
 	const inputRef = useRef()
-
-	const handleDelete = () => {
-		store.getState().onNodesChange([{ id: id, type: 'remove' }])
-	}
 
 	const readFile = newFile => {
 		setFileMetaData({
@@ -51,7 +46,7 @@ function FileUpload({ id, selected }) {
 					borderColor: `${selected ? 'primary.light' : 'primary.darkLight'}`,
 				}}>
 				<Stack spacing={0}>
-					<HeaderLayout title='File' onDelete={handleDelete} />
+					<HeaderLayout title='File' id={id} />
 					<Box
 						sx={{
 							display: 'flex',

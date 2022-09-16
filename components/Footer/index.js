@@ -25,7 +25,7 @@ function Footer() {
 	})
 	useEffect(() => {
 		//satır ve sutünlar okunuyor
-		if (fileMap !== undefined) {
+		if (fileMap !== undefined && fileMap !== null) {
 			//max satır sayısını belirliyor
 			let numRows
 			numRows = fileMap.data.length
