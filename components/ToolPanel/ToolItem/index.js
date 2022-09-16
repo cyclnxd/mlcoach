@@ -19,7 +19,7 @@ function ToolItem({ index, title, desc, input, output, group, type }) {
 			id,
 			type,
 			position: { x: 200, y: 100 },
-			data: { label: title, group: nodeGroup },
+			data: { label: title, group: nodeGroup, current: '' },
 		}
 		setNodes(newNode)
 
