@@ -15,7 +15,7 @@ import { memo, useState } from 'react'
 const pages = ['Editor']
 const settings = ['Logout']
 
-const Header = ({ height }) => {
+const Header = ({ height = 75 }) => {
 	const [anchorElNav, setAnchorElNav] = useState(null)
 	const [anchorElUser, setAnchorElUser] = useState(null)
 
