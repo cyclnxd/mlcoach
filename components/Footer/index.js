@@ -32,6 +32,7 @@ function Footer({ onDelete, isDisplay }) {
 
 			const newCols = []
 			for (var i = 0; i < fileMap.meta.fields.length; i++) {
+				if(fileMap.meta.fields[i] !== undefined){
 				newCols.push({
 					field: fileMap.meta.fields[i],
 					headerName: fileMap.meta.fields[i],
@@ -40,11 +41,13 @@ function Footer({ onDelete, isDisplay }) {
 					minWidth: 200,
 				})
 			}
+			}
 			const newRows = []
 			for (var j = 1; j < numRows; j++) {
 				const newRow = fileMap.data[j]
 				newRows.push({ ...newRow, id: j })
 			}
+			
 			//kaydediliyor
 			setGridColumns(newCols)
 			setGridRows(newRows)

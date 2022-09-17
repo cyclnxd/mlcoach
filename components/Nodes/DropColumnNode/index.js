@@ -36,13 +36,22 @@ function DropColumnNode({ id, selected, data }) {
 			if (file !== undefined && file?.data.length > 0) {
 				setError('')
 				// store the all column to the keys state
-				setKeys(Object.keys(file.data[0]))
+				setKeys(Object.keys(store.getState().fileMap[sourceId].data[0]))
 				// deletes the selected columns from the file
 				for (var row in file.data) {
 					for (const column of selectedColumns) {
 						delete file.data[row][column]
+						 
 					}
 				}
+				for(var field in file.meta.fields)
+				{ 
+					for(const column of selectedColumns){
+						if(file.meta.fields[field] === column){
+							delete file.meta.fields[field]
+						}
+					}
+				}				
 				store.getState().storeFile(id, file)
 			} else {
 				setKeys([])
