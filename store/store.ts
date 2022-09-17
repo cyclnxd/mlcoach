@@ -106,10 +106,12 @@ const store = create<RFState>((set, get) => ({
 					...sourceNode,
 					data: { ...sourceNode!.data, current: uuidv4() },
 				} as Node)
+				if(targetNode !== undefined){
 				get().setNodes({
 					...targetNode,
 					data: { ...targetNode!.data, current: uuidv4() },
 				} as Node)
+			}
 			})
 		}
 		set({
