@@ -33,6 +33,14 @@ const nodeTypes = [
 		input: 'DataFrame',
 		output: 'DataFrame',
 	},
+	{
+		title: 'Fill with Constant',
+		type: 'fillWithConstantNode',
+		group: 'transform',
+		desc: 'Filling missing values with constant',
+		input: 'DataFrame',
+		output: 'DataFrame',
+	}
 ]
 
 function TabPanel(props) {

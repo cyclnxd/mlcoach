@@ -40,8 +40,7 @@ function DropColumnNode({ id, selected, data }) {
 				// deletes the selected columns from the file
 				for (var row in file.data) {
 					for (const column of selectedColumns) {
-						delete file.data[row][column]
-						 
+						delete file.data[row][column]	 
 					}
 				}
 				for(var field in file.meta.fields)
