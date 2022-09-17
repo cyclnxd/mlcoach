@@ -6,22 +6,6 @@ import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
 import ToolPanel from '../ToolPanel'
 
-const style = {
-	position: 'absolute',
-	top: '50%',
-	left: '50%',
-	transform: 'translate(-50%, -50%)',
-	width: '60%',
-	height: '80%',
-	minWidth: '500px',
-	minHeight: '500px',
-	bgcolor: '#222138',
-	color: 'primary.contrastText',
-	p: 4,
-	outline: 'none',
-	borderRadius: '10px',
-}
-
 export default function ToolModal({ open, handleModal }) {
 	return (
 		<Modal
@@ -35,7 +19,23 @@ export default function ToolModal({ open, handleModal }) {
 				timeout: 500,
 			}}>
 			<Fade in={open}>
-				<Box sx={style}>
+				<Box
+					sx={{
+						position: 'absolute',
+						top: '50%',
+						left: '50%',
+						transform: 'translate(-50%, -50%)',
+						width: '60%',
+						height: '80%',
+						minWidth: '500px',
+						minHeight: '500px',
+						bgcolor: '#222138',
+						color: 'primary.contrastText',
+						p: 4,
+						outline: 'none',
+						borderRadius: '10px',
+						overflow: 'scroll',
+					}}>
 					<ToolPanel />
 				</Box>
 			</Fade>
