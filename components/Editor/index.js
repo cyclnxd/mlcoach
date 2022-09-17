@@ -29,11 +29,6 @@ const Flow = ({ handleDelete }) => {
 		handleModal(true)
 	}
 
-	const onDragOver = useCallback(event => {
-		event.preventDefault()
-		event.dataTransfer.dropEffect = 'move'
-	}, [])
-
 	return (
 		<ReactFlow
 			nodeTypes={useMemo(() => nodeTypes, [nodeTypes])}
@@ -45,14 +40,12 @@ const Flow = ({ handleDelete }) => {
 			onNodesChange={useMemo(() => onNodesChange, [onNodesChange])}
 			onEdgesChange={useMemo(() => onEdgesChange, [onEdgesChange])}
 			onConnect={onConnect}
-			onDragOver={onDragOver}
 			onNodeClick={onNodeClick}
 			onPaneClick={onPaneClick}
 			connectionLineComponent={ConnectionLine}
 			fitView
 			defaultEdgeOptions={{
 				animated: true,
-
 				style: {
 					strokeWidth: 2,
 					strokeOpacity: 0.5,

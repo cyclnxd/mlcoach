@@ -27,14 +27,13 @@ export default function ToolModal({ open, handleModal }) {
 						transform: 'translate(-50%, -50%)',
 						width: '60%',
 						height: '80%',
-						minWidth: '500px',
-						minHeight: '500px',
+						minWidth: '300px',
+						minHeight: '300px',
 						bgcolor: '#222138',
 						color: 'primary.contrastText',
 						p: 4,
 						outline: 'none',
 						borderRadius: '10px',
-						overflow: 'scroll',
 					}}>
 					<ToolPanel />
 				</Box>

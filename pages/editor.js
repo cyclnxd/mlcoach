@@ -6,10 +6,11 @@ import { CircularProgress, Stack, Zoom } from '@mui/material'
 import GridLayout from 'react-grid-layout'
 import { useEffect, useState } from 'react'
 import { Box } from '@mui/system'
+import { useRef } from 'react'
 const layout = [
 	{ i: 'a', x: 0, y: 0, w: 12, h: 1, static: true },
-	{ i: 'b', x: 0, y: 1, w: 12, h: 8, static: true },
-	{ i: 'c', x: 0, y: 9, w: 12, h: 3 },
+	{ i: 'b', x: 0, y: 1, w: 12, h: 12, static: true },
+	{ i: 'c', x: 4, y: 7, w: 7, h: 4, minW: 5, minH: 4 },
 ]
 export default function Editor() {
 	const [windowSize, setWindowSize] = useState({
@@ -24,24 +25,20 @@ export default function Editor() {
 	}
 
 	useEffect(() => {
-		// only execute all the code below in client side
 		if (typeof window !== 'undefined') {
-			// Handler to call on window resize
 			function handleResize() {
-				// Set window width/height to state
 				setWindowSize({
 					width: window.innerWidth,
 					height: window.innerHeight,
 				})
+				setTimeout(() => {
+					setLoading(false)
+				}, 500)
 			}
 
-			// Add event listener
 			window.addEventListener('resize', handleResize)
-
-			// Call handler right away so state gets updated with initial window size
 			handleResize()
 
-			// Remove event listener on cleanup
 			return () => window.removeEventListener('resize', handleResize)
 		}
 	}, [])
@@ -58,39 +55,51 @@ export default function Editor() {
 				<Footer />
 				
 			</Stack> */}
-			{/* {loading ? (
-				<Box sx={{ display: 'flex' }}>
-					<CircularProgress />
-				</Box>
-			) : ( )}*/}
-			<GridLayout
-				className='layout'
-				layout={layout}
-				cols={12}
-				containerPadding={[0, 0]}
-				allowOverlap
-				maxRows={windowSize.height || 1000}
-				rowHeight={windowSize.height / 12 || 1000 / 12}
-				width={windowSize.width || 1000}
-				margin={[0, 0]}
-				useCSSTransforms={true}>
-				<div key='a'>
-					<Header height={windowSize.height / 12} />
-				</div>
-				<div key='b'>
-					<Flow handleDelete={handleDelete} />
-				</div>
-
-				<div
-					key='c'
-					style={{
+			{loading ? (
+				<Box
+					sx={{
+						width: '100vw',
+						height: '100vh',
 						display: 'flex',
-						justifyContent: 'center',
 						alignItems: 'center',
+						justifyContent: 'center',
 					}}>
-					<Footer onDelete={handleDelete} isDisplay={isRender} />
-				</div>
-			</GridLayout>
+					<CircularProgress
+						sx={{
+							color: 'primary.light',
+						}}
+					/>
+				</Box>
+			) : (
+				<GridLayout
+					className='layout'
+					layout={layout}
+					cols={12}
+					containerPadding={[0, 0]}
+					allowOverlap
+					maxRows={windowSize.height}
+					rowHeight={windowSize.height / 12}
+					width={windowSize.width}
+					margin={[0, 0]}
+					useCSSTransforms={true}>
+					<div key='a'>
+						<Header height={windowSize.height / 12} />
+					</div>
+					<div key='b'>
+						<Flow handleDelete={handleDelete} />
+					</div>
+
+					<div
+						key='c'
+						style={{
+							width: '50vw',
+							height: '40vh',
+							visibility: isRender ? 'visible' : 'hidden',
+						}}>
+						<Footer onDelete={handleDelete} isDisplay={isRender} />
+					</div>
+				</GridLayout>
+			)}
 		</>
 	)
 }

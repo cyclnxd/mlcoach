@@ -36,6 +36,7 @@ function ToolItem({ index, title, desc, input, output, group, type }) {
 							height: '100%',
 							flexGrow: 1,
 							padding: '10px 10px 8px 10px',
+							minWidth: '100px',
 						}}>
 						<Stack spacing={1} alignItems='start' justifyContent='center'>
 							<Typography
