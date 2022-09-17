@@ -128,15 +128,17 @@ const store = create<RFState>((set, get) => ({
 		edges.forEach(edge => {
 			let sourceNode = get().nodes.find(node => node.id === edge.source)
 			let targetNode = get().nodes.find(node => node.id === edge.target)
-			get().setNodes({
-				...sourceNode,
-				data: { ...sourceNode?.data, current: uuidv4() },
-			} as Node)
+			if (sourceNode !== undefined && targetNode !== undefined) {
+				get().setNodes({
+					...sourceNode,
+					data: { ...sourceNode?.data, current: uuidv4() },
+				} as Node)
 
-			get().setNodes({
-				...targetNode,
-				data: { ...targetNode?.data, current: uuidv4() },
-			} as Node)
+				get().setNodes({
+					...targetNode,
+					data: { ...targetNode?.data, current: uuidv4() },
+				} as Node)
+			}
 		})
 		return [sourceNode, targetNode]
 	},
