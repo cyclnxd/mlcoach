@@ -69,9 +69,9 @@ export default function Editor() {
 				cols={12}
 				containerPadding={[0, 0]}
 				allowOverlap
-				maxRows={windowSize.height}
-				rowHeight={windowSize.height / 12}
-				width={windowSize.width}
+				maxRows={windowSize.height || 1000}
+				rowHeight={windowSize.height / 12 || 1000 / 12}
+				width={windowSize.width || 1000}
 				margin={[0, 0]}
 				useCSSTransforms={true}>
 				<div key='a'>

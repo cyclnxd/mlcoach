@@ -86,7 +86,7 @@ const store = create<RFState>((set, get) => ({
 		let targetNode = get().nodes.find(node => node.id === connection.target)
 		get().setNodes({
 			...sourceNode,
-			data: { ...sourceNode!.data, current: uuidv4() },
+			data: { ...sourceNode?.data, current: uuidv4() },
 		} as Node)
 		get().setNodes({
 			...targetNode,
@@ -112,8 +112,8 @@ const store = create<RFState>((set, get) => ({
 	},
 	onNodesDelete: changes => {
 		changes.forEach(change => {
-			if (change.id in get().fileMap) {
-				delete get().fileMap[change.id]
+			if (change?.id in get().fileMap) {
+				delete get().fileMap[change?.id]
 			}
 		})
 	},
@@ -130,7 +130,7 @@ const store = create<RFState>((set, get) => ({
 			let targetNode = get().nodes.find(node => node.id === edge.target)
 			get().setNodes({
 				...sourceNode,
-				data: { ...sourceNode!.data, current: uuidv4() },
+				data: { ...sourceNode?.data, current: uuidv4() },
 			} as Node)
 			get().setNodes({
 				...targetNode,
