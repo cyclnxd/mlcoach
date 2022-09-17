@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useRef } from "react";
+import React, { useState, useEffect, memo} from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import store from "../../../../store/store.ts";
@@ -6,10 +6,10 @@ import { Handle } from "react-flow-renderer";
 import { Card, Stack, Typography, TextField } from "@mui/material";
 import HeaderLayout from "../../HeaderLayout";
 
-function fillingConstantoNode({ id, selected, data }) {
-  const [fillingValue, setFillingValue] = useState(0);
+function FillingConstantNode({ id, selected, data }) {
+  const [fillingValue, setFillingValue] = useState(0)
 
-  const [error, setError] = useState("connect a data source to select columns");
+  const [error, setError] = useState("connect a data source to select columns")
 
   const startTextHandle = (event) => {
     event.target.value === NaN
@@ -17,7 +17,7 @@ function fillingConstantoNode({ id, selected, data }) {
           setFillingValue(0);
         }
       : setFillingValue(parseInt(event.target.value));
-  };
+  }
   useEffect(() => {
     // checking if the user has created a valid edge between two nodes
     const edge = Object.values(store.getState().edges).find(
@@ -173,4 +173,4 @@ function fillingConstantoNode({ id, selected, data }) {
   );
 }
 
-export default memo(fillingConstantoNode);
+export default memo(FillingConstantNode);
