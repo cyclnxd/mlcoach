@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import { TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import store from '../../../store/store.ts'
+import store from '../../../lib/store/store.ts'
 import { Handle } from 'react-flow-renderer'
 import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
@@ -114,31 +114,6 @@ function SliceNode({ id, selected, data }) {
 							padding: '10px',
 							gap: '10px',
 							width: '200px',
-							'.MuiOutlinedInput-root': {
-								color: 'primary.contrastText',
-								fontSize: '12px',
-							},
-							'& label': {
-								color: 'primary.contrastText',
-								fontSize: '12px',
-							},
-							'& label.Mui-focused': {
-								color: 'primary.contrastText',
-							},
-							'& .MuiInput-underline:after': {
-								borderBottomColor: 'green',
-							},
-							'& .MuiOutlinedInput-root': {
-								'& fieldset': {
-									borderColor: 'primary.darkLight',
-								},
-								'&:hover fieldset': {
-									borderColor: 'primary.light',
-								},
-								'&.Mui-focused fieldset': {
-									borderColor: 'primary.light',
-								},
-							},
 						}}>
 						{error.length === 0 ? (
 							<>

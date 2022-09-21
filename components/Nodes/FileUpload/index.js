@@ -3,11 +3,10 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Papa from 'papaparse'
-import store from '../../../store/store.ts'
+import store from '../../../lib/store/store.ts'
 import { Handle } from 'react-flow-renderer'
 import { Card, Stack, Typography } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
-import Zoom from '@mui/material/Zoom'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'

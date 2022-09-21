@@ -6,32 +6,28 @@ import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
-import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
+import DesignServicesIcon from '@mui/icons-material/DesignServices'
+import WorkspacesIcon from '@mui/icons-material/Workspaces'
 import { memo, useState } from 'react'
+import { Icon } from '@mui/material'
+import Link from 'next/link'
+import UserProfile from './UserProfile'
 
-const pages = ['Editor']
-const settings = ['Logout']
+const pages = ['Editor', 'Workplace']
+const icons = [
+	<DesignServicesIcon key={'editor'} />,
+	<WorkspacesIcon key={'workplace'} />,
+]
 
-const Header = ({ height = 75 }) => {
+const Header = () => {
 	const [anchorElNav, setAnchorElNav] = useState(null)
-	const [anchorElUser, setAnchorElUser] = useState(null)
-
 	const handleOpenNavMenu = event => {
 		setAnchorElNav(event.currentTarget)
 	}
-	const handleOpenUserMenu = event => {
-		setAnchorElUser(event.currentTarget)
-	}
-
 	const handleCloseNavMenu = () => {
 		setAnchorElNav(null)
-	}
-
-	const handleCloseUserMenu = () => {
-		setAnchorElUser(null)
 	}
 
 	return (
@@ -41,32 +37,32 @@ const Header = ({ height = 75 }) => {
 			position='static'
 			sx={{
 				borderBottom: '1px solid #413f66',
-				height: height || '75px',
+				height: '70px',
 			}}>
 			<Container maxWidth='xl'>
 				<Toolbar
 					disableGutters
 					variant='dense'
 					sx={{
-						height: height || '75px',
+						height: '70px',
 					}}>
-					<Typography
-						variant='h6'
-						noWrap
-						component='a'
-						href='/'
-						sx={{
-							mr: 2,
-							display: { xs: 'none', md: 'flex' },
-							fontFamily: 'monospace',
-							fontWeight: 700,
-							letterSpacing: '.3rem',
-							color: 'inherit',
-							textDecoration: 'none',
-						}}>
-						MLCoach
-					</Typography>
-
+					{/*responsive layout for mobile or small devices */}
+					<Link href={'/'}>
+						<Typography
+							variant='h6'
+							noWrap
+							sx={{
+								mr: 2,
+								display: { xs: 'none', md: 'flex' },
+								fontFamily: 'monospace',
+								fontWeight: 700,
+								letterSpacing: '.3rem',
+								color: 'inherit',
+								textDecoration: 'none',
+							}}>
+							MLCoach
+						</Typography>
+					</Link>
 					<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
 						<IconButton
 							size='large'
@@ -94,73 +90,62 @@ const Header = ({ height = 75 }) => {
 							sx={{
 								display: { xs: 'block', md: 'none' },
 							}}>
-							{pages.map(page => (
+							{pages.map((page, i) => (
 								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Typography
-										textAlign='center'
-										href={page.toLocaleLowerCase()}>
-										{page}
-									</Typography>
+									<Icon
+										aria-controls='menu-appbar'
+										aria-haspopup='true'
+										color='inherit'
+										sx={{ display: 'flex', alignItems: 'center', my: 0.8 }}>
+										{icons[i]}
+									</Icon>
+									<Link href={page.toLocaleLowerCase()}>
+										<Typography
+											textAlign='center'
+											sx={{
+												ml: 1,
+												display: { xs: 'flex', md: 'none' },
+												flexGrow: 1,
+												color: 'inherit',
+												textDecoration: 'none',
+											}}>
+											{page}
+										</Typography>
+									</Link>
 								</MenuItem>
 							))}
 						</Menu>
 					</Box>
-					<Typography
-						variant='h5'
-						noWrap
-						component='a'
-						href=''
-						sx={{
-							mr: 2,
-							display: { xs: 'flex', md: 'none' },
-							flexGrow: 1,
-							fontFamily: 'monospace',
-							fontWeight: 700,
-							letterSpacing: '.3rem',
-							color: 'inherit',
-							textDecoration: 'none',
-						}}>
-						MLCoach
-					</Typography>
+					{/*responsive layout for desktop or nonsmall devices */}
+					<Link href={'/'}>
+						<Typography
+							variant='h5'
+							noWrap
+							sx={{
+								mr: 2,
+								display: { xs: 'flex', md: 'none' },
+								flexGrow: 1,
+								fontFamily: 'monospace',
+								fontWeight: 700,
+								letterSpacing: '.3rem',
+								color: 'inherit',
+								textDecoration: 'none',
+							}}>
+							MLCoach
+						</Typography>
+					</Link>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map(page => (
-							<Button
-								key={page}
-								href={page.toLocaleLowerCase()}
-								sx={{ my: 2, color: 'white', display: 'block' }}>
-								{page}
-							</Button>
+							<Link href={page.toLocaleLowerCase()} key={page}>
+								<Button sx={{ my: 2, color: 'white', display: 'block' }}>
+									{page}
+								</Button>
+							</Link>
 						))}
 					</Box>
 
-					<Box sx={{ flexGrow: 0 }}>
-						<Tooltip title='Open settings'>
-							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-								<Avatar />
-							</IconButton>
-						</Tooltip>
-						<Menu
-							sx={{ mt: '45px' }}
-							id='menu-appbar'
-							anchorEl={anchorElUser}
-							anchorOrigin={{
-								vertical: 'top',
-								horizontal: 'right',
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: 'top',
-								horizontal: 'right',
-							}}
-							open={Boolean(anchorElUser)}
-							onClose={handleCloseUserMenu}>
-							{settings.map(setting => (
-								<MenuItem key={setting} onClick={handleCloseUserMenu}>
-									<Typography textAlign='center'>{setting}</Typography>
-								</MenuItem>
-							))}
-						</Menu>
-					</Box>
+					{/* navbar right side */}
+					<UserProfile />
 				</Toolbar>
 			</Container>
 		</AppBar>

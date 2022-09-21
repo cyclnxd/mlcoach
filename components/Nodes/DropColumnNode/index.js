@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import store from '../../../store/store.ts'
+import store from '../../../lib/store/store.ts'
 import { Handle } from 'react-flow-renderer'
 import {
 	Card,
@@ -40,17 +40,16 @@ function DropColumnNode({ id, selected, data }) {
 				// deletes the selected columns from the file
 				for (var row in file.data) {
 					for (const column of selectedColumns) {
-						delete file.data[row][column]	 
+						delete file.data[row][column]
 					}
 				}
-				for(var field in file.meta.fields)
-				{ 
-					for(const column of selectedColumns){
-						if(file.meta.fields[field] === column){
+				for (var field in file.meta.fields) {
+					for (const column of selectedColumns) {
+						if (file.meta.fields[field] === column) {
 							delete file.meta.fields[field]
 						}
 					}
-				}				
+				}
 				store.getState().storeFile(id, file)
 			} else {
 				setKeys([])

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, memo, useMemo } from 'react'
 import ReactFlow, { Controls, Background } from 'react-flow-renderer'
-import store from '../../store/store.ts'
+import store from '../../lib/store/store.ts'
 import create from 'zustand'
 import ToolModal from '../Modal'
 import ConnectionLine from '../ConnectionLine'
