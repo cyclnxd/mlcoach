@@ -13,6 +13,9 @@ import store from '../../lib/store/AuthStore.ts'
 import create from 'zustand'
 import { useRouter } from 'next/router'
 
+import { useUser } from '@supabase/auth-helpers-react'
+import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+
 function UserProfile() {
 	const [anchorElUser, setAnchorElUser] = useState(undefined)
 	const [registerOpenModal, setRegisterOpenModal] = useState(false)
@@ -20,14 +23,10 @@ function UserProfile() {
 	const [settings, setSettings] = useState([])
 	const [username, setUsername] = useState('')
 	const router = useRouter()
-	const { user, logout, currentUserData } = create(store)()
+	const { user, error } = useUser()
+	const { logout, currentUserData } = create(store)()
 
 	useEffect(() => {
-		if (currentUserData) {
-			setUsername(currentUserData.username.charAt(0).toUpperCase())
-		} else {
-			setUsername('')
-		}
 		if (user) {
 			setSettings([
 				{

@@ -1,13 +1,16 @@
-import { Session, UserCredentials } from '@supabase/supabase-js'
+import { Session, User } from '@supabase/supabase-js'
 import create from 'zustand/vanilla'
 //@ts-ignore
-import { AuthService, AuthState } from '../services/AuthService.ts'
-import supabase from '../supabase'
-//@ts-ignore
-import { UserService, UserState } from '../services/UserService.ts'
+// import { AuthService, AuthState } from '../services/AuthService.ts'
+// import supabase from '../supabase'
+// //@ts-ignore
+// import { UserService, UserState } from '../services/UserService.ts'
+
+import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+import { userAgent } from 'next/server'
 
 type authState = {
-	user: UserCredentials | null
+	user: User | null
 	currentUserData: any
 	session: Session | null
 	authStateChange: any
@@ -15,58 +18,108 @@ type authState = {
 	setUserSession: any
 	login: any
 	register: any
-	logout: any
 }
 
-const authService: AuthState = new AuthService(supabase)
-const userService: UserState = new UserService(supabase)
+// const authService: AuthState = new AuthService(supabase)
+// const userService: UserState = new UserService(supabase)
 const useAuthStore = create<authState>((set, get) => ({
 	user: null,
 	session: null,
 	currentUserData: null,
 	setSession: async () => {
-		const session = await authService.getCurrentSession()
-		const userData = await userService.getUserDataById(session?.user.id)
-		set({
-			user: session?.user,
-			session,
-			currentUserData: userData?.data !== null && userData?.data[0],
-		})
+		try {
+			const session = await supabaseClient.auth.session()
+			set({ session })
+		} catch (error) {
+			throw error
+		}
+		if (get().session) {
+			try {
+				const user = await supabaseClient.auth.user()
+				set({ user })
+			} catch (error) {
+				throw error
+			}
+		}
+
+		try {
+			const userData = await supabaseClient
+				.from('users')
+				.select('*')
+				.eq('id', get().user?.id)
+				.single()
+			set({
+				currentUserData: userData?.data,
+			})
+		} catch (error) {
+			throw error
+		}
 	},
-	setUserSession: (user: UserCredentials, session: Session) => {
+	setUserSession: (user: User, session: Session) => {
 		set({ user, session })
 	},
 	authStateChange: callback => {
-		return authService.onAuthStateChange(callback)
+		return supabaseClient.auth.onAuthStateChange(callback)
 	},
 	login: async (email: string, password: string) => {
-		const { user, session, error } = await authService.login(email, password)
-		const userData = await userService.getUserDataById(session?.user.id)
-		if (error) throw error
-		set({
-			user,
-			session,
-			currentUserData: userData?.data !== null && userData?.data[0],
-		})
+		try {
+			const { user, session } = await supabaseClient.auth.signIn({
+				email,
+				password,
+			})
+			set({ user, session })
+		} catch (error) {
+			throw error
+		}
+
+		try {
+			const userData = await supabaseClient
+				.from('users')
+				.select('*')
+				.eq('id', get().user?.id)
+				.single()
+			set({
+				currentUserData: userData?.data,
+			})
+		} catch (error) {
+			throw error
+		}
 	},
 	register: async (email: string, password: string, username: string) => {
-		const { user, session, error } = await authService.register(
-			email,
-			password,
-			username
-		)
-		const userData = await userService.getUserDataById(session?.user.id)
-		if (error) throw error
-		set({
-			user,
-			session,
-			currentUserData: userData?.data !== null && userData?.data[0],
-		})
-	},
-	logout: async () => {
-		const error = await authService.logout()
-		if (error) throw error
-		set({ user: null, session: null, currentUserData: null })
+		try {
+			const { user, session } = await supabaseClient.auth.signUp(
+				{ email, password },
+				{ data: { username } }
+			)
+			set({
+				user,
+				session,
+			})
+		} catch (error) {
+			throw error
+		}
+		try {
+			await supabaseClient.from('users').insert({
+				id: get().user?.id,
+				username,
+				avatar_url: null,
+				is_active: true,
+			})
+		} catch (error) {
+			throw error
+		}
+		try {
+			const userData = await supabaseClient
+				.from('users')
+				.select('*')
+				.eq('id', get().user?.id)
+				.single()
+			set({
+				currentUserData: userData?.data,
+			})
+		} catch (error) {
+			throw error
+		}
 	},
 }))
 

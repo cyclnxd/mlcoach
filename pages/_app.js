@@ -9,6 +9,9 @@ import { darkTheme } from '../lib/themes/theme'
 import store from '../lib/store/AuthStore.ts'
 import Header from '../components/Header'
 
+import { UserProvider } from '@supabase/auth-helpers-react'
+import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+
 function MyApp({ Component, pageProps }) {
 	const { setSession, authStateChange, setUserSession } = create(store)()
 	useEffect(() => {
@@ -32,10 +35,12 @@ function MyApp({ Component, pageProps }) {
 	}, [authStateChange, setUserSession])
 
 	return (
-		<ThemeProvider theme={darkTheme}>
-			<Header />
-			<Component {...pageProps} />
-		</ThemeProvider>
+		<UserProvider supabaseClient={supabaseClient}>
+			<ThemeProvider theme={darkTheme}>
+				<Header />
+				<Component {...pageProps} />
+			</ThemeProvider>
+		</UserProvider>
 	)
 }
 
