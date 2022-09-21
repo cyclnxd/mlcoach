@@ -55,7 +55,7 @@ class AuthService implements AuthState {
 		if (!error && user) {
 			const { data, error } = await this._supaBaseClient
 				.from('profiles')
-				.insert([{ id: user.id, username }])
+				.insert({ id: user.id, username, is_active: true })
 			return { user, session, error }
 		}
 

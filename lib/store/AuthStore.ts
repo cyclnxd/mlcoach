@@ -27,7 +27,11 @@ const useAuthStore = create<authState>((set, get) => ({
 	setSession: async () => {
 		const session = await authService.getCurrentSession()
 		const userData = await userService.getUserDataById(session?.user.id)
-		set({ user: session?.user, session, currentUserData: userData?.data[0] })
+		set({
+			user: session?.user,
+			session,
+			currentUserData: userData?.data !== null && userData?.data[0],
+		})
 	},
 	setUserSession: (user: UserCredentials, session: Session) => {
 		set({ user, session })
@@ -39,7 +43,11 @@ const useAuthStore = create<authState>((set, get) => ({
 		const { user, session, error } = await authService.login(email, password)
 		const userData = await userService.getUserDataById(session?.user.id)
 		if (error) throw error
-		set({ user, session, currentUserData: userData?.data[0] })
+		set({
+			user,
+			session,
+			currentUserData: userData?.data !== null && userData?.data[0],
+		})
 	},
 	register: async (email: string, password: string, username: string) => {
 		const { user, session, error } = await authService.register(
@@ -49,7 +57,11 @@ const useAuthStore = create<authState>((set, get) => ({
 		)
 		const userData = await userService.getUserDataById(session?.user.id)
 		if (error) throw error
-		set({ user, session, currentUserData: userData?.data[0] })
+		set({
+			user,
+			session,
+			currentUserData: userData?.data !== null && userData?.data[0],
+		})
 	},
 	logout: async () => {
 		const error = await authService.logout()

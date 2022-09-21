@@ -123,13 +123,13 @@ function FileUpload({ id, selected }) {
 					id={'file-out'}
 					key={id}
 					style={{
-						left: '91%',
-						width: '15px',
+						left: 'inherit',
+						width: 'inherit',
 						top: '50%',
-						height: '100px',
+						height: 'inherit',
 						background: 'none',
 						border: 'none',
-						borderRadius: '0px 15px 15px 0px',
+						borderRadius: 'inherit',
 					}}
 					isConnectable={true}
 				/>
