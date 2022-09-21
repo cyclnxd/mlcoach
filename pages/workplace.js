@@ -1,12 +1,14 @@
 import Head from 'next/head'
 
-export default function Home() {
+export default function Workplace() {
 	return (
 		<>
 			<Head>
-				<title>MLCoach</title>
+				<title>Workplace</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
+
+			<div className=''>workplace</div>
 		</>
 	)
 }

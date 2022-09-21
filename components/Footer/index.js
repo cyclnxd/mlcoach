@@ -1,7 +1,7 @@
 import { Box, Typography, Stack } from '@mui/material'
 import React, { useState, useEffect, useRef, memo } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
-import store from '../../store/store.ts'
+import store from '../../lib/store/store.ts'
 import StormIcon from '@mui/icons-material/Storm'
 function Footer({ onDelete, isDisplay }) {
 	//store da seçilen node tutmak için
@@ -32,22 +32,22 @@ function Footer({ onDelete, isDisplay }) {
 
 			const newCols = []
 			for (var i = 0; i < fileMap.meta.fields.length; i++) {
-				if(fileMap.meta.fields[i] !== undefined){
-				newCols.push({
-					field: fileMap.meta.fields[i],
-					headerName: fileMap.meta.fields[i],
-					flex: 1,
-					maxWidth: 200,
-					minWidth: 200,
-				})
-			}
+				if (fileMap.meta.fields[i] !== undefined) {
+					newCols.push({
+						field: fileMap.meta.fields[i],
+						headerName: fileMap.meta.fields[i],
+						flex: 1,
+						maxWidth: 200,
+						minWidth: 200,
+					})
+				}
 			}
 			const newRows = []
 			for (var j = 1; j < numRows; j++) {
 				const newRow = fileMap.data[j]
 				newRows.push({ ...newRow, id: j })
 			}
-			
+
 			//kaydediliyor
 			setGridColumns(newCols)
 			setGridRows(newRows)

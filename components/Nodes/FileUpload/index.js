@@ -3,11 +3,10 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Papa from 'papaparse'
-import store from '../../../store/store.ts'
+import store from '../../../lib/store/store.ts'
 import { Handle } from 'react-flow-renderer'
 import { Card, Stack, Typography } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
-import Zoom from '@mui/material/Zoom'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
@@ -124,13 +123,13 @@ function FileUpload({ id, selected }) {
 					id={'file-out'}
 					key={id}
 					style={{
-						left: '91%',
-						width: '15px',
+						left: 'inherit',
+						width: 'inherit',
 						top: '50%',
-						height: '100px',
+						height: 'inherit',
 						background: 'none',
 						border: 'none',
-						borderRadius: '0px 15px 15px 0px',
+						borderRadius: 'inherit',
 					}}
 					isConnectable={true}
 				/>
