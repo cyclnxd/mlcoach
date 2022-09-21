@@ -34,10 +34,18 @@ const nodeTypes = [
 		output: 'DataFrame',
 	},
 	{
-		title: 'Fill with Constant',
+		title: 'Fill With Constant',
 		type: 'fillWithConstantNode',
 		group: 'transform',
 		desc: 'Filling missing values with constant',
+		input: 'DataFrame',
+		output: 'DataFrame',
+	},
+	{
+		title: 'Fill With Statistics Values',
+		type: 'fillWithStatisticsNode',
+		group: 'transform',
+		desc: 'Filling missing values with statistics values',
 		input: 'DataFrame',
 		output: 'DataFrame',
 	}

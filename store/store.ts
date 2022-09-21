@@ -18,12 +18,14 @@ import FilterNode from '../components/Nodes/FilterNode'
 import SliceNode from '../components/Nodes/SliceNode'
 import DropColumn from '../components/Nodes/DropColumnNode'
 import fillWithConstantNode from '../components/Nodes/MissingValueNodes/fillWithConstantNode'
+import FillWithStatsNode from '../components/Nodes/MissingValueNodes/fillWithStatsNode'
 const nodeTypes = {
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
 	sliceNode: SliceNode,
 	dropColNode: DropColumn,
-	fillWithConstantNode:fillWithConstantNode
+	fillWithConstantNode:fillWithConstantNode,
+	fillWithStatisticsNode:FillWithStatsNode
 }
 
 type RFState = {

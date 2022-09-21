@@ -7,6 +7,7 @@ import GridLayout from 'react-grid-layout'
 import { useEffect, useState } from 'react'
 import { Box } from '@mui/system'
 import { useRef } from 'react'
+ 
 const layout = [
 	{ i: 'a', x: 0, y: 0, w: 12, h: 1, static: true },
 	{ i: 'b', x: 0, y: 1, w: 12, h: 12, static: true },
@@ -44,6 +45,7 @@ export default function Editor() {
 	}, [])
 	return (
 		<>
+		
 			<Head>
 				<title>MLCoach Editor</title>
 				<link rel='icon' href='/favicon.ico' />
