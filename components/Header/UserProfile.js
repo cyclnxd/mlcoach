@@ -21,10 +21,8 @@ function UserProfile() {
 	const [registerOpenModal, setRegisterOpenModal] = useState(false)
 	const [loginOpenModal, setLoginOpenModal] = useState(false)
 	const [settings, setSettings] = useState([])
-	const [username, setUsername] = useState('')
 	const router = useRouter()
-	const { user, error } = useUser()
-	const { logout, currentUserData } = create(store)()
+	const { logout, currentUserData, user } = create(store)()
 
 	useEffect(() => {
 		if (user) {
@@ -50,7 +48,7 @@ function UserProfile() {
 				},
 			])
 		}
-	}, [currentUserData, logout, router, user])
+	}, [logout, router, user])
 
 	const handleCloseUserMenu = () => {
 		setAnchorElUser(null)
@@ -69,8 +67,10 @@ function UserProfile() {
 	return (
 		<Box sx={{ flexGrow: 0 }}>
 			<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-				{username.length > 0 ? (
-					<Avatar alt={username}> {username}</Avatar>
+				{currentUserData?.username.length > 0 ? (
+					<Avatar alt={currentUserData?.username}>
+						{currentUserData?.username.charAt(0).toUpperCase()}
+					</Avatar>
 				) : (
 					<Avatar />
 				)}

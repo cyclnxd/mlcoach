@@ -13,26 +13,32 @@ import { UserProvider } from '@supabase/auth-helpers-react'
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 
 function MyApp({ Component, pageProps }) {
-	const { setSession, authStateChange, setUserSession } = create(store)()
+	const { setSession, authStateChange, setUserSession, supaClient, session } =
+		create(store)()
 	useEffect(() => {
 		async function fetchSession() {
 			await setSession()
 		}
+
 		fetchSession()
-	}, [setSession])
+	}, [session, setSession, supaClient])
 
 	useEffect(() => {
-		const { data: listener } = authStateChange(async (event, session) => {
-			if (event === 'SIGNED_OUT') {
-				await setUserSession(null, null)
-			} else if (event === 'USER_DELETED') {
-				await setUserSession(null, null)
-			}
-		})
-		return () => {
-			listener.unsubscribe()
+		let listener
+		if (supaClient) {
+			const { data } = authStateChange(async (event, session) => {
+				if (event === 'SIGNED_OUT') {
+					await setUserSession(null, null)
+				} else if (event === 'USER_DELETED') {
+					await setUserSession(null, null)
+				}
+			})
+			listener = data
 		}
-	}, [authStateChange, setUserSession])
+		return () => {
+			listener?.unsubscribe()
+		}
+	}, [authStateChange, setUserSession, supaClient])
 
 	return (
 		<UserProvider supabaseClient={supabaseClient}>

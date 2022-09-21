@@ -7,14 +7,26 @@ import {
 	Grid,
 	TextField,
 	Typography,
+	Alert,
 } from '@mui/material'
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import useAuthStore from '../../../lib/store/AuthStore.ts'
 import create from 'zustand'
 
 const LoginModal = ({ open, handleModal }) => {
+	const [error, setError] = useState('')
+
 	const { login } = create(useAuthStore)()
+
+	useEffect(() => {
+		if (error) {
+			setTimeout(() => {
+				setError('')
+			}, 3000)
+		}
+	}, [error])
+
 	return (
 		<Modal
 			aria-labelledby='transition-modal-title'
@@ -72,9 +84,10 @@ const LoginModal = ({ open, handleModal }) => {
 							onSubmit={async (values, { setSubmitting }) => {
 								try {
 									await login(values.email, values.password)
+									setError('')
 									handleModal(false)
 								} catch (error) {
-									console.log(error)
+									setError(error.message)
 								} finally {
 									setSubmitting(false)
 								}
@@ -122,6 +135,10 @@ const LoginModal = ({ open, handleModal }) => {
 												id='password'
 												autoComplete='new-password'
 											/>
+										</Grid>
+
+										<Grid item xs={12}>
+											{error && <Alert severity='error'>{error}</Alert>}
 										</Grid>
 									</Grid>
 									<Button

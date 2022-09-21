@@ -1,13 +1,6 @@
 import { Session, User } from '@supabase/supabase-js'
 import create from 'zustand/vanilla'
-//@ts-ignore
-// import { AuthService, AuthState } from '../services/AuthService.ts'
-// import supabase from '../supabase'
-// //@ts-ignore
-// import { UserService, UserState } from '../services/UserService.ts'
-
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
-import { userAgent } from 'next/server'
 
 type authState = {
 	user: User | null
@@ -18,39 +11,38 @@ type authState = {
 	setUserSession: any
 	login: any
 	register: any
+	logout: any
 }
 
-// const authService: AuthState = new AuthService(supabase)
-// const userService: UserState = new UserService(supabase)
 const useAuthStore = create<authState>((set, get) => ({
 	user: null,
 	session: null,
 	currentUserData: null,
+	supaClient: supabaseClient,
 	setSession: async () => {
 		try {
 			const session = await supabaseClient.auth.session()
 			set({ session })
-		} catch (error) {
-			throw error
-		}
-		if (get().session) {
 			try {
 				const user = await supabaseClient.auth.user()
 				set({ user })
+				if (user?.id !== undefined) {
+					try {
+						const userData = await supabaseClient
+							.from('profiles')
+							.select('*')
+							.eq('id', get().user?.id)
+							.single()
+						set({
+							currentUserData: userData?.data,
+						})
+					} catch (error) {
+						throw error
+					}
+				}
 			} catch (error) {
 				throw error
 			}
-		}
-
-		try {
-			const userData = await supabaseClient
-				.from('users')
-				.select('*')
-				.eq('id', get().user?.id)
-				.single()
-			set({
-				currentUserData: userData?.data,
-			})
 		} catch (error) {
 			throw error
 		}
@@ -62,64 +54,75 @@ const useAuthStore = create<authState>((set, get) => ({
 		return supabaseClient.auth.onAuthStateChange(callback)
 	},
 	login: async (email: string, password: string) => {
-		try {
-			const { user, session } = await supabaseClient.auth.signIn({
-				email,
-				password,
-			})
-			set({ user, session })
-		} catch (error) {
+		const { user, session, error } = await supabaseClient.auth.signIn({
+			email,
+			password,
+		})
+		if (error) {
 			throw error
 		}
-
-		try {
-			const userData = await supabaseClient
-				.from('users')
+		if (user?.id !== undefined) {
+			const { data, error } = await supabaseClient
+				.from('profiles')
 				.select('*')
-				.eq('id', get().user?.id)
+				.eq('id', user?.id)
 				.single()
+			if (error) {
+				throw error
+			}
 			set({
-				currentUserData: userData?.data,
+				currentUserData: data,
 			})
-		} catch (error) {
-			throw error
 		}
+		set({ user, session })
 	},
 	register: async (email: string, password: string, username: string) => {
-		try {
-			const { user, session } = await supabaseClient.auth.signUp(
-				{ email, password },
-				{ data: { username } }
-			)
-			set({
-				user,
-				session,
-			})
-		} catch (error) {
+		const {
+			user,
+			session,
+			error: signUpError,
+		} = await supabaseClient.auth.signUp(
+			{ email, password },
+			{ data: { username } }
+		)
+		if (signUpError) {
+			throw signUpError
+		}
+		const { error } = await supabaseClient.from('profiles').insert({
+			id: user?.id,
+			username,
+			avatar_url: null,
+			is_active: true,
+		})
+		if (error) {
 			throw error
 		}
-		try {
-			await supabaseClient.from('users').insert({
-				id: get().user?.id,
-				username,
-				avatar_url: null,
-				is_active: true,
-			})
-		} catch (error) {
-			throw error
-		}
-		try {
-			const userData = await supabaseClient
-				.from('users')
+		if (user?.id !== undefined) {
+			const { data, error } = await supabaseClient
+				.from('profiles')
 				.select('*')
-				.eq('id', get().user?.id)
+				.eq('id', user?.id)
 				.single()
+			if (error) {
+				throw error
+			}
 			set({
-				currentUserData: userData?.data,
+				currentUserData: data,
 			})
+		}
+
+		set({
+			user,
+			session,
+		})
+	},
+	logout: async () => {
+		try {
+			await supabaseClient.auth.signOut()
 		} catch (error) {
 			throw error
 		}
+		set({ user: null, session: null, currentUserData: null })
 	},
 }))
 
