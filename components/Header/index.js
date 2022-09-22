@@ -59,6 +59,7 @@ const Header = () => {
 								letterSpacing: '.3rem',
 								color: 'inherit',
 								textDecoration: 'none',
+								cursor: 'pointer',
 							}}>
 							MLCoach
 						</Typography>
@@ -130,13 +131,14 @@ const Header = () => {
 								letterSpacing: '.3rem',
 								color: 'inherit',
 								textDecoration: 'none',
+								cursor: 'pointer',
 							}}>
 							MLCoach
 						</Typography>
 					</Link>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map(page => (
-							<Link href={page.toLocaleLowerCase()} key={page}>
+							<Link href={`/${page.toLocaleLowerCase()}`} key={page} passHref>
 								<Button sx={{ my: 2, color: 'white', display: 'block' }}>
 									{page}
 								</Button>

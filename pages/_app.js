@@ -9,44 +9,39 @@ import { darkTheme } from '../lib/themes/theme'
 import store from '../lib/store/AuthStore.ts'
 import Header from '../components/Header'
 
-import { UserProvider } from '@supabase/auth-helpers-react'
-import { supabaseClient } from '@supabase/auth-helpers-nextjs'
-
 function MyApp({ Component, pageProps }) {
-	const { setSession, authStateChange, setUserSession, supaClient, session } =
-		create(store)()
+	const { setSession, authStateChange, setUserSession } = create(store)()
 	useEffect(() => {
 		async function fetchSession() {
 			await setSession()
 		}
 
 		fetchSession()
-	}, [session, setSession, supaClient])
+	}, [setSession])
 
 	useEffect(() => {
-		let listener
-		if (supaClient) {
-			const { data } = authStateChange(async (event, session) => {
-				if (event === 'SIGNED_OUT') {
-					await setUserSession(null, null)
-				} else if (event === 'USER_DELETED') {
-					await setUserSession(null, null)
-				}
-			})
-			listener = data
-		}
+		const { data } = authStateChange(async (event, session) => {
+			if (event === 'SIGNED_OUT') {
+				await setUserSession(null, null)
+			} else if (event === 'USER_DELETED') {
+				await setUserSession(null, null)
+			} else if (event === 'SIGNED_IN') {
+				await setUserSession(session?.user, session)
+			} else if (event === 'TOKEN_REFRESHED') {
+				await setUserSession(session?.user, session)
+			}
+		})
+
 		return () => {
-			listener?.unsubscribe()
+			data?.unsubscribe()
 		}
-	}, [authStateChange, setUserSession, supaClient])
+	}, [authStateChange, setUserSession])
 
 	return (
-		<UserProvider supabaseClient={supabaseClient}>
-			<ThemeProvider theme={darkTheme}>
-				<Header />
-				<Component {...pageProps} />
-			</ThemeProvider>
-		</UserProvider>
+		<ThemeProvider theme={darkTheme}>
+			<Header />
+			<Component {...pageProps} />
+		</ThemeProvider>
 	)
 }
 
