@@ -23,7 +23,7 @@ function Profile() {
 	return (
 		<>
 			<Head>
-				<title>MLCoach {user.username}`s profile</title>
+				<title>MLCoach {username}`s profile</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			{loading ? (
