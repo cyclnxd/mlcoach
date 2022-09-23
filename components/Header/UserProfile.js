@@ -28,7 +28,10 @@ function UserProfile() {
 			setSettings([
 				{
 					name: 'Logout',
-					onClick: () => logout(),
+					onClick: () => {
+						logout()
+						router.push('/editor')
+					},
 				},
 				{
 					name: 'Profile',

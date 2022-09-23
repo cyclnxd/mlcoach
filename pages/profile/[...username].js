@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import useDataStore from '../../lib/store/UserDataStore.ts'
+import useDataStore from '../../lib/store/DataStore.ts'
 import create from 'zustand'
 import { useEffect, useState } from 'react'
 import { Box, CircularProgress } from '@mui/material'
@@ -9,13 +9,27 @@ function Profile() {
 	const { username } = router.query
 	const { getUserByUsername } = create(useDataStore)()
 	const [user, setUser] = useState(null)
+	const [error, setError] = useState('')
+	const [title, setTitle] = useState('Loading...')
 	const [loading, setLoading] = useState(true)
+
 	useEffect(() => {
 		async function getUser() {
 			setLoading(true)
-			const user = await getUserByUsername(username)
-			setUser(user)
-			setLoading(false)
+			if (username) {
+				setTitle(`MLCoach ${username}'s profile`)
+				try {
+					const data = await getUserByUsername(username)
+					setUser(data)
+					setError('')
+				} catch (error) {
+					setError(error.message)
+					setUser(null)
+					setTitle('Profile not found')
+				} finally {
+					setLoading(false)
+				}
+			}
 		}
 		getUser()
 	}, [getUserByUsername, username])
@@ -23,7 +37,7 @@ function Profile() {
 	return (
 		<>
 			<Head>
-				<title>MLCoach {username}`s profile</title>
+				<title>{title}</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			{loading ? (
@@ -41,10 +55,14 @@ function Profile() {
 						}}
 					/>
 				</Box>
+			) : error.length > 0 ? (
+				<div>
+					<h1>User not found</h1>
+				</div>
 			) : (
 				<div>
 					<h1>Profile</h1>
-					<p>Profile page of user {user.id}</p>
+					<p>Profile page of user {user?.id}</p>
 				</div>
 			)}
 		</>

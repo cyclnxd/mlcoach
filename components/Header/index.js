@@ -45,6 +45,9 @@ const Header = () => {
 					variant='dense'
 					sx={{
 						height: '70px',
+						display: { xs: 'flex' },
+						justifyContent: { xs: 'space-between', md: 'flex-start' },
+						alignItems: 'center',
 					}}>
 					{/*responsive layout for mobile or small devices */}
 					<Link href={'/'}>
@@ -64,7 +67,8 @@ const Header = () => {
 							MLCoach
 						</Typography>
 					</Link>
-					<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+					<Box
+						sx={{ flexGrow: { md: 1 }, display: { xs: 'flex', md: 'none' } }}>
 						<IconButton
 							size='large'
 							aria-label='account of current user'
@@ -92,15 +96,15 @@ const Header = () => {
 								display: { xs: 'block', md: 'none' },
 							}}>
 							{pages.map((page, i) => (
-								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Icon
-										aria-controls='menu-appbar'
-										aria-haspopup='true'
-										color='inherit'
-										sx={{ display: 'flex', alignItems: 'center', my: 0.8 }}>
-										{icons[i]}
-									</Icon>
-									<Link href={page.toLocaleLowerCase()}>
+								<Link key={i} href={page.toLocaleLowerCase()}>
+									<MenuItem onClick={handleCloseNavMenu}>
+										<Icon
+											aria-controls='menu-appbar'
+											aria-haspopup='true'
+											color='inherit'
+											sx={{ display: 'flex', alignItems: 'center', my: 0.8 }}>
+											{icons[i]}
+										</Icon>
 										<Typography
 											textAlign='center'
 											sx={{
@@ -112,20 +116,19 @@ const Header = () => {
 											}}>
 											{page}
 										</Typography>
-									</Link>
-								</MenuItem>
+									</MenuItem>
+								</Link>
 							))}
 						</Menu>
 					</Box>
 					{/*responsive layout for desktop or nonsmall devices */}
 					<Link href={'/'}>
 						<Typography
-							variant='h5'
+							variant='h6'
 							noWrap
 							sx={{
-								mr: 2,
 								display: { xs: 'flex', md: 'none' },
-								flexGrow: 1,
+
 								fontFamily: 'monospace',
 								fontWeight: 700,
 								letterSpacing: '.3rem',
@@ -136,7 +139,8 @@ const Header = () => {
 							MLCoach
 						</Typography>
 					</Link>
-					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+					<Box
+						sx={{ flexGrow: { md: 1 }, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map(page => (
 							<Link href={`/${page.toLocaleLowerCase()}`} key={page} passHref>
 								<Button sx={{ my: 2, color: 'white', display: 'block' }}>

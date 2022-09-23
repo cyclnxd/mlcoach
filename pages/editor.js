@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import Flow from '../components/Editor'
 import Footer from '../components/Footer'
-import { CircularProgress } from '@mui/material'
 import GridLayout from 'react-grid-layout'
 import { useState } from 'react'
-import { Box } from '@mui/material'
 import useWindowSize from '../lib/hooks/useWindowSize'
+import Loading from '../components/Loading'
 const layout = [
 	{ i: 'b', x: 0, y: 0, w: 12, h: 12, static: true },
 	{ i: 'c', x: 4, y: 7, w: 7, h: 4, minW: 5, minH: 4 },
@@ -21,27 +20,13 @@ export default function Editor() {
 
 	return (
 		<>
-		
 			<Head>
 				<title>MLCoach Editor</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
 			{loading ? (
-				<Box
-					sx={{
-						width: '100vw',
-						height: '100vh',
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}>
-					<CircularProgress
-						sx={{
-							color: 'primary.light',
-						}}
-					/>
-				</Box>
+				<Loading />
 			) : (
 				<>
 					<GridLayout

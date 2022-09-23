@@ -24,8 +24,8 @@ const nodeTypes = {
 	filterNode: FilterNode,
 	sliceNode: SliceNode,
 	dropColNode: DropColumn,
-	fillWithConstantNode:fillWithConstantNode,
-	fillWithStatisticsNode:FillWithStatsNode
+	fillWithConstantNode: fillWithConstantNode,
+	fillWithStatisticsNode: FillWithStatsNode,
 }
 
 type RFState = {

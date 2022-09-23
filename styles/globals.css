@@ -68,3 +68,7 @@ body {
 	-o-user-select: none;
 	user-select: none;
 }
+
+.react-grid-item {
+	transition: transform 100ms ease !important;
+}

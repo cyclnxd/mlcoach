@@ -8,9 +8,11 @@ import { useEffect } from 'react'
 import { darkTheme } from '../lib/themes/theme'
 import store from '../lib/store/AuthStore.ts'
 import Header from '../components/Header'
+import { Logout } from '@mui/icons-material'
 
 function MyApp({ Component, pageProps }) {
-	const { setSession, authStateChange, setUserSession } = create(store)()
+	const { setSession, authStateChange, setUserSession, logout } =
+		create(store)()
 	useEffect(() => {
 		async function fetchSession() {
 			await setSession()
@@ -21,14 +23,12 @@ function MyApp({ Component, pageProps }) {
 
 	useEffect(() => {
 		const { data } = authStateChange(async (event, session) => {
-			if (event === 'SIGNED_OUT') {
-				await setUserSession(null, null)
-			} else if (event === 'USER_DELETED') {
-				await setUserSession(null, null)
+			if (event === 'USER_DELETED') {
+				logout()
 			} else if (event === 'SIGNED_IN') {
-				await setUserSession(session?.user, session)
+				await setSession()
 			} else if (event === 'TOKEN_REFRESHED') {
-				await setUserSession(session?.user, session)
+				await setSession()
 			}
 		})
 
