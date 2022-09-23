@@ -40,6 +40,33 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return data
 	},
+	updateWorkByUsername: async (data: object) => {
+		const { data: work, error } = await supabase
+			.from('works')
+			.upsert(data, { onConflict: 'id' })
+			.single()
+
+		if (error) throw error
+		return work
+	},
+	getWorkByUsernameAndName: async (username: string, name: string) => {
+		const { data, error } = await supabase
+			.from('works')
+			.select()
+			.match({ username, name })
+			.single()
+		if (error) throw error
+		return data
+	},
+	getWorksByUsername: async (username: string) => {
+		const { data, error } = await supabase
+			.from('works')
+			.select('name')
+			.match({ username })
+			.order('updated_at', { ascending: false })
+		if (error) throw error
+		return data
+	},
 }))
 
 export default useDataStore
