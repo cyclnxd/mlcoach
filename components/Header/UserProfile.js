@@ -13,16 +13,15 @@ import store from '../../lib/store/AuthStore.ts'
 import create from 'zustand'
 import { useRouter } from 'next/router'
 
-import { useUser } from '@supabase/auth-helpers-react'
-import { supabaseClient } from '@supabase/auth-helpers-nextjs'
-
 function UserProfile() {
 	const [anchorElUser, setAnchorElUser] = useState(undefined)
 	const [registerOpenModal, setRegisterOpenModal] = useState(false)
 	const [loginOpenModal, setLoginOpenModal] = useState(false)
 	const [settings, setSettings] = useState([])
-	const router = useRouter()
-	const { logout, currentUserData, user } = create(store)()
+	const router = useRouter({
+		isReady: true,
+	})
+	const { logout, currentUserData, user, session } = create(store)()
 
 	useEffect(() => {
 		if (user) {
@@ -33,7 +32,7 @@ function UserProfile() {
 				},
 				{
 					name: 'Profile',
-					onClick: () => router.push('/profile'),
+					onClick: () => router.push(`/profile/${currentUserData?.username}`),
 				},
 			])
 		} else {
@@ -48,7 +47,7 @@ function UserProfile() {
 				},
 			])
 		}
-	}, [logout, router, user])
+	}, [logout, router, user, session, currentUserData])
 
 	const handleCloseUserMenu = () => {
 		setAnchorElUser(null)

@@ -1,30 +1,45 @@
 import create from 'zustand/vanilla'
-//@ts-ignore
-import { UserService, UserState } from '../services/UserService'
 import supabase from '../supabase'
 
 type userState = {
-	updateUserDataById: any
-	getUserDataById: any
+	updateUserById: any
+	getUserById: any
+	getUserByUsername: any
 	getAllUserData: any
 }
-
-const userService: UserState = new UserService(supabase)
-const useUserStore = create<userState>(() => ({
-	updateUserDataById: async (id: string, data: object) => {
-		const { error } = await userService.updateUserDataById(id, data)
+const useDataStore = create<userState>(() => ({
+	updateUserById: async (id: string, data: object) => {
+		const { data: user, error } = await supabase
+			.from('profiles')
+			.update(data)
+			.match({ id })
+			.single()
 		if (error) throw error
+		return user
 	},
-	getUserDataById: async (id: string) => {
-		const { data, error } = await userService.getUserDataById(id)
+	getUserById: async (id: string) => {
+		const { data, error } = await supabase
+			.from('profiles')
+			.select()
+			.match({ id })
+			.single()
+		if (error) throw error
+		return data
+	},
+	getUserByUsername: async (username: string) => {
+		const { data, error } = await supabase
+			.from('profiles')
+			.select()
+			.match({ username })
+			.single()
 		if (error) throw error
 		return data
 	},
 	getAllUserData: async () => {
-		const { data, error } = await userService.getAllUserData()
+		const { data, error } = await await supabase.from('profiles').select()
 		if (error) throw error
 		return data
 	},
 }))
 
-export default useUserStore
+export default useDataStore

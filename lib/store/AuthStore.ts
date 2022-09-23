@@ -1,6 +1,6 @@
 import { Session, User } from '@supabase/supabase-js'
 import create from 'zustand/vanilla'
-import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+import supabase from '../supabase'
 
 type authState = {
 	user: User | null
@@ -18,17 +18,16 @@ const useAuthStore = create<authState>((set, get) => ({
 	user: null,
 	session: null,
 	currentUserData: null,
-	supaClient: supabaseClient,
 	setSession: async () => {
 		try {
-			const session = await supabaseClient.auth.session()
+			const session = await supabase.auth.session()
 			set({ session })
 			try {
-				const user = await supabaseClient.auth.user()
+				const user = await supabase.auth.user()
 				set({ user })
 				if (user?.id !== undefined) {
 					try {
-						const userData = await supabaseClient
+						const userData = await supabase
 							.from('profiles')
 							.select('*')
 							.eq('id', get().user?.id)
@@ -51,10 +50,10 @@ const useAuthStore = create<authState>((set, get) => ({
 		set({ user, session })
 	},
 	authStateChange: callback => {
-		return supabaseClient.auth.onAuthStateChange(callback)
+		return supabase.auth.onAuthStateChange(callback)
 	},
 	login: async (email: string, password: string) => {
-		const { user, session, error } = await supabaseClient.auth.signIn({
+		const { user, session, error } = await supabase.auth.signIn({
 			email,
 			password,
 		})
@@ -62,7 +61,7 @@ const useAuthStore = create<authState>((set, get) => ({
 			throw error
 		}
 		if (user?.id !== undefined) {
-			const { data, error } = await supabaseClient
+			const { data, error } = await supabase
 				.from('profiles')
 				.select('*')
 				.eq('id', user?.id)
@@ -81,14 +80,11 @@ const useAuthStore = create<authState>((set, get) => ({
 			user,
 			session,
 			error: signUpError,
-		} = await supabaseClient.auth.signUp(
-			{ email, password },
-			{ data: { username } }
-		)
+		} = await supabase.auth.signUp({ email, password }, { data: { username } })
 		if (signUpError) {
 			throw signUpError
 		}
-		const { error } = await supabaseClient.from('profiles').insert({
+		const { error } = await supabase.from('profiles').insert({
 			id: user?.id,
 			username,
 			avatar_url: null,
@@ -98,7 +94,7 @@ const useAuthStore = create<authState>((set, get) => ({
 			throw error
 		}
 		if (user?.id !== undefined) {
-			const { data, error } = await supabaseClient
+			const { data, error } = await supabase
 				.from('profiles')
 				.select('*')
 				.eq('id', user?.id)
@@ -118,7 +114,7 @@ const useAuthStore = create<authState>((set, get) => ({
 	},
 	logout: async () => {
 		try {
-			await supabaseClient.auth.signOut()
+			await supabase.auth.signOut()
 		} catch (error) {
 			throw error
 		}

@@ -4,7 +4,7 @@ export default function Workplace() {
 	return (
 		<>
 			<Head>
-				<title>Workplace</title>
+				<title>MLCoach Workplace</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
