@@ -1,13 +1,4 @@
-const ConnectionLine = ({
-	sourceX,
-	sourceY,
-	sourcePosition,
-	targetX,
-	targetY,
-	targetPosition,
-	connectionLineType,
-	connectionLineStyle,
-}) => {
+const ConnectionLine = ({ sourceX, sourceY, targetX, targetY }) => {
 	const getBezierPath = (from, to) => {
 		if (Math.abs(from.x - to.x) > Math.abs(from.y - to.y)) {
 			const midX = (to.x + from.x) / 2

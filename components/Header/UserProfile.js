@@ -9,7 +9,7 @@ import {
 import React, { memo, useEffect, useState } from 'react'
 import LoginModal from './modals/LoginModal'
 import RegisterModal from './modals/RegisterModal'
-import store from '../../lib/store/AuthStore.ts'
+import store from 'lib/store/AuthStore.ts'
 import create from 'zustand'
 import { useRouter } from 'next/router'
 

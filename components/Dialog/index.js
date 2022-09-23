@@ -8,11 +8,10 @@ import {
 	DialogTitle,
 	TextField,
 } from '@mui/material'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useEffect } from 'react'
-import useDataStore from '../../lib/store/DataStore.ts'
+import useDataStore from 'lib/store/DataStore.ts'
 import create from 'zustand'
-import Loading from '../Loading'
 
 function CustomDialog({
 	open,

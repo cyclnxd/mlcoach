@@ -1,8 +1,7 @@
 import Grid2 from '@mui/material/Unstable_Grid2'
 import Fade from '@mui/material/Fade'
 import { Card, CardActionArea, Stack, Typography } from '@mui/material'
-import { useId } from 'react'
-import store from '../../../lib/store/store.ts'
+import store from 'lib/store/store.ts'
 import create from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 

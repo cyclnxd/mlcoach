@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import store from '../../../lib/store/store.ts'
+import store from 'lib/store/store.ts'
 import { Handle } from 'react-flow-renderer'
 import {
 	Card,

@@ -1,18 +1,18 @@
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import ReactFlow, {
 	ReactFlowProvider,
 	Controls,
 	Background,
 } from 'react-flow-renderer'
-import store from '../../lib/store/store.ts'
-import useAuthStore from '../../lib/store/AuthStore.ts'
-import useDataStore from '../../lib/store/DataStore.ts'
+import store from 'lib/store/store.ts'
+import useAuthStore from 'lib/store/AuthStore.ts'
+import useDataStore from 'lib/store/DataStore.ts'
 import create from 'zustand'
-import ToolModal from '../Modal'
-import ConnectionLine from '../ConnectionLine'
+import ToolModal from 'components/Modal'
+import ConnectionLine from 'components/ConnectionLine'
 import { Box, Stack } from '@mui/system'
 import { Alert, Button } from '@mui/material'
-import CustomDialog from '../Dialog'
+import CustomDialog from 'components/Dialog'
 import { v4 as uuidv4 } from 'uuid'
 
 const Flow = ({ handleDelete }) => {
@@ -122,7 +122,6 @@ const Flow = ({ handleDelete }) => {
 					}
 					setError(null)
 				} catch (error) {
-					console.log(error)
 					switch (error.code) {
 						case 'PGRST116':
 							setError('Not found')

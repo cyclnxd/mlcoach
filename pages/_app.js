@@ -1,14 +1,13 @@
-import '../styles/globals.css'
-import '../node_modules/react-grid-layout/css/styles.css'
-import '../node_modules/react-resizable/css/styles.css'
+import 'styles/globals.css'
+import 'node_modules/react-grid-layout/css/styles.css'
+import 'node_modules/react-resizable/css/styles.css'
 import { ThemeProvider } from '@mui/material'
 import create from 'zustand'
 import { useEffect } from 'react'
 
-import { darkTheme } from '../lib/themes/theme'
-import store from '../lib/store/AuthStore.ts'
-import Header from '../components/Header'
-import { Logout } from '@mui/icons-material'
+import { darkTheme } from 'lib/themes/theme'
+import store from 'lib/store/AuthStore.ts'
+import Header from 'components/Header'
 
 function MyApp({ Component, pageProps }) {
 	const { setSession, authStateChange, setUserSession, logout } =
@@ -35,7 +34,7 @@ function MyApp({ Component, pageProps }) {
 		return () => {
 			data?.unsubscribe()
 		}
-	}, [authStateChange, setUserSession])
+	}, [authStateChange, logout, setSession, setUserSession])
 
 	return (
 		<ThemeProvider theme={darkTheme}>

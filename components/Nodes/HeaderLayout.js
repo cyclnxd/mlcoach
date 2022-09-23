@@ -1,8 +1,7 @@
-import React from 'react'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import StormIcon from '@mui/icons-material/Storm'
 import { Box, Typography } from '@mui/material'
-import store from '../../lib/store/store.ts'
+import store from 'lib/store/store.ts'
 function HeaderLayout({ title, id }) {
 	const handleDelete = () => {
 		store.getState().onNodesChange([{ id, type: 'remove' }])

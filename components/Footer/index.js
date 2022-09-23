@@ -1,7 +1,7 @@
 import { Box, Typography, Stack } from '@mui/material'
-import React, { useState, useEffect, useRef, memo } from 'react'
+import { useState, useEffect, useRef, memo } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
-import store from '../../lib/store/store.ts'
+import store from 'lib/store/store.ts'
 import StormIcon from '@mui/icons-material/Storm'
 function Footer({ onDelete, isDisplay }) {
 	//store da seçilen node tutmak için

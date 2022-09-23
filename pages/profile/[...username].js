@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import useDataStore from '../../lib/store/DataStore.ts'
+import useDataStore from 'lib/store/DataStore.ts'
 import create from 'zustand'
 import { useEffect, useState } from 'react'
 import { Box, CircularProgress } from '@mui/material'

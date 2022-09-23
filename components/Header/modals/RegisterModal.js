@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { memo, useEffect, useState } from 'react'
 import { Formik } from 'formik'
-import useAuthStore from '../../../lib/store/AuthStore.ts'
+import useAuthStore from 'lib/store/AuthStore.ts'
 import create from 'zustand'
 
 const RegisterModal = ({ open, handleModal }) => {
