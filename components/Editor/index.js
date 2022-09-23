@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import ReactFlow, {
 	ReactFlowProvider,
 	Controls,
@@ -147,18 +147,18 @@ const Flow = ({ handleDelete }) => {
 					height: '100%',
 				}}>
 				<ReactFlow
-					nodeTypes={nodeTypes}
-					nodes={nodes}
-					edges={edges}
+					nodeTypes={useMemo(() => nodeTypes, [nodeTypes])}
+					nodes={useMemo(() => nodes, [nodes])}
+					edges={useMemo(() => edges, [edges])}
 					deleteKeyCode={['Backspace', 'Delete']}
 					onInit={setRfInstance}
-					onNodesDelete={onNodesDelete}
-					onEdgesDelete={onEdgesDelete}
-					onNodesChange={onNodesChange}
-					onEdgesChange={onEdgesChange}
-					onConnect={onConnect}
-					onNodeClick={onNodeClick}
-					onPaneClick={onPaneClick}
+					onNodesDelete={useMemo(() => onNodesDelete, [onNodesDelete])}
+					onEdgesDelete={useMemo(() => onEdgesDelete, [onEdgesDelete])}
+					onNodesChange={useMemo(() => onNodesChange, [onNodesChange])}
+					onEdgesChange={useMemo(() => onEdgesChange, [onEdgesChange])}
+					onConnect={useMemo(() => onConnect, [onConnect])}
+					onNodeClick={useMemo(() => onNodeClick, [onNodeClick])}
+					onPaneClick={useMemo(() => onPaneClick, [onPaneClick])}
 					connectionLineComponent={ConnectionLine}
 					fitView
 					defaultEdgeOptions={{

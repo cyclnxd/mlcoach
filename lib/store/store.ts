@@ -112,9 +112,10 @@ const store = create<RFState>((set, get) => ({
 	},
 	onEdgesDelete: (edges: Edge[]) => {
 		const [sourceNode, targetNode] = get().changeNodeState(edges)
-		get().onNodesDelete([targetNode])
+		get().onNodesDelete([sourceNode, targetNode])
 	},
 	onNodesDelete: changes => {
+		console.log(changes)
 		changes.forEach(change => {
 			if (change?.id in get().fileMap) {
 				delete get().fileMap[change?.id]

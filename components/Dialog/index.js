@@ -8,8 +8,7 @@ import {
 	DialogTitle,
 	TextField,
 } from '@mui/material'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import useDataStore from 'lib/store/DataStore.ts'
 import create from 'zustand'
 

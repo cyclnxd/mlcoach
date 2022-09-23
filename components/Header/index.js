@@ -1,19 +1,19 @@
+import DesignServicesIcon from '@mui/icons-material/DesignServices'
+import WorkspacesIcon from '@mui/icons-material/Workspaces'
+import React, { memo, useState } from 'react'
 import {
 	AppBar,
 	Box,
-	Toolbar,
-	IconButton,
-	Typography,
-	Menu,
-	MenuIcon,
-	Container,
 	Button,
+	Container,
+	Icon,
+	IconButton,
+	Menu,
 	MenuItem,
+	Toolbar,
+	Typography,
 } from '@mui/material'
-import DesignServicesIcon from '@mui/icons-material/DesignServices'
-import WorkspacesIcon from '@mui/icons-material/Workspaces'
-import { memo, useState } from 'react'
-import { Icon } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
 import UserProfile from './UserProfile'
 
