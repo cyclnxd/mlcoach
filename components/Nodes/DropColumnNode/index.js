@@ -53,13 +53,11 @@ function DropColumnNode({ id, selected, data }) {
 				store.getState().storeFile(id, file)
 			} else {
 				setKeys([])
-				setSelectedColumns(() => [])
 				setError('data source has no data')
 			}
 		} else {
-			store.getState().fileMap[id] = undefined
+			store.getState().storeFile(id, undefined)
 			setKeys([])
-			setSelectedColumns(() => [])
 			setError('connect a data source to select columns')
 		}
 	}, [selectedColumns, id, selected, data])

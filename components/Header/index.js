@@ -98,7 +98,7 @@ const Header = () => {
 								display: { xs: 'block', md: 'none' },
 							}}>
 							{pages.map((page, i) => (
-								<Link key={i} href={page.toLocaleLowerCase()}>
+								<Link key={i} href={`/${page.toLocaleLowerCase()}`}>
 									<MenuItem onClick={handleCloseNavMenu}>
 										<Icon
 											aria-controls='menu-appbar'

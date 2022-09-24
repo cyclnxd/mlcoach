@@ -46,6 +46,7 @@ function FillingConstantNode({ id, selected, data }) {
 				setError('data source has no data')
 			}
 		} else {
+			store.getState().storeFile(id, undefined)
 			setError('connect a data source to slice data')
 		}
 	}, [fillingValue, id, selected, data])
