@@ -14,6 +14,9 @@ import { Box, Stack } from '@mui/system'
 import { Alert, Button } from '@mui/material'
 import CustomDialog from 'components/Dialog'
 import { v4 as uuidv4 } from 'uuid'
+import ButtonMenu from 'components/ButtonMenu'
+import SaveIcon from '@mui/icons-material/Save'
+import FileOpenIcon from '@mui/icons-material/FileOpen'
 
 const Flow = ({ handleDelete }) => {
 	const [rfInstance, setRfInstance] = useState(null)
@@ -22,7 +25,14 @@ const Flow = ({ handleDelete }) => {
 	const [openSaveMenu, setOpenSaveMenu] = useState(false)
 	const [openOpenMenu, setOpenOpenMenu] = useState(false)
 	const [work, setWork] = useState(null)
+	const [anchorEl, setAnchorEl] = useState(null)
 
+	const handleOpen = e => {
+		setAnchorEl(e.currentTarget)
+	}
+	const handleClose = () => {
+		setAnchorEl(null)
+	}
 	const handleOpenSaveMenu = () => {
 		setOpenSaveMenu(true)
 	}
@@ -175,10 +185,48 @@ const Flow = ({ handleDelete }) => {
 						spacing={2}
 						sx={{
 							position: 'absolute',
-							top: '10px',
-							left: '10px',
+							top: '15px',
+							left: '15px',
 							zIndex: 1000,
 						}}>
+						<ButtonMenu
+							disabled={loading || !user}
+							anchorEl={anchorEl}
+							handleClose={handleClose}
+							handleOpen={handleOpen}
+							title='Editor'
+							options={[
+								{
+									label: 'Save',
+									icon: <SaveIcon />,
+									onClick: () => handleOpenSaveMenu(),
+								},
+								{
+									label: 'Open',
+									icon: <FileOpenIcon />,
+									onClick: () => handleOpenOpenMenu(),
+								},
+							]}
+						/>
+						<CustomDialog
+							open={openOpenMenu}
+							handleClose={handleCloseOpenMenu}
+							callback={handleOpenEditor}
+							title='Open Editor'
+							content='Enter the name of the editor you saved earlier'
+							label='Editor Name'
+							username={user?.username}
+						/>
+						<CustomDialog
+							open={openSaveMenu}
+							handleClose={handleCloseSaveMenu}
+							callback={handleSaveEditor}
+							title='Save Editor'
+							content='Enter the name of the editor you want to save'
+							label='Editor Name'
+							username={user?.username}
+						/>
+
 						<Button
 							variant='contained'
 							sx={{
@@ -199,52 +247,6 @@ const Flow = ({ handleDelete }) => {
 							onClick={() => handleModal(true)}>
 							ToolBox
 						</Button>
-						{user ? (
-							<>
-								<Button
-									variant='contained'
-									sx={{
-										backgroundColor: 'primary.darkLight',
-										color: 'primary.contrastText',
-									}}
-									disabled={loading}
-									size='small'
-									onClick={() => handleOpenSaveMenu()}>
-									Save Editor
-								</Button>
-								<Button
-									variant='contained'
-									sx={{
-										backgroundColor: 'primary.darkLight',
-										color: 'primary.contrastText',
-									}}
-									size='small'
-									disabled={loading}
-									onClick={() => handleOpenOpenMenu()}>
-									Open Editor
-								</Button>
-								<CustomDialog
-									open={openOpenMenu}
-									handleClose={handleCloseOpenMenu}
-									callback={handleOpenEditor}
-									title='Open Editor'
-									content='Enter the name of the editor you saved earlier'
-									label='Editor Name'
-									username={user?.username}
-								/>
-								<CustomDialog
-									open={openSaveMenu}
-									handleClose={handleCloseSaveMenu}
-									callback={handleSaveEditor}
-									title='Save Editor'
-									content='Enter the name of the editor you want to save'
-									label='Editor Name'
-									username={user?.username}
-								/>
-							</>
-						) : (
-							<></>
-						)}
 					</Stack>
 					{error ? (
 						<Alert
