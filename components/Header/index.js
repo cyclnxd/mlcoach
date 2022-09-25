@@ -17,10 +17,15 @@ import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
 import UserProfile from './UserProfile'
 
-const pages = ['Editor', 'Workplace']
-const icons = [
-	<DesignServicesIcon key={'editor'} />,
-	<WorkspacesIcon key={'workplace'} />,
+const pages = [
+	{
+		name: 'Editor',
+		icon: <DesignServicesIcon />,
+	},
+	{
+		name: 'Workplace',
+		icon: <WorkspacesIcon />,
+	},
 ]
 
 const Header = () => {
@@ -98,15 +103,10 @@ const Header = () => {
 								display: { xs: 'block', md: 'none' },
 							}}>
 							{pages.map((page, i) => (
-								<Link key={i} href={`/${page.toLocaleLowerCase()}`}>
+								<Link key={i} href={`/${page.name.toLocaleLowerCase()}`}>
 									<MenuItem onClick={handleCloseNavMenu}>
-										<Icon
-											aria-controls='menu-appbar'
-											aria-haspopup='true'
-											color='inherit'
-											sx={{ display: 'flex', alignItems: 'center', my: 0.8 }}>
-											{icons[i]}
-										</Icon>
+										{page.icon}
+
 										<Typography
 											textAlign='center'
 											sx={{
@@ -116,7 +116,7 @@ const Header = () => {
 												color: 'inherit',
 												textDecoration: 'none',
 											}}>
-											{page}
+											{page.name}
 										</Typography>
 									</MenuItem>
 								</Link>
@@ -143,10 +143,10 @@ const Header = () => {
 					</Link>
 					<Box
 						sx={{ flexGrow: { md: 1 }, display: { xs: 'none', md: 'flex' } }}>
-						{pages.map(page => (
-							<Link href={`/${page.toLocaleLowerCase()}`} key={page} passHref>
+						{pages.map((page, i) => (
+							<Link href={`/${page.name.toLocaleLowerCase()}`} key={i}>
 								<Button sx={{ my: 2, color: 'white', display: 'block' }}>
-									{page}
+									{page.name}
 								</Button>
 							</Link>
 						))}

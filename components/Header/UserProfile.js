@@ -6,12 +6,16 @@ import {
 	Typography,
 	Box,
 } from '@mui/material'
-import React, { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import LoginModal from './modals/LoginModal'
 import RegisterModal from './modals/RegisterModal'
 import store from 'lib/store/AuthStore.ts'
 import create from 'zustand'
 import { useRouter } from 'next/router'
+import PersonIcon from '@mui/icons-material/Person'
+import LoginIcon from '@mui/icons-material/Login'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 function UserProfile() {
 	const [anchorElUser, setAnchorElUser] = useState(undefined)
@@ -27,6 +31,7 @@ function UserProfile() {
 		if (user) {
 			setSettings([
 				{
+					icon: <LogoutIcon />,
 					name: 'Logout',
 					onClick: () => {
 						logout()
@@ -34,6 +39,7 @@ function UserProfile() {
 					},
 				},
 				{
+					icon: <PersonIcon />,
 					name: 'Profile',
 					onClick: () => router.push(`/profile/${currentUserData?.username}`),
 				},
@@ -41,10 +47,12 @@ function UserProfile() {
 		} else {
 			setSettings([
 				{
+					icon: <LoginIcon />,
 					name: 'Login',
 					onClick: () => loginHandleModal(true),
 				},
 				{
+					icon: <PersonAddIcon />,
 					name: 'Register',
 					onClick: () => registerHandleModal(true),
 				},
@@ -99,7 +107,14 @@ function UserProfile() {
 							setting.onClick()
 							handleCloseUserMenu()
 						}}>
-						<Typography textAlign='center'>{setting.name}</Typography>
+						{setting.icon}
+						<Typography
+							textAlign='center'
+							sx={{
+								marginLeft: 1,
+							}}>
+							{setting.name}
+						</Typography>
 					</MenuItem>
 				))}
 			</Menu>

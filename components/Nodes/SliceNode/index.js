@@ -3,9 +3,9 @@ import Box from '@mui/material/Box'
 import { TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import store from 'lib/store/store.ts'
-import { Handle } from 'react-flow-renderer'
 import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
+import CustomHandle from '../CustomHandle'
 
 function SliceNode({ id, selected, data }) {
 	//holding slicing index values
@@ -68,30 +68,13 @@ function SliceNode({ id, selected, data }) {
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
-			<Box
-				sx={{
-					height: '15px',
-					width: 15,
-					backgroundColor: 'primary.light',
-					borderRadius: '15px 0px 0px 15px',
-				}}>
-				<Handle
-					type='target'
-					position='left'
-					id={`slice-in`}
-					key={`${id}-in`}
-					style={{
-						left: '0%',
-						width: '15px',
-						top: '50%',
-						height: '15px',
-						background: 'none',
-						border: 'none',
-						borderRadius: '15px 0px 0px 15px',
-					}}
-					isConnectable={true}
-				/>
-			</Box>
+			<CustomHandle
+				type='target'
+				position='left'
+				id={`slice-in`}
+				key={`slice-${id}-in`}
+				isConnectable={true}
+			/>
 			<Card
 				sx={{
 					backgroundColor: 'primary.surface',
@@ -141,30 +124,14 @@ function SliceNode({ id, selected, data }) {
 					</Box>
 				</Stack>
 			</Card>
-			<Box
-				sx={{
-					height: '100px',
-					width: 15,
-					backgroundColor: 'primary.light',
-					borderRadius: '0px 15px 15px 0px',
-				}}>
-				<Handle
-					type='source'
-					position='right'
-					id={`slice-out`}
-					key={`${id}-out`}
-					style={{
-						left: '91%',
-						width: '15px',
-						top: '50%',
-						height: '100px',
-						background: 'none',
-						border: 'none',
-						borderRadius: '0px 15px 15px 0px',
-					}}
-					isConnectable={true}
-				/>
-			</Box>
+
+			<CustomHandle
+				type='source'
+				position='right'
+				id={`slice-out`}
+				key={`slice-${id}-out`}
+				isConnectable={true}
+			/>
 		</Grid>
 	)
 }

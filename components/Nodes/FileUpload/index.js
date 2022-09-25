@@ -4,9 +4,9 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Papa from 'papaparse'
 import store from 'lib/store/store.ts'
-import { Handle } from 'react-flow-renderer'
 import { Card, Stack, Typography } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
+import CustomHandle from '../CustomHandle'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
@@ -110,30 +110,13 @@ function FileUpload({ id, selected }) {
 				</Stack>
 			</Card>
 
-			<Box
-				sx={{
-					height: '100px',
-					width: 15,
-					backgroundColor: 'primary.light',
-					borderRadius: '0px 15px 15px 0px',
-				}}>
-				<Handle
-					type='source'
-					position='right'
-					id={'file-out'}
-					key={id}
-					style={{
-						left: 'inherit',
-						width: 'inherit',
-						top: '50%',
-						height: 'inherit',
-						background: 'none',
-						border: 'none',
-						borderRadius: 'inherit',
-					}}
-					isConnectable={true}
-				/>
-			</Box>
+			<CustomHandle
+				type='source'
+				position='right'
+				id={'file-out'}
+				key={`file-${id}-out`}
+				isConnectable={true}
+			/>
 		</Grid>
 	)
 }

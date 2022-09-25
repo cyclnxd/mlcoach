@@ -48,7 +48,7 @@ const nodeTypes = [
 		desc: 'Filling missing values with statistics values',
 		input: 'DataFrame',
 		output: 'DataFrame',
-	}
+	},
 ]
 
 function TabPanel(props) {

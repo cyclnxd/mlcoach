@@ -2,9 +2,9 @@ import { useState, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import store from 'lib/store/store.ts'
-import { Handle } from 'react-flow-renderer'
 import { Card, Stack, Typography, TextField } from '@mui/material'
 import HeaderLayout from '../../HeaderLayout'
+import CustomHandle from 'components/Nodes/CustomHandle'
 
 function FillingConstantNode({ id, selected, data }) {
 	const [fillingValue, setFillingValue] = useState(0)
@@ -52,30 +52,13 @@ function FillingConstantNode({ id, selected, data }) {
 	}, [fillingValue, id, selected, data])
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
-			<Box
-				sx={{
-					height: '15px',
-					width: 15,
-					backgroundColor: 'primary.light',
-					borderRadius: '15px 0px 0px 15px',
-				}}>
-				<Handle
-					type='target'
-					position='left'
-					id={`slice-in`}
-					key={`${id}-in`}
-					style={{
-						left: '0%',
-						width: '15px',
-						top: '50%',
-						height: '15px',
-						background: 'none',
-						border: 'none',
-						borderRadius: '15px 0px 0px 15px',
-					}}
-					isConnectable={true}
-				/>
-			</Box>
+			<CustomHandle
+				type='target'
+				position='left'
+				id={`fwcn-in`}
+				key={`fwcn-${id}-in`}
+				isConnectable={true}
+			/>
 			<Card
 				sx={{
 					backgroundColor: 'primary.surface',
@@ -142,30 +125,13 @@ function FillingConstantNode({ id, selected, data }) {
 					</Box>
 				</Stack>
 			</Card>
-			<Box
-				sx={{
-					height: '75px',
-					width: 15,
-					backgroundColor: 'primary.light',
-					borderRadius: '0px 15px 15px 0px',
-				}}>
-				<Handle
-					type='source'
-					position='right'
-					id={`slice-out`}
-					key={`${id}-out`}
-					style={{
-						left: '91%',
-						width: '15px',
-						top: '50%',
-						height: '75px',
-						background: 'none',
-						border: 'none',
-						borderRadius: '0px 15px 15px 0px',
-					}}
-					isConnectable={true}
-				/>
-			</Box>
+			<CustomHandle
+				type='source'
+				position='right'
+				id={`fwcn-out`}
+				key={`fwcn-${id}-out`}
+				isConnectable={true}
+			/>
 		</Grid>
 	)
 }
