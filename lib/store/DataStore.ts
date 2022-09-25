@@ -67,6 +67,15 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return data
 	},
+	deleteWorkByUsernameAndName: async (username: string, name: string) => {
+		const { data, error } = await supabase
+			.from('works')
+			.delete()
+			.match({ username, name })
+			.single()
+		if (error) throw error
+		return data
+	},
 }))
 
 export default useDataStore

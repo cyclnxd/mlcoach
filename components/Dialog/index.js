@@ -6,8 +6,10 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	IconButton,
 	TextField,
 } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { useState, useEffect } from 'react'
 import useDataStore from 'lib/store/DataStore.ts'
 import create from 'zustand'
@@ -24,7 +26,13 @@ function CustomDialog({
 	const [value, setValue] = useState('')
 	const [works, setWorks] = useState([])
 	const [loading, setLoading] = useState(false)
-	const { getWorksByUsername } = create(useDataStore)()
+	const { getWorksByUsername, deleteWorkByUsernameAndName } =
+		create(useDataStore)()
+
+	const handleDeleteWork = async value => {
+		await deleteWorkByUsernameAndName(username, value)
+		setWorks(works.filter(work => work.name !== value))
+	}
 
 	useEffect(() => {
 		async function fetchData() {
@@ -39,11 +47,7 @@ function CustomDialog({
 	return (
 		<>
 			{!loading ? (
-				<Dialog
-					open={open}
-					onClose={() => {
-						handleClose()
-					}}>
+				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>{title}</DialogTitle>
 					<DialogContent>
 						<DialogContentText>{content}</DialogContentText>
@@ -54,7 +58,22 @@ function CustomDialog({
 								setValue(newValue)
 							}}
 							options={works.map(work => work.name || 'noname')}
-							renderOption={(props, option) => <li {...props}>{option}</li>}
+							renderOption={(props, option) => (
+								<li {...props}>
+									{option}
+									<IconButton
+										color='primary'
+										aria-label='delete work'
+										component='label'
+										sx={{ ml: 'auto' }}
+										onClick={async () => {
+											await handleDeleteWork(option)
+											setValue('')
+										}}>
+										<DeleteIcon />
+									</IconButton>
+								</li>
+							)}
 							freeSolo
 							renderInput={params => (
 								<TextField
@@ -73,12 +92,7 @@ function CustomDialog({
 					</DialogContent>
 
 					<DialogActions>
-						<Button
-							onClick={() => {
-								handleClose()
-							}}>
-							Cancel
-						</Button>
+						<Button onClick={handleClose}>Cancel</Button>
 						<Button
 							onClick={async () => {
 								await callback(value)
