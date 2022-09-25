@@ -14,7 +14,9 @@ function ButtonMenu({
 	return (
 		<>
 			<Tooltip
-				title={'You must be logged in to use this feature'}
+				title={
+					'You must be logged in to use this feature or need to add at least one node to save your work'
+				}
 				disableHoverListener={!disabled}>
 				<span>
 					<Button

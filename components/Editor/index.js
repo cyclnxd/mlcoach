@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactFlow, {
 	ReactFlowProvider,
 	Controls,
@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid'
 import ButtonMenu from 'components/ButtonMenu'
 import SaveIcon from '@mui/icons-material/Save'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
+import html2canvas from 'html2canvas'
 
 const Flow = ({ handleDelete }) => {
 	const [rfInstance, setRfInstance] = useState(null)
@@ -26,6 +27,8 @@ const Flow = ({ handleDelete }) => {
 	const [openOpenMenu, setOpenOpenMenu] = useState(false)
 	const [work, setWork] = useState(null)
 	const [anchorEl, setAnchorEl] = useState(null)
+
+	const editorRef = useRef(null)
 
 	const handleOpen = e => {
 		setAnchorEl(e.currentTarget)
@@ -62,7 +65,7 @@ const Flow = ({ handleDelete }) => {
 		modalOpen,
 	} = create(store)()
 	const { currentUserData: user } = create(useAuthStore)()
-	const { updateWorkByUsername, getWorkByUsernameAndName } =
+	const { updateWorkByUsername, getWorkByUsernameAndName, uploadThumbnail } =
 		create(useDataStore)()
 
 	const handleContextMenu = e => {
@@ -70,10 +73,31 @@ const Flow = ({ handleDelete }) => {
 		handleModal(true)
 	}
 
+	const takeScreenshot = useCallback(
+		async id => {
+			if (rfInstance) {
+				rfInstance.fitView()
+				html2canvas(editorRef.current.firstChild, {
+					allowTaint: true,
+					useCORS: true,
+					backgroundColor: '#403f69',
+				}).then(async canvas => {
+					canvas.toBlob(async blob => {
+						const file = new File([blob], `${id}.jpeg`, {
+							type: 'image/jpeg',
+						})
+						await uploadThumbnail(file, id)
+					})
+				})
+			}
+		},
+		[rfInstance, uploadThumbnail]
+	)
+
 	useEffect(() => {
 		setTimeout(() => {
 			setError(null)
-		}, 4000)
+		}, 5000)
 	}, [error])
 
 	const handleSaveEditor = useCallback(
@@ -81,22 +105,31 @@ const Flow = ({ handleDelete }) => {
 			async function save() {
 				if (rfInstance) {
 					const flow = rfInstance.toObject()
+					if (!flow.nodes.length) {
+						setError('You need to add at least one node to save your work')
+						return
+					}
 					try {
 						setLoading(true)
 						if (work && work.name === name) {
+							await takeScreenshot(work.id)
 							await updateWorkByUsername({
 								...work,
 								name,
 								updated_at: new Date().toISOString(),
 								work: JSON.stringify(flow),
+								thumbnail_url: `thumbnails/${work.id}`,
 							})
 						} else {
+							const randomId = uuidv4()
+							await takeScreenshot(randomId)
 							const work = await updateWorkByUsername({
-								id: uuidv4(),
+								id: randomId,
 								username: user?.username,
 								work: JSON.stringify(flow),
 								name,
 								updated_at: new Date().toISOString(),
+								thumbnail_url: `thumbnails/${randomId}`,
 								is_active: true,
 								is_public: true,
 							})
@@ -112,7 +145,7 @@ const Flow = ({ handleDelete }) => {
 			}
 			save()
 		},
-		[rfInstance, updateWorkByUsername, user?.username, work]
+		[rfInstance, takeScreenshot, updateWorkByUsername, user?.username, work]
 	)
 
 	const handleOpenEditor = useCallback(
@@ -157,6 +190,7 @@ const Flow = ({ handleDelete }) => {
 					height: '100%',
 				}}>
 				<ReactFlow
+					ref={editorRef}
 					nodeTypes={useMemo(() => nodeTypes, [nodeTypes])}
 					nodes={useMemo(() => nodes, [nodes])}
 					edges={useMemo(() => edges, [edges])}
@@ -190,7 +224,7 @@ const Flow = ({ handleDelete }) => {
 							zIndex: 1000,
 						}}>
 						<ButtonMenu
-							disabled={loading || !user}
+							disabled={loading || !user || !rfInstance?.nodes?.length}
 							anchorEl={anchorEl}
 							handleClose={handleClose}
 							handleOpen={handleOpen}

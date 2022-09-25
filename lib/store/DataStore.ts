@@ -1,5 +1,6 @@
 import create from 'zustand/vanilla'
 import supabase from '../supabase'
+import { decode, encode } from 'base64-arraybuffer'
 
 type userState = {
 	updateUserById: any
@@ -40,6 +41,16 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return data
 	},
+	uploadThumbnail: async (file, id: string) => {
+		const { error } = await supabase.storage
+			.from('thumbnails')
+			.upload(id, file, {
+				cacheControl: '3600',
+				upsert: true,
+				contentType: 'File',
+			})
+		if (error) throw error
+	},
 	updateWorkByUsername: async (data: object) => {
 		const { data: work, error } = await supabase
 			.from('works')
@@ -61,7 +72,7 @@ const useDataStore = create<userState>(() => ({
 	getWorksByUsername: async (username: string) => {
 		const { data, error } = await supabase
 			.from('works')
-			.select('name')
+			.select('id, name, username, thumbnail_url, updated_at')
 			.match({ username })
 			.order('updated_at', { ascending: false })
 		if (error) throw error
@@ -73,6 +84,13 @@ const useDataStore = create<userState>(() => ({
 			.delete()
 			.match({ username, name })
 			.single()
+		if (error) throw error
+		return data
+	},
+	getPublicUrl: async (id: string) => {
+		const { data, error } = await supabase.storage
+			.from('thumbnails')
+			.getPublicUrl(id)
 		if (error) throw error
 		return data
 	},
