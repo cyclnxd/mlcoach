@@ -9,6 +9,7 @@ function ButtonMenu({
 	title,
 	options,
 	disabled,
+	menuDisabled,
 }) {
 	const open = Boolean(anchorEl)
 	return (
@@ -52,6 +53,7 @@ function ButtonMenu({
 				}}>
 				{options.map((option, index) => (
 					<MenuItem
+						disabled={option.label === 'Save' && menuDisabled}
 						key={index}
 						onClick={() => {
 							option.onClick()

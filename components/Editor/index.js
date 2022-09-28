@@ -224,7 +224,8 @@ const Flow = ({ handleDelete }) => {
 							zIndex: 1000,
 						}}>
 						<ButtonMenu
-							disabled={loading || !user || nodes.length === 0}
+							disabled={loading || !user}
+							menuDisabled={nodes.length === 0}
 							anchorEl={anchorEl}
 							handleClose={handleClose}
 							handleOpen={handleOpen}

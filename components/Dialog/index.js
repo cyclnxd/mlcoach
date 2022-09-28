@@ -14,6 +14,7 @@ import {
 	ListItemAvatar,
 	ListItemText,
 	TextField,
+	Typography,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useState, useEffect, useCallback } from 'react'
@@ -83,17 +84,19 @@ function CustomDialog({
 											overflow: 'auto',
 											border: '1px solid',
 											borderColor: 'primary.dark',
+											pt: 1,
 										}}>
-										<ListItemText
-											primary={'Your works'}
+										<Typography
+											variant='h6'
 											sx={{
 												width: '100%',
-												fontWeight: 'bold',
 												justifyContent: 'center',
 												alignItems: 'center',
 												display: 'flex',
-											}}
-										/>
+												pb: 1,
+											}}>
+											Your Works
+										</Typography>
 										<Divider width={'100%'} />
 										{works.map(work => (
 											<ListItem
@@ -107,13 +110,13 @@ function CustomDialog({
 														alt={work.name}
 														src={work.url}
 														sx={{
-															width: 30,
-															height: 30,
+															width: 150,
+															height: 80,
 															borderRadius: 1,
-															zoom: 5,
 														}}
 													/>
 												</ListItemAvatar>
+
 												<ListItemText
 													primary={work.name}
 													secondary={moment(work.updated_at).fromNow()}
