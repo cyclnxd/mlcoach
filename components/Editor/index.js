@@ -19,7 +19,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import html2canvas from 'html2canvas'
 
-const Flow = ({ handleDelete }) => {
+const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 	const [rfInstance, setRfInstance] = useState(null)
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
@@ -269,8 +269,17 @@ const Flow = ({ handleDelete }) => {
 								color: 'primary.contrastText',
 							}}
 							size='small'
-							onClick={handleDelete}>
+							onClick={handleDeleteLog}>
 							Output Panel
+						</Button>
+						<Button
+						variant ='contained'
+						sx={{ backgroundColor: 'primary.darkLight', 
+						color: 'primary.contrastText' }}
+						size='small'
+						onClick={handleDeleteGraph}
+						>
+						Graph Panel
 						</Button>
 						<Button
 							variant='contained'
