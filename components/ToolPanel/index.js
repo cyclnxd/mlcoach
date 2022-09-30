@@ -49,6 +49,14 @@ const nodeTypes = [
 		input: 'DataFrame',
 		output: 'DataFrame',
 	},
+	{
+		title: 'Filter Node',
+		type: 'filterNode',
+		group: 'transform',
+		desc: 'Filtering data frames given conditions',
+		input: 'DataFrame',
+		output: 'DataFrame',
+	},
 ]
 
 function TabPanel(props) {
@@ -138,7 +146,6 @@ export default function ToolPanel() {
 								(node.group === group || group === 'all') && (
 									<ToolItem
 										key={idx}
-										index={idx}
 										group={node.group}
 										title={node.title}
 										type={node.type}

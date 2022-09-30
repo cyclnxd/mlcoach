@@ -1,20 +1,54 @@
-import React, { useState, useRef, useEffect, memo } from 'react'
+import { useState, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
+import { Autocomplete, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
 import store from 'lib/store/store.ts'
-import { Card, Stack, Typography } from '@mui/material'
+import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
 
-function FilterNode({ id, selected }) {
-	const [fileMetaData, setFileMetaData] = useState(null)
-	const [fileData, setFileData] = useState()
-	const inputRef = useRef()
+function FilterNode({ id, selected, data }) {
+	const [error, setError] = useState('connect a data source to select columns')
+	const [selectedColumn, setSelectedColumn] = useState(null)
+	const [selectedFilter, setSelectedFilter] = useState(null)
+	const [columns, setColumns] = useState([])
+	const [filters, setFilters] = useState([])
+	const [types, setTypes] = useState([])
+	const [value, setValue] = useState([])
 
 	useEffect(() => {
-		store.getState().storeFile(id, fileData)
-	}, [fileData, id])
+		const edge = Object.values(store.getState().edges).find(
+			item => item.target === id
+		)
+		const sourceId = edge !== undefined ? edge.source : undefined
+		if (sourceId !== undefined) {
+			let file = structuredClone(store.getState().fileMap[sourceId])
+			if (file !== undefined && file?.data.length > 0) {
+				setColumns(file.meta.fields)
+				setTypes(file.data[0])
+
+				if (selectedFilter !== null) {
+					let filter = filters.find(item => item.name === selectedFilter)
+					if (filter !== undefined) {
+						let type = types[selectedColumn]
+						if (type === 'number') {
+							setValue([filter.min, filter.max])
+						} else if (type === 'string') {
+							setValue(filter.values)
+						}
+					}
+				}
+
+				setError('')
+				store.getState().storeFile(id, file)
+			} else {
+				setError('data source has no data')
+			}
+		} else {
+			store.getState().storeFile(id, undefined)
+			setError('connect a data source to slice data')
+		}
+	}, [id, selected, data, selectedFilter, filters, types, selectedColumn])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -23,6 +57,7 @@ function FilterNode({ id, selected }) {
 				position='left'
 				id={`filter-in`}
 				key={`filter-${id}-in`}
+				isConnectable={true}
 			/>
 			<Card
 				sx={{
@@ -30,73 +65,242 @@ function FilterNode({ id, selected }) {
 					color: 'white',
 					justifyContent: 'center',
 					alignItems: 'center',
-					border: '0.5px solid ',
-					borderColor: `${selected ? 'primary.light' : 'primary.darkLight'}`,
-				}}>
-				<Stack spacing={0}>
-					<HeaderLayout title='Filter' id={id} />
+				}}
+				style={
+					selected
+						? { border: '0.5px solid #403f69' }
+						: { border: '0.5px solid #333154' }
+				}>
+				<Stack spacing={1}>
+					<HeaderLayout title='Filter Node' id={id} />
 					<Box
 						sx={{
 							display: 'flex',
 							flexDirection: 'column',
-							justifyContent: 'center',
-							alignItems: 'center',
+							justifyContent: 'start',
+							alignItems: 'start',
 							padding: '10px',
-							gap: '10px',
+							gap: '15px',
+							width: '200px',
 						}}>
-						{fileData === undefined ? (
+						{error.length === 0 ? (
 							<>
-								<Button
-									variant='contained'
-									component='label'
-									value='Upload'
-									size='small'
-									sx={{
-										backgroundColor: 'primary.light',
-										'&:hover': {
-											backgroundColor: 'primary.darkLight',
-										},
-									}}>
-									Upload
-									<input
-										id='contained-button-file'
-										type='file'
-										hidden
-										ref={inputRef}
-										className='nodrag'
-										onChange={() => {
-											readFile(inputRef.current.files[0])
-										}}
-									/>
-								</Button>
 								<Typography
-									component={'div'}
-									fontSize={9}
+									variant='h6'
+									component='div'
 									sx={{
 										color: 'primary.darkText',
+										fontWeight: 'bold',
+										fontSize: '12px',
 									}}>
-									allowed types csv, excel
+									Select column:
 								</Typography>
+								<Autocomplete
+									fullWidth
+									options={columns}
+									getOptionLabel={option => option}
+									value={selectedColumn}
+									sx={{
+										'& .MuiAutocomplete-popupIndicator': {
+											color: 'primary.darkText',
+										},
+										'& .MuiAutocomplete-clearIndicator': {
+											color: 'primary.darkText',
+										},
+										'& .MuiAutocomplete-clearIndicatorDirty': {
+											color: 'primary.darkText',
+										},
+									}}
+									onChange={(_, newValue) => {
+										setSelectedColumn(newValue)
+
+										switch (types[newValue]) {
+											case 'DOUBLE':
+											case 'FLOAT':
+											case 'INT':
+											case 'LONG':
+											case 'SHORT':
+												setFilters([
+													'equals',
+													'not equals',
+													'greater than',
+													'greater than or equal',
+													'less than',
+													'less than or equal',
+													'is null',
+													'is not null',
+													'regex',
+												])
+
+												break
+											case 'BOOLEAN':
+												setFilters([
+													'equals',
+													'not equals',
+													'is null',
+													'is not null',
+												])
+												break
+											case 'DATE':
+											case 'STRING':
+											case 'TEXT':
+												setFilters([
+													'equals',
+													'not equals',
+													'contains',
+													'not contains',
+													'starts with',
+													'ends with',
+													'is null',
+													'is not null',
+													'regex',
+												])
+												break
+											default:
+												setFilters([])
+												setSelectedFilter(null)
+												break
+										}
+									}}
+									renderInput={params => (
+										<TextField
+											className='nodrag'
+											{...params}
+											variant='outlined'
+											label='Columns'
+											sx={{
+												'.MuiOutlinedInput-root': {
+													color: 'primary.contrastText',
+													fontSize: '12px',
+												},
+												'& label': {
+													color: 'primary.contrastText',
+													fontSize: '12px',
+												},
+												'& label.Mui-focused': {
+													color: 'primary.contrastText',
+												},
+												'& .MuiOutlinedInput-root': {
+													'& fieldset': {
+														borderColor: 'primary.darkLight',
+													},
+													'&:hover fieldset': {
+														borderColor: 'primary.light',
+													},
+													'&.Mui-focused fieldset': {
+														borderColor: 'primary.light',
+													},
+												},
+											}}
+										/>
+									)}
+								/>
+								<Typography
+									variant='h6'
+									component='div'
+									sx={{
+										color: 'primary.darkText',
+										fontWeight: 'bold',
+										fontSize: '12px',
+									}}>
+									Select filter:
+								</Typography>
+								<Autocomplete
+									fullWidth
+									options={filters}
+									getOptionLabel={option => option}
+									value={selectedFilter}
+									sx={{
+										'& .MuiAutocomplete-popupIndicator': {
+											color: 'primary.darkText',
+										},
+										'& .MuiAutocomplete-clearIndicator': {
+											color: 'primary.darkText',
+										},
+										'& .MuiAutocomplete-clearIndicatorDirty': {
+											color: 'primary.darkText',
+										},
+									}}
+									onChange={(_, newValue) => {
+										setSelectedFilter(newValue)
+									}}
+									renderInput={params => (
+										<TextField
+											className='nodrag'
+											{...params}
+											variant='outlined'
+											label='Filters'
+											sx={{
+												'.MuiOutlinedInput-root': {
+													color: 'primary.contrastText',
+													fontSize: '12px',
+												},
+												'& label': {
+													color: 'primary.contrastText',
+													fontSize: '12px',
+												},
+												'& label.Mui-focused': {
+													color: 'primary.contrastText',
+												},
+												'& .MuiOutlinedInput-root': {
+													'& fieldset': {
+														borderColor: 'primary.darkLight',
+													},
+													'&:hover fieldset': {
+														borderColor: 'primary.light',
+													},
+													'&.Mui-focused fieldset': {
+														borderColor: 'primary.light',
+													},
+												},
+											}}
+										/>
+									)}
+								/>
+								{selectedFilter && (
+									<>
+										<TextField
+											className='nodrag'
+											fullWidth
+											label='Value'
+											variant='outlined'
+											value={value}
+											onChange={e => setValue(e.target.value)}
+											sx={{
+												'.MuiOutlinedInput-root': {
+													color: 'primary.contrastText',
+													fontSize: '12px',
+												},
+												'& label': {
+													color: 'primary.contrastText',
+													fontSize: '12px',
+												},
+												'& label.Mui-focused': {
+													color: 'primary.contrastText',
+												},
+												'& .MuiOutlinedInput-root': {
+													'& fieldset': {
+														borderColor: 'primary.darkLight',
+													},
+													'&:hover fieldset': {
+														borderColor: 'primary.light',
+													},
+													'&.Mui-focused fieldset': {
+														borderColor: 'primary.light',
+													},
+												},
+											}}
+										/>
+									</>
+								)}
 							</>
 						) : (
-							<Stack spacing={2} alignItems='center' justifyContent='center'>
-								<Typography fontSize='12px' color='primary.darkText'>
-									<strong>name: </strong>
-									{fileMetaData.name}
-								</Typography>
-								<Typography fontSize='12px' color='primary.darkText'>
-									<strong>size: </strong>
-									{fileMetaData.size} bytes
-								</Typography>
-								<Typography fontSize='12px' color='primary.darkText'>
-									<strong>type: </strong>
-									{fileMetaData.type}
-								</Typography>
-							</Stack>
+							<Typography>{error}</Typography>
 						)}
 					</Box>
 				</Stack>
 			</Card>
+
 			<CustomHandle
 				type='source'
 				position='right'
