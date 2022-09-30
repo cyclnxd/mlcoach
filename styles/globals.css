@@ -34,7 +34,7 @@ body {
 	flex-shrink: 0;
 	resize: vertical;
 	min-height: 55vh;
-	max-height: 92vh;
+	max-height: 91vh;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
