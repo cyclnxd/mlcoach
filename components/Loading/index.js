@@ -14,7 +14,7 @@ function Loading() {
 			}}>
 			<CircularProgress
 				sx={{
-					color: 'primary.light',
+					color: 'primary.contrastText',
 				}}
 			/>
 		</Box>

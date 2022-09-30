@@ -1,6 +1,5 @@
 import create from 'zustand/vanilla'
 import supabase from '../supabase'
-import { decode, encode } from 'base64-arraybuffer'
 
 type userState = {
 	updateUserById: any
