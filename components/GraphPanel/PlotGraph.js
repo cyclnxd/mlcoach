@@ -13,11 +13,13 @@ function PlotGraph({
   chartParams,
   axisParams,
   update,
+  style,
+  axisChanged,
 }) {
   const [option, setOption] = useState()
   const [chartData, setChartData] = useState()
   const optionHandler = (type) => {
-    if (type === "ScatterChart") {
+  
       var options = {
         title: chartParams.title,
         subtitle: chartParams.subtitle,
@@ -34,8 +36,7 @@ function PlotGraph({
         legend: "none",
       };
       setOption(options);
-      return "ScatterChart";
-    }
+    
   }
  
     useEffect(() => {
@@ -43,22 +44,26 @@ function PlotGraph({
       {
         ChartHandler(data)
       }
-    }, [ update]);
+      else
+      {
+        ChartHandler(undefined)
+      }
+    }, [data,update,width, axisChanged]);
   
     function ChartHandler  (data){
     if(data !== undefined){
-      if (optionHandler(chartType) === "ScatterChart") {
+    
         let scatterData = [[axisParams.xAxis.title, axisParams.yAxis.title]];
         for (var index in data.data) {
           scatterData.push([
             parseFloat(data.data[index][axisParams.xAxis.title]),
             parseFloat(data.data[index][axisParams.yAxis.title]),
           ]);
-        }
+        
         setChartData(scatterData)
       }
     }
-    }
+  }
     return (
       <Chart 
         width={width}
@@ -67,6 +72,7 @@ function PlotGraph({
         loader={<div>Loading Chart</div>}
         data={chartData}
         options={option}
+        style = {style}
       />
     )
 }
