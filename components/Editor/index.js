@@ -65,8 +65,12 @@ const Flow = ({ handleDelete }) => {
 		modalOpen,
 	} = create(store)()
 	const { currentUserData: user } = create(useAuthStore)()
-	const { updateWorkByUsername, getWorkByUsernameAndName, uploadThumbnail } =
-		create(useDataStore)()
+	const {
+		updateWorkByUsername,
+		getWorkByUsernameAndName,
+		uploadThumbnail,
+		getPublicUrl,
+	} = create(useDataStore)()
 
 	const handleContextMenu = e => {
 		e.preventDefault()
@@ -76,7 +80,7 @@ const Flow = ({ handleDelete }) => {
 	const takeScreenshot = useCallback(
 		async id => {
 			if (rfInstance) {
-				rfInstance.fitView()
+				await rfInstance.fitView()
 				html2canvas(editorRef.current.firstChild, {
 					allowTaint: true,
 					useCORS: true,
@@ -101,7 +105,7 @@ const Flow = ({ handleDelete }) => {
 	}, [error])
 
 	const handleSaveEditor = useCallback(
-		name => {
+		(name, descp) => {
 			async function save() {
 				if (rfInstance) {
 					const flow = rfInstance.toObject()
@@ -113,25 +117,29 @@ const Flow = ({ handleDelete }) => {
 						setLoading(true)
 						if (work && work.name === name) {
 							await takeScreenshot(work.id)
+							const res = await getPublicUrl(work.id, 'thumbnails')
 							await updateWorkByUsername({
 								...work,
 								name,
 								updated_at: new Date().toISOString(),
 								work: JSON.stringify(flow),
-								thumbnail_url: `thumbnails/${work.id}`,
+								thumbnail_url: res.publicURL,
+								description: descp,
 							})
 						} else {
 							const randomId = uuidv4()
 							await takeScreenshot(randomId)
+							const res = await getPublicUrl(randomId, 'thumbnails')
 							const work = await updateWorkByUsername({
 								id: randomId,
 								username: user?.username,
 								work: JSON.stringify(flow),
 								name,
 								updated_at: new Date().toISOString(),
-								thumbnail_url: `thumbnails/${randomId}`,
+								thumbnail_url: res.publicURL,
 								is_active: true,
 								is_public: true,
+								description: descp,
 							})
 							setWork(work)
 							setError(null)
@@ -145,7 +153,14 @@ const Flow = ({ handleDelete }) => {
 			}
 			save()
 		},
-		[rfInstance, takeScreenshot, updateWorkByUsername, user?.username, work]
+		[
+			getPublicUrl,
+			rfInstance,
+			takeScreenshot,
+			updateWorkByUsername,
+			user?.username,
+			work,
+		]
 	)
 
 	const handleOpenEditor = useCallback(

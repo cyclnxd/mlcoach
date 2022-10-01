@@ -71,7 +71,7 @@ const useDataStore = create<userState>(() => ({
 	getWorksByUsername: async (username: string) => {
 		const { data, error } = await supabase
 			.from('works')
-			.select('id, name, username, thumbnail_url, updated_at')
+			.select('*')
 			.match({ username })
 			.order('updated_at', { ascending: false })
 		if (error) throw error
@@ -86,10 +86,47 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return data
 	},
-	getPublicUrl: async (id: string) => {
-		const { data, error } = await supabase.storage
-			.from('thumbnails')
-			.getPublicUrl(id)
+	getPublicUrl: async (id: string, from: string) => {
+		const { data, error } = await supabase.storage.from(from).getPublicUrl(id)
+		if (error) throw error
+		return data
+	},
+	followUser: async (
+		follower: string,
+		following: string,
+		isFollow: boolean
+	) => {
+		if (follower === following) throw new Error('You cannot follow yourself')
+		if (isFollow) {
+			const { data, error } = await supabase
+				.from('follows')
+				.insert([{ follower, following }])
+				.single()
+			if (error) throw error
+			return data
+		} else {
+			const { data, error } = await supabase
+				.from('follows')
+				.delete()
+				.match({ follower, following })
+				.single()
+			if (error) throw error
+			return data
+		}
+	},
+	getFollowers: async (id: string) => {
+		const { data, error } = await supabase
+			.from('follows')
+			.select('follower')
+			.match({ following: id })
+		if (error) throw error
+		return data
+	},
+	getForked: async (username: string) => {
+		const { data, error } = await supabase
+			.from('works')
+			.select('count(forked)')
+			.match({ username })
 		if (error) throw error
 		return data
 	},
