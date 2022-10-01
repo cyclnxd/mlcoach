@@ -6,23 +6,24 @@ import GridLayout from 'react-grid-layout'
 import { useState } from 'react'
 import useWindowSize from 'lib/hooks/useWindowSize'
 import Loading from 'components/Loading'
+import GraphPanel from 'components/GraphPanel'
 const layout = [
-	{ i: 'b', x: 0, y: 0, w: 12, h: 12, static: true },
-	{ i: 'c', x: 1, y: 8, w: 7, h: 4, minW: 5, minH: 4 },
-	{ i: 'd', x: 8, y:8, w: 4, h: 4, minW: 2, minH: 4 },
+	{ i: 'a', x: 0, y: 0, w: 12, h: 12, static: true },
+	{ i: 'b', x: 4, y: 7, w: 7, h: 4, minW: 5, minH: 4 },
+	{ i: 'c', x: 6, y: 5, w: 5, h: 6, minW: 5, minH: 6 },
 ]
 export default function Editor() {
 	const [windowSize, loading] = useWindowSize()
 
-	const [isRenderLog, setIsRenderLog] = useState(false)
-	const [isRenderGraph, setIsRenderGraph] = useState(false)
+	const [isRender, setIsRender] = useState(true)
 
-	const handleDeleteLog = () => {
-		setIsRenderLog(!isRenderLog)
-	}
+	const [dimensions, setDimensions] = useState({
+		height: layout[2].h,
+		width: layout[2].w,
+	})
 
-	const handleDeleteGraph = () =>{
-		setIsRenderGraph(!isRenderGraph)
+	const handleDelete = () => {
+		setIsRender(!isRender)
 	}
 
 	return (
@@ -46,30 +47,29 @@ export default function Editor() {
 						rowHeight={windowSize.height / 12}
 						width={windowSize.width}
 						margin={[0, 0]}
-						useCSSTransforms={true}>
-						<div key='b'>
-							<Flow handleDeleteLog={handleDeleteLog} handleDeleteGraph={handleDeleteGraph} />
+						useCSSTransforms={true}
+						onLayoutChange={layout => {
+							setDimensions({
+								height: layout[2].h,
+								width: layout[2].w,
+							})
+						}}>
+						<div key='a'>
+							<Flow handleDelete={handleDelete} />
 						</div>
 
 						<div
-							key='c'
+							key='b'
 							style={{
 								width: '50vw',
 								height: '40vh',
 								visibility: isRenderLog ? 'visible' : 'hidden',
 							}}>
-							<Footer onDelete={handleDeleteLog} isDisplay={isRenderLog} />
+							<Footer onDelete={handleDelete} isDisplay={isRender} />
 						</div>
-						<div
-							key='d'
-							style={{
-								width: '50vw',
-								height: '40vh',
-								visibility: isRenderGraph ? 'visible' : 'hidden',
-							}}>
-							<Graph onDelete={handleDeleteGraph} isDisplay={isRenderGraph} />
+						<div key='c'>
+							<GraphPanel parentDimensions={dimensions} />
 						</div>
-						
 					</GridLayout>
 				</>
 			)}

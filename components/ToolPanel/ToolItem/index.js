@@ -5,10 +5,10 @@ import store from 'lib/store/store.ts'
 import create from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 
-function ToolItem({ index, title, desc, input, output, group, type }) {
+function ToolItem({ title, desc, input, output, group, type }) {
 	const { setNodes, handleModal } = create(store)()
 
-	const onSelectItem = (e, nodeGroup) => {
+	const onSelectItem = (_, nodeGroup) => {
 		if (typeof type === 'undefined' || !type) {
 			return
 		}
@@ -26,7 +26,7 @@ function ToolItem({ index, title, desc, input, output, group, type }) {
 	}
 
 	return (
-		<Fade in={true} style={{ transitionDelay: `${(index + 1) * 75}ms` }}>
+		<Fade in={true}>
 			<Grid2 xs={2} sm={4} md={4}>
 				<CardActionArea onClick={e => onSelectItem(e, group)}>
 					<Card

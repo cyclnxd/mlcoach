@@ -23,10 +23,12 @@ function FileUpload({ id, selected }) {
 			type: newFile.type,
 		})
 		Papa.parse(newFile, {
+			header: true,
+			dynamicTyping: true,
+			fastMode: true,
 			complete: result => {
 				setFileData(result)
 			},
-			header: true,
 		})
 	}
 	useEffect(() => {
