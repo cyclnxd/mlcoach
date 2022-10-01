@@ -184,7 +184,7 @@ const UserProfile = ({ user, works, isOwner, session }) => {
 						/>
 					</>
 				)}
-				{!isOwner && (
+				{!isOwner && session?.user && (
 					<IconButton
 						size='small'
 						onClick={handleFollow}
