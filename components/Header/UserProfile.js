@@ -79,8 +79,8 @@ function UserProfile() {
 		<Box sx={{ flexGrow: 0 }}>
 			<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 				<UserAvatar
-					src={currentUserData.avatar_url}
-					username={currentUserData.username}
+					src={currentUserData?.avatar_url}
+					username={currentUserData?.username}
 					size={50}
 				/>
 			</IconButton>

@@ -12,7 +12,7 @@ function UserAvatar({ username, src, size }) {
 						height: 56,
 					}}
 				/>
-			) : username.length > 0 ? (
+			) : username?.length > 0 ? (
 				<Avatar
 					alt={username}
 					sx={{

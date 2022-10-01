@@ -59,7 +59,7 @@ function Profile() {
 			}
 		}
 		getUser()
-	}, [username])
+	}, [getUserByUsername, getWorksByUsername, username])
 	useEffect(() => {
 		setIsOwner(session?.user?.id === user?.id)
 	}, [session?.user?.id, user])
@@ -113,7 +113,7 @@ function Profile() {
 						}}>
 						<UserWorks
 							works={works}
-							avatar_url={user.avatar_url}
+							avatar_url={user?.avatar_url}
 							isOwner={isOwner}
 						/>
 					</Box>
@@ -170,7 +170,7 @@ const UserProfile = ({ user, works, isOwner, session }) => {
 					alignItems: 'center',
 					gap: { xs: 4, md: 2 },
 				}}>
-				<UserAvatar src={user.avatar_url} username={user.username} />
+				<UserAvatar src={user?.avatar_url} username={user.username} />
 				<Typography variant='h5'>{user.username}</Typography>
 				{isOwner && (
 					<>
