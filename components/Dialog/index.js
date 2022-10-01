@@ -17,7 +17,7 @@ import {
 	Typography,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import useDataStore from 'lib/store/DataStore.ts'
 import create from 'zustand'
 import moment from 'moment/moment'
@@ -32,9 +32,10 @@ function CustomDialog({
 	username,
 }) {
 	const [value, setValue] = useState('')
+	const [description, setDescription] = useState('')
 	const [works, setWorks] = useState([])
 	const [loading, setLoading] = useState(false)
-	const { getWorksByUsername, deleteWorkByUsernameAndName, getPublicUrl } =
+	const { getWorksByUsername, deleteWorkByUsernameAndName } =
 		create(useDataStore)()
 
 	const handleDeleteWork = async value => {
@@ -42,20 +43,11 @@ function CustomDialog({
 		setWorks(works.filter(work => work.name !== value))
 	}
 
-	const getUrl = useCallback(
-		async id => {
-			const url = await getPublicUrl(id)
-			return url.publicURL
-		},
-		[getPublicUrl]
-	)
 	useEffect(() => {
 		async function fetchData() {
 			setLoading(true)
 			const works = await getWorksByUsername(username)
-			works.forEach(async work => {
-				work.url = await getUrl(work.id)
-			})
+
 			if (works) {
 				setWorks(works)
 			} else {
@@ -65,7 +57,17 @@ function CustomDialog({
 			setLoading(false)
 		}
 		if (username && open) fetchData()
-	}, [getWorksByUsername, username, open, getUrl])
+	}, [getWorksByUsername, username, open])
+
+	useEffect(() => {
+		if (value) {
+			const work = works.find(work => work.name === value)
+
+			setDescription(work?.description || '')
+		} else {
+			setDescription('')
+		}
+	}, [value, works])
 
 	return (
 		<>
@@ -108,7 +110,7 @@ function CustomDialog({
 												<ListItemAvatar>
 													<Avatar
 														alt={work.name}
-														src={work.url}
+														src={work.thumbnail_url}
 														sx={{
 															width: 150,
 															height: 80,
@@ -138,8 +140,17 @@ function CustomDialog({
 										))}
 									</List>
 								)}
-								<DialogContentText>{content}</DialogContentText>
+								<DialogContentText
+									sx={{
+										color: 'primary.main',
+										mb: 1,
+									}}>
+									{content}
+								</DialogContentText>
 								<Autocomplete
+									sx={{
+										mb: 2,
+									}}
 									value={value}
 									onChange={(_, newValue) => {
 										setValue(newValue)
@@ -149,7 +160,7 @@ function CustomDialog({
 										<li {...props}>
 											{option}
 											<IconButton
-												color='primary'
+												edge='end'
 												aria-label='delete work'
 												component='label'
 												sx={{ ml: 'auto' }}
@@ -176,6 +187,27 @@ function CustomDialog({
 										/>
 									)}
 								/>
+
+								<DialogContentText
+									sx={{
+										display: title === 'Open Editor' ? 'none' : 'block',
+										color: 'primary.main',
+										mb: 1,
+									}}>
+									{'Enter the description of the editor(optional)'}
+								</DialogContentText>
+								<TextField
+									disabled={title === 'Open Editor'}
+									fullWidth
+									multiline
+									value={description}
+									label='Description'
+									type='text'
+									variant='standard'
+									onChange={e => {
+										setDescription(e.target.value)
+									}}
+								/>
 							</>
 						) : (
 							<DialogContentText>
@@ -189,7 +221,7 @@ function CustomDialog({
 							disabled={!value || works.length < 0}
 							onClick={async () => {
 								if (value) {
-									await callback(value)
+									await callback(value, description)
 									handleClose()
 								}
 							}}>

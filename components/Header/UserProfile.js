@@ -16,6 +16,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import LoginIcon from '@mui/icons-material/Login'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import LogoutIcon from '@mui/icons-material/Logout'
+import UserAvatar from 'components/UserAvatar'
 
 function UserProfile() {
 	const [anchorElUser, setAnchorElUser] = useState(undefined)
@@ -77,13 +78,11 @@ function UserProfile() {
 	return (
 		<Box sx={{ flexGrow: 0 }}>
 			<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-				{currentUserData?.username.length > 0 ? (
-					<Avatar alt={currentUserData?.username}>
-						{currentUserData?.username.charAt(0).toUpperCase()}
-					</Avatar>
-				) : (
-					<Avatar />
-				)}
+				<UserAvatar
+					src={currentUserData?.avatar_url}
+					username={currentUserData?.username}
+					size={50}
+				/>
 			</IconButton>
 			<Menu
 				sx={{ mt: '45px' }}
