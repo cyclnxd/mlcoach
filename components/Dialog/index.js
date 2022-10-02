@@ -120,14 +120,24 @@ function CustomDialog({
 												</ListItemAvatar>
 
 												<ListItemText
-													primary={work.name}
-													secondary={moment(work.updated_at).fromNow()}
+													primary={
+														<Typography
+															variant='h6'
+															component='span'
+															sx={{
+																overflow: 'clip',
+																whiteSpace: 'nowrap',
+																textOverflow: 'ellipsis',
+															}}>
+															{work.name}
+														</Typography>
+													}
+													secondary={moment(work.created_at).fromNow()}
 													sx={{
-														width: '100%',
-														justifyContent: 'center',
-														alignItems: 'center',
-														display: 'flex',
-														flexDirection: 'column',
+														overflow: 'clip',
+														whiteSpace: 'nowrap',
+														textOverflow: 'ellipsis',
+														ml: 1,
 													}}
 												/>
 												<IconButton

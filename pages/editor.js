@@ -9,7 +9,7 @@ import GraphPanel from 'components/GraphPanel'
 const layout = [
 	{ i: 'b', x: 0, y: 0, w: 12, h: 12, static: true },
 	{ i: 'c', x: 1, y: 8, w: 7, h: 4, minW: 5, minH: 4 },
-	{ i: 'd', x: 8, y:8, w: 4, h: 4, minW: 2, minH: 4 },
+	{ i: 'd', x: 8, y: 8, w: 4, h: 4, minW: 2, minH: 4 },
 ]
 export default function Editor() {
 	const [windowSize, loading] = useWindowSize()
@@ -26,7 +26,7 @@ export default function Editor() {
 		setIsRenderLog(!isRenderLog)
 	}
 
-	const handleDeleteGraph = () =>{
+	const handleDeleteGraph = () => {
 		setIsRenderGraph(!isRenderGraph)
 	}
 
@@ -57,14 +57,16 @@ export default function Editor() {
 								height: layout[2].h,
 								width: layout[2].w,
 							})
-						}}
-						>
+						}}>
 						<div key='b'>
-							<Flow handleDeleteLog={handleDeleteLog} handleDeleteGraph={handleDeleteGraph} />
+							<Flow
+								handleDeleteLog={handleDeleteLog}
+								handleDeleteGraph={handleDeleteGraph}
+							/>
 						</div>
 
 						<div
-							key='b'
+							key='c'
 							style={{
 								width: '50vw',
 								height: '40vh',
@@ -79,9 +81,12 @@ export default function Editor() {
 								height: '40vh',
 								visibility: isRenderGraph ? 'visible' : 'hidden',
 							}}>
-							<GraphPanel parentDimensions={dimensions} onDelete={handleDeleteGraph} isDisplay={isRenderGraph} />
+							<GraphPanel
+								parentDimensions={dimensions}
+								onDelete={handleDeleteGraph}
+								isDisplay={isRenderGraph}
+							/>
 						</div>
-						
 					</GridLayout>
 				</>
 			)}

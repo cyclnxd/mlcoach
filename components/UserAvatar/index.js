@@ -8,21 +8,26 @@ function UserAvatar({ username, src, size }) {
 					alt={username}
 					src={src}
 					sx={{
-						width: 56,
-						height: 56,
+						width: size || 50,
+						height: size || 50,
 					}}
 				/>
 			) : username?.length > 0 ? (
 				<Avatar
 					alt={username}
 					sx={{
-						width: size || 56,
-						height: size || 56,
+						width: size || 50,
+						height: size || 50,
 					}}>
 					{username.charAt(0).toUpperCase()}
 				</Avatar>
 			) : (
-				<Avatar />
+				<Avatar
+					sx={{
+						width: 50,
+						height: 50,
+					}}
+				/>
 			)}
 		</>
 	)
