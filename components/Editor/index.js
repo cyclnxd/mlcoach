@@ -135,11 +135,11 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 								username: user?.username,
 								work: JSON.stringify(flow),
 								name,
-								updated_at: new Date().toISOString(),
 								thumbnail_url: res.publicURL,
 								is_active: true,
 								is_public: true,
 								description: descp,
+								created_at: new Date().toISOString(),
 							})
 							setWork(work)
 							setError(null)
@@ -288,13 +288,14 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							Output Panel
 						</Button>
 						<Button
-						variant ='contained'
-						sx={{ backgroundColor: 'primary.darkLight', 
-						color: 'primary.contrastText' }}
-						size='small'
-						onClick={handleDeleteGraph}
-						>
-						Graph Panel
+							variant='contained'
+							sx={{
+								backgroundColor: 'primary.darkLight',
+								color: 'primary.contrastText',
+							}}
+							size='small'
+							onClick={handleDeleteGraph}>
+							Graph Panel
 						</Button>
 						<Button
 							variant='contained'

@@ -21,7 +21,6 @@ import { Stack } from '@mui/system'
 import useDataStore from 'lib/store/DataStore.ts'
 import Image from 'next/image'
 import { useState } from 'react'
-import create from 'zustand'
 import ForkLeftIcon from '@mui/icons-material/ForkLeft'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt'
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt'
@@ -30,9 +29,16 @@ import UserAvatar from 'components/UserAvatar'
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PublicIcon from '@mui/icons-material/Public'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import create from 'zustand'
+import moment from 'moment'
 
-function WorkCard({ work, props, avatar_url, isOwner }) {
+function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 	const [open, setOpen] = useState(false)
+	const [error, setError] = useState(null)
+	const [avatarUrl, setAvatarUrl] = useState(null)
+	const { getUserByUsername } = create(useDataStore)()
 
 	const handleClickOpen = () => {
 		setOpen(true)
@@ -41,68 +47,166 @@ function WorkCard({ work, props, avatar_url, isOwner }) {
 	const handleClose = () => {
 		setOpen(false)
 	}
-	const { like, forked, view, name, thumbnail_url, description } = work
+	const {
+		like,
+		forked,
+		view,
+		name,
+		thumbnail_url: thumbnailUrl,
+		description,
+		username,
+		created_at: createdAt,
+	} = work
+
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				const url = await getUserByUsername(work.username, 'avatar_url')
+				setAvatarUrl(url.avatar_url)
+				setError(null)
+			} catch (error) {
+				setError(error)
+			}
+		}
+		fetchData()
+	}, [getUserByUsername, work])
 
 	return (
-		<Box {...props}>
-			<Card sx={{}}>
-				<CardActionArea onClick={handleClickOpen}>
-					{thumbnail_url ? (
-						<Image
-							src={thumbnail_url}
-							alt={name}
-							width={1920}
-							height={900}
-							objectFit='cover'
-							loading='lazy'
-						/>
-					) : (
-						<Skeleton variant='rectangular' width={1200} height={170} />
-					)}
-					<CardContent>
-						<Typography
-							gutterBottom
-							variant='h5'
-							component='div'
-							sx={{
-								overflow: 'clip',
-								whiteSpace: 'nowrap',
-								textOverflow: 'ellipsis',
-							}}>
-							{name}
-						</Typography>
-						<Typography
-							variant='body2'
-							color='text.secondary'
-							sx={{
-								overflow: 'clip',
-								whiteSpace: 'nowrap',
-								textOverflow: 'ellipsis',
-								mb: 2,
-							}}>
-							{description || 'No description'}
-						</Typography>
-						<Typography variant='body2' color='text.secondary' sx={{}}>
-							<strong>like:</strong> {like} <strong>forked:</strong> {forked}{' '}
-							<strong>view:</strong> {view}
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
-			<WorkDetails
-				open={open}
-				handleClose={handleClose}
-				work={work}
-				avatar_url={avatar_url}
-				isOwner={isOwner}
-			/>
-		</Box>
+		<>
+			{error ? (
+				<Box sx={{}}>
+					<h1>Something went wrong</h1>
+				</Box>
+			) : (
+				<Box {...props}>
+					<Card>
+						<CardActionArea onClick={handleClickOpen}>
+							{thumbnailUrl ? (
+								<Image
+									src={thumbnailUrl}
+									alt={name}
+									width={1920}
+									height={1200}
+									objectFit='cover'
+									loading='lazy'
+								/>
+							) : (
+								<Skeleton variant='rectangular' width={1200} height={170} />
+							)}
+						</CardActionArea>
+						<CardContent>
+							<Typography
+								variant='body2'
+								color='text.secondary'
+								sx={{
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'start',
+									fontSize: 10,
+									mt: -1,
+								}}>
+								{moment(createdAt).fromNow()}
+							</Typography>
+							<Box
+								sx={{
+									display: 'flex',
+									flexDirection: 'row',
+									justifyContent: 'space-between',
+									alignItems: 'center',
+								}}>
+								<Typography
+									gutterBottom
+									variant='h5'
+									component='div'
+									sx={{
+										overflow: 'clip',
+										whiteSpace: 'nowrap',
+										textOverflow: 'ellipsis',
+									}}>
+									{name}
+								</Typography>
+								{type === 'workplace' && (
+									<Link href={`/profile/${username}`}>
+										<Box
+											onClick={e => e.stopPropagation()}
+											sx={{
+												display: 'flex',
+												flexDirection: 'row',
+												alignItems: 'start',
+												mb: 1,
+												gap: 1,
+												borderRadius: 1,
+												'&:hover': {
+													cursor: 'pointer',
+													backgroundColor: 'rgba(0, 0, 0, 0.04)',
+													transform: 'scale(1.05)',
+												},
+											}}>
+											<UserAvatar
+												src={avatarUrl}
+												username={username}
+												size={20}
+											/>
+											<Typography variant='body2'>{username}</Typography>
+										</Box>
+									</Link>
+								)}
+							</Box>
+
+							<Typography
+								variant='body2'
+								color='text.secondary'
+								sx={{
+									overflow: 'clip',
+									whiteSpace: 'nowrap',
+									textOverflow: 'ellipsis',
+									mb: 2,
+								}}>
+								{description || 'No description'}
+							</Typography>
+
+							<Typography
+								variant='body2'
+								color='text.secondary'
+								sx={{
+									overflow: 'clip',
+									whiteSpace: 'nowrap',
+									textOverflow: 'ellipsis',
+								}}>
+								<strong>like:</strong> {like} <strong>forked:</strong> {forked}{' '}
+								<strong>view:</strong> {view}
+							</Typography>
+						</CardContent>
+					</Card>
+					<WorkDetails
+						open={open}
+						handleClose={handleClose}
+						work={work}
+						avatarUrl={avatarUrl}
+						isOwner={isOwner}
+					/>
+				</Box>
+			)}
+		</>
 	)
 }
 
-const WorkDetails = ({ open, handleClose, work, avatar_url, isOwner }) => {
-	const { like, forked, view, name, thumbnail_url, description, username } =
-		work
+const WorkDetails = ({
+	open,
+	handleClose,
+	work,
+	avatarUrl,
+	isOwner = false,
+}) => {
+	const {
+		like,
+		forked,
+		view,
+		name,
+		thumbnail_url: thumbnailUrl,
+		description,
+		username,
+	} = work
 
 	const [anchorEl, setAnchorEl] = useState(null)
 	const openMenu = !!anchorEl
@@ -129,7 +233,7 @@ const WorkDetails = ({ open, handleClose, work, avatar_url, isOwner }) => {
 								alignItems: 'center',
 								gap: 2,
 							}}>
-							<UserAvatar src={avatar_url} username={username} />
+							<UserAvatar src={avatarUrl} username={username} />
 							<Typography variant='h6'>{username}</Typography>
 						</Box>
 						<IconButton onClick={handleOpenMenu}>
@@ -167,9 +271,9 @@ const WorkDetails = ({ open, handleClose, work, avatar_url, isOwner }) => {
 				<Divider />
 				<DialogContent>
 					<>
-						{thumbnail_url ? (
+						{thumbnailUrl ? (
 							<Image
-								src={thumbnail_url}
+								src={thumbnailUrl}
 								alt={name}
 								width={1920}
 								height={900}

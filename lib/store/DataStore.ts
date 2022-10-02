@@ -17,19 +17,19 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return user
 	},
-	getUserById: async (id: string) => {
+	getUserById: async (id: string, select?: string) => {
 		const { data, error } = await supabase
 			.from('profiles')
-			.select()
+			.select(select ? select : '*')
 			.match({ id })
 			.single()
 		if (error) throw error
 		return data
 	},
-	getUserByUsername: async (username: string) => {
+	getUserByUsername: async (username: string, select?: string) => {
 		const { data, error } = await supabase
 			.from('profiles')
-			.select()
+			.select(select ? select : '*')
 			.match({ username })
 			.single()
 		if (error) throw error
@@ -59,6 +59,14 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return work
 	},
+	getAllWorks: async () => {
+		const { data, error } = await supabase
+			.from('works')
+			.select('*')
+			.order('created_at', { ascending: false })
+		if (error) throw error
+		return data
+	},
 	getWorkByUsernameAndName: async (username: string, name: string) => {
 		const { data, error } = await supabase
 			.from('works')
@@ -73,7 +81,7 @@ const useDataStore = create<userState>(() => ({
 			.from('works')
 			.select('*')
 			.match({ username })
-			.order('updated_at', { ascending: false })
+			.order('created_at', { ascending: false })
 		if (error) throw error
 		return data
 	},
