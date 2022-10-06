@@ -1,15 +1,15 @@
 import Head from 'next/head'
 import Flow from 'components/Editor'
-import Footer from 'components/Footer'
+import OutputPanel from 'components/OutputPanel'
 import GridLayout from 'react-grid-layout'
 import { useState } from 'react'
 import useWindowSize from 'lib/hooks/useWindowSize'
 import Loading from 'components/Loading'
 import GraphPanel from 'components/GraphPanel'
 const layout = [
-	{ i: 'b', x: 0, y: 0, w: 12, h: 12, static: true },
-	{ i: 'c', x: 1, y: 8, w: 7, h: 4, minW: 5, minH: 4 },
-	{ i: 'd', x: 8, y: 8, w: 4, h: 4, minW: 2, minH: 4 },
+	{ i: 'a', x: 0, y: 0, w: 12, h: 12, static: true },
+	{ i: 'b', x: 4, y: 7, w: 7, h: 4, minW: 5, minH: 4 },
+	{ i: 'c', x: 6, y: 5, w: 5, h: 6, minW: 5, minH: 6 },
 ]
 export default function Editor() {
 	const [windowSize, loading] = useWindowSize()
@@ -42,6 +42,7 @@ export default function Editor() {
 			) : (
 				<>
 					<GridLayout
+						draggableCancel='.nodrag'
 						className='layout'
 						layout={layout}
 						cols={12}
@@ -58,7 +59,7 @@ export default function Editor() {
 								width: layout[2].w,
 							})
 						}}>
-						<div key='b'>
+						<div key='a'>
 							<Flow
 								handleDeleteLog={handleDeleteLog}
 								handleDeleteGraph={handleDeleteGraph}
@@ -66,26 +67,27 @@ export default function Editor() {
 						</div>
 
 						<div
-							key='c'
+							key='b'
 							style={{
-								width: '50vw',
-								height: '40vh',
 								visibility: isRenderLog ? 'visible' : 'hidden',
 							}}>
-							<Footer onDelete={handleDeleteLog} isDisplay={isRenderLog} />
+							{isRenderLog && (
+								<OutputPanel
+									onDelete={handleDeleteLog}
+									isDisplay={isRenderLog}
+								/>
+							)}
 						</div>
 						<div
-							key='d'
+							key='c'
 							style={{
-								width: '50vw',
-								height: '40vh',
 								visibility: isRenderGraph ? 'visible' : 'hidden',
 							}}>
-							<GraphPanel
+							{/* <GraphPanel
 								parentDimensions={dimensions}
 								onDelete={handleDeleteGraph}
 								isDisplay={isRenderGraph}
-							/>
+							/> */}
 						</div>
 					</GridLayout>
 				</>
