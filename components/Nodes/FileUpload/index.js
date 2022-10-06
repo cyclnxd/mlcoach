@@ -3,37 +3,48 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Papa from 'papaparse'
-import store from 'lib/store/store.ts'
 import { Card, Stack, Typography } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
+import localforage from 'localforage'
+import store from 'lib/store/store.ts'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
 
 function FileUpload({ id, selected }) {
 	const [fileMetaData, setFileMetaData] = useState(null)
-	const [fileData, setFileData] = useState()
+	const [fileUploaded, setFileUploaded] = useState(false)
 	const inputRef = useRef()
-
+	const storeFile = store(state => state.storeFile)
 	const readFile = newFile => {
 		setFileMetaData({
 			name: newFile.name,
 			size: newFile.size,
 			type: newFile.type,
 		})
-		Papa.parse(newFile, {
-			header: true,
-			dynamicTyping: true,
-			fastMode: true,
-			complete: result => {
-				setFileData(result)
-			},
-		})
+		if (newFile.size <= 10000000) {
+			Papa.parse(newFile, {
+				header: true,
+				dynamicTyping: true,
+				fastMode: true,
+				complete: result => {
+					localforage
+						.setItem(id, result)
+						.then(() => {
+							storeFile(id)
+							setFileUploaded(true)
+						})
+						.catch(err => {
+							console.log(err)
+						})
+				},
+			})
+		} else {
+			alert('File size is too large `max 10mb`')
+			inputRef.current.value = null
+		}
 	}
-	useEffect(() => {
-		store.getState().storeFile(id, fileData)
-	}, [fileData, id])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -45,6 +56,7 @@ function FileUpload({ id, selected }) {
 					alignItems: 'center',
 					border: '0.5px solid ',
 					borderColor: `${selected ? 'primary.light' : 'primary.darkLight'}`,
+					maxWidth: '200px',
 				}}>
 				<Stack spacing={0}>
 					<HeaderLayout title='File' id={id} />
@@ -57,7 +69,7 @@ function FileUpload({ id, selected }) {
 							padding: '10px',
 							gap: '10px',
 						}}>
-						{fileData === undefined ? (
+						{!fileUploaded ? (
 							<>
 								<Button
 									variant='contained'
@@ -79,7 +91,9 @@ function FileUpload({ id, selected }) {
 										ref={inputRef}
 										className='nodrag'
 										onChange={() => {
-											readFile(inputRef.current.files[0])
+											if (inputRef.current.files[0]) {
+												readFile(inputRef.current.files[0])
+											}
 										}}
 									/>
 								</Button>
@@ -93,8 +107,15 @@ function FileUpload({ id, selected }) {
 								</Typography>
 							</>
 						) : (
-							<Stack spacing={2} alignItems='center' justifyContent='center'>
-								<Typography fontSize='12px' color='primary.darkText'>
+							<Stack spacing={2} alignItems='start' justifyContent='center'>
+								<Typography
+									fontSize='12px'
+									color='primary.darkText'
+									sx={{
+										wordBreak: 'break-all',
+										textOverflow: 'ellipsis',
+										overflow: 'hidden',
+									}}>
 									<strong>name: </strong>
 									{fileMetaData.name}
 								</Typography>
