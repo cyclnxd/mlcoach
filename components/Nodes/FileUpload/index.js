@@ -30,7 +30,14 @@ function FileUpload({ id, selected }) {
 				fastMode: true,
 				complete: result => {
 					localforage
-						.setItem(id, result)
+						.setItem(id, {
+							...result,
+							fileMetaData: {
+								name: newFile.name,
+								size: newFile.size,
+								type: newFile.type,
+							},
+						})
 						.then(() => {
 							storeFile(id)
 							setFileUploaded(true)
@@ -45,6 +52,16 @@ function FileUpload({ id, selected }) {
 			inputRef.current.value = null
 		}
 	}
+	useEffect(() => {
+		async function getFile() {
+			const file = await localforage.getItem(id)
+			if (file) {
+				setFileMetaData(file.fileMetaData)
+				setFileUploaded(true)
+			}
+		}
+		getFile()
+	}, [id])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
