@@ -31,14 +31,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PublicIcon from '@mui/icons-material/Public'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import create from 'zustand'
 import moment from 'moment'
 
 function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 	const [open, setOpen] = useState(false)
 	const [error, setError] = useState(null)
 	const [avatarUrl, setAvatarUrl] = useState(null)
-	const { getUserByUsername } = create(useDataStore)()
+	const getUserByUsername = useDataStore(state => state.getUserByUsername)
 
 	const handleClickOpen = () => {
 		setOpen(true)
@@ -135,6 +134,7 @@ function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 												alignItems: 'start',
 												mb: 1,
 												gap: 1,
+												ml: 1,
 												borderRadius: 1,
 												'&:hover': {
 													cursor: 'pointer',
@@ -231,10 +231,10 @@ const WorkDetails = ({
 								flexDirection: 'row',
 								justifyContent: 'start',
 								alignItems: 'center',
-								gap: 2,
+								gap: 1,
 							}}>
 							<UserAvatar src={avatarUrl} username={username} />
-							<Typography variant='h6'>{username}</Typography>
+							<Typography>{username}</Typography>
 						</Box>
 						<IconButton onClick={handleOpenMenu}>
 							<MoreVertIcon />
@@ -296,7 +296,9 @@ const WorkDetails = ({
 					</>
 
 					<DialogContentText sx={{ my: 2 }}>
-						<Typography variant='h6'>{name}</Typography>
+						<Typography variant='h5' color={'text.primary'}>
+							{name}
+						</Typography>
 					</DialogContentText>
 					<DialogContentText
 						tabIndex={-1}

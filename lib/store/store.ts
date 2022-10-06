@@ -1,4 +1,4 @@
-import create from 'zustand/vanilla'
+import create from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import {
 	Connection,
@@ -19,6 +19,8 @@ import SliceNode from 'components/Nodes/SliceNode'
 import DropColumn from 'components/Nodes/DropColumnNode'
 import fillWithConstantNode from 'components/Nodes/MissingValueNodes/fillWithConstantNode'
 import FillWithStatsNode from 'components/Nodes/MissingValueNodes/fillWithStatsNode'
+import localforage from 'localforage'
+
 const nodeTypes = {
 	fileUpload: FileUpload,
 	filterNode: FilterNode,
@@ -65,7 +67,7 @@ const store = create<RFState>((set, get) => ({
 			clickedNode: -1,
 		})
 	},
-	onNodeClick: (_: any, node: Node) => {
+	onNodeClick: (e: any, node: Node) => {
 		set({
 			clickedNode: node.id,
 		})
@@ -101,13 +103,13 @@ const store = create<RFState>((set, get) => ({
 			edges: addEdge(connection, get().edges),
 		})
 	},
-	storeFile: (nodeId, file: JSON) => {
-		let currentNodeEdges = get().edges.filter(edge => edge.source === nodeId)
+	storeFile: (ref: string) => {
+		let currentNodeEdges = get().edges.filter(edge => edge.source === ref)
 		if (currentNodeEdges) {
 			get().changeNodeState(currentNodeEdges)
 		}
 		set({
-			fileMap: { ...get().fileMap, [nodeId]: file },
+			fileMap: { ...get().fileMap, [ref]: uuidv4() },
 		})
 	},
 	onEdgesDelete: (edges: Edge[]) => {
@@ -115,11 +117,14 @@ const store = create<RFState>((set, get) => ({
 		get().onNodesDelete([sourceNode, targetNode])
 	},
 	onNodesDelete: changes => {
-		changes.forEach(change => {
-			if (change?.id in get().fileMap) {
-				delete get().fileMap[change?.id]
-			}
-		})
+		if (changes.length > 0) {
+			changes.forEach(change => {
+				if (localforage.getItem(change?.id)) {
+					set({ fileMap: { ...get().fileMap, [change?.id]: null } })
+					localforage.removeItem(change?.id)
+				}
+			})
+		}
 	},
 	handleModal: state => {
 		set({

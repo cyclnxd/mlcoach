@@ -7,7 +7,6 @@ import ReactFlow, {
 import store from 'lib/store/store.ts'
 import useAuthStore from 'lib/store/AuthStore.ts'
 import useDataStore from 'lib/store/DataStore.ts'
-import create from 'zustand'
 import ToolModal from 'components/Modal'
 import ConnectionLine from 'components/ConnectionLine'
 import { Box, Stack } from '@mui/system'
@@ -63,14 +62,14 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 		onEdgesDelete,
 		handleModal,
 		modalOpen,
-	} = create(store)()
-	const { currentUserData: user } = create(useAuthStore)()
+	} = store(state => state)
+	const user = useAuthStore(state => state.user)
 	const {
 		updateWorkByUsername,
 		getWorkByUsernameAndName,
 		uploadThumbnail,
 		getPublicUrl,
-	} = create(useDataStore)()
+	} = useDataStore(state => state)
 
 	const handleContextMenu = e => {
 		e.preventDefault()

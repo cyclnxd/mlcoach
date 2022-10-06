@@ -4,20 +4,18 @@ import WorkCard from 'components/WorkCard'
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import create from 'zustand'
 import useDataStore from 'lib/store/DataStore.ts'
 
 export default function Workplace() {
 	const [loading, setLoading] = useState(true)
 	const [works, setWorks] = useState([])
 	const [error, setError] = useState(null)
-	const { getAllWorks } = create(useDataStore)()
+	const getAllWorks = useDataStore(state => state.getAllWorks)
 
 	useEffect(() => {
 		async function fetchData() {
 			try {
 				const works = await getAllWorks()
-				console.log(works)
 				setWorks(works)
 				setLoading(false)
 				setError(null)
@@ -54,7 +52,6 @@ export default function Workplace() {
 			) : (
 				<Stack
 					component='main'
-					container
 					spacing={2}
 					sx={{
 						display: 'flex',
@@ -67,6 +64,9 @@ export default function Workplace() {
 						mb: 2,
 						overflowY: 'scroll',
 						overflowX: 'hidden',
+						'&::-webkit-scrollbar': {
+							width: 0,
+						},
 					}}>
 					<Box
 						sx={{

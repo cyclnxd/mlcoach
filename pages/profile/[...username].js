@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import useDataStore from 'lib/store/DataStore.ts'
-import create from 'zustand'
 import { useEffect, useState } from 'react'
 import {
 	Stack,
@@ -28,8 +27,8 @@ import UserAvatar from 'components/UserAvatar'
 function Profile() {
 	const router = useRouter()
 	const { username } = router.query
-	const { getUserByUsername, getWorksByUsername } = create(useDataStore)()
-	const { session } = create(useAuthStore)()
+	const { getUserByUsername, getWorksByUsername } = useDataStore(state => state)
+	const session = useAuthStore(state => state.session)
 
 	const [user, setUser] = useState(null)
 	const [works, setWorks] = useState([])
@@ -86,7 +85,6 @@ function Profile() {
 			) : (
 				<Stack
 					component='main'
-					container
 					spacing={2}
 					sx={{
 						display: 'flex',
@@ -99,6 +97,9 @@ function Profile() {
 						mb: 2,
 						overflowY: 'scroll',
 						overflowX: 'hidden',
+						'&::-webkit-scrollbar': {
+							width: 0,
+						},
 					}}>
 					<UserProfile
 						user={user}
@@ -124,7 +125,7 @@ function Profile() {
 }
 
 const UserProfile = ({ user, works, isOwner, session }) => {
-	const { followUser, getFollowers } = create(useDataStore)()
+	const { followUser, getFollowers } = useDataStore(state => state)
 	const [followers, setFollowers] = useState([])
 	const [isFollowing, setIsFollowing] = useState(false)
 

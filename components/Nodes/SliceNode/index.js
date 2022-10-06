@@ -1,70 +1,75 @@
 import { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
-import { TextField, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import store from 'lib/store/store.ts'
 import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
+import CustomTextField from 'components/CustomTextField'
+import localforage from 'localforage'
 
 function SliceNode({ id, selected, data }) {
 	//holding slicing index values
-	const [startSliceRef, setStartSliceRef] = useState(0)
-	const [endSliceRef, setEndSliceRef] = useState(-1)
-	//used for getting previous selected index
-	const prevSSlice = useRef(startSliceRef)
-	const prevESlice = useRef(endSliceRef)
-
+	const [startSlice, setStartSlice] = useState(0)
+	const [endSlice, setEndSlice] = useState(-1)
 	const [error, setError] = useState('connect a data source to select columns')
+	const fileLengthRef = useRef(null)
 	// takes an event from text field and updates the startSliceRef state
 	// if event target value is NaN then saves all element from source
 	const startTextHandle = event => {
 		event.target.value === NaN
 			? () => {
-					setStartSliceRef(0)
-					prevSSlice.current = 0
+					setStartSlice(0)
 			  }
-			: setStartSliceRef(parseInt(event.target.value))
+			: setStartSlice(parseInt(event.target.value))
 	}
 	// takes an event from text field and updates the endSliceRef state
 	// if event target value is NaN then saves all element from source
 	const endTextHandle = event => {
 		event.target.value === NaN
 			? () => {
-					setEndSliceRef(-1)
-					prevESlice.current = -1
+					setEndSlice(-1)
 			  }
-			: setEndSliceRef(parseInt(event.target.value))
+			: setEndSlice(parseInt(event.target.value))
 	}
+
 	// used to delete file stored in global storage when a node is deleted
 
 	useEffect(() => {
-		// get previous value of SliceRefs
-		prevSSlice.current = startSliceRef
-		prevESlice.current = endSliceRef
+		async function deleteFile() {
+			await localforage.removeItem(id)
+		}
 		// checking if the user has created a valid edge between two nodes
-
 		const edge = Object.values(store.getState().edges).find(
 			item => item.target === id
 		)
 		const sourceId = edge !== undefined ? edge.source : undefined
 		if (sourceId !== undefined) {
-			let file = structuredClone(store.getState().fileMap[sourceId])
-			if (file !== undefined && file?.data.length > 0) {
-				setError('')
-				file = {
-					...file,
-					data: file.data.slice(prevSSlice.current, prevESlice.current),
+			localforage.getItem(sourceId).then(file => {
+				if (file !== undefined && file?.data.length > 0) {
+					fileLengthRef.current = file?.data.length + 1 // +1 for slice to include last element
+					let newFile = {
+						...file,
+						data: file.data.slice(
+							startSlice,
+							endSlice === -1 ? file.data.length : endSlice
+						),
+					}
+					localforage.setItem(id, newFile).then(() => {
+						store.getState().storeFile(id)
+					})
+					setError('')
+				} else {
+					deleteFile()
+					setError('data source has no data')
 				}
-				store.getState().storeFile(id, file)
-			} else {
-				setError('data source has no data')
-			}
+			})
 		} else {
-			store.getState().storeFile(id, undefined)
+			deleteFile()
 			setError('connect a data source to slice data')
 		}
-	}, [startSliceRef, endSliceRef, id, selected, data])
+	}, [id, selected, data, startSlice, endSlice])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -101,27 +106,45 @@ function SliceNode({ id, selected, data }) {
 						}}>
 						{error.length === 0 ? (
 							<>
-								<TextField
-									id='outlined-name'
+								<CustomTextField
+									fullWidth
 									label='Start'
 									className='nodrag'
 									size='small'
 									type='number'
 									onChange={startTextHandle}
+									value={startSlice}
+									inputProps={{
+										min: 0,
+										max: fileLengthRef?.current,
+									}}
 								/>
-								<TextField
-									id='outlined-name'
+								<CustomTextField
+									fullWidth
 									label='End'
 									className='nodrag'
 									size='small'
 									type='number'
 									onChange={endTextHandle}
+									value={endSlice}
+									inputProps={{
+										min: -1,
+										max: fileLengthRef?.current,
+									}}
 								/>
 							</>
 						) : (
 							<Typography>{error}</Typography>
 						)}
 					</Box>
+					<Box
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+
+							cursor: 'pointer',
+						}}></Box>
 				</Stack>
 			</Card>
 

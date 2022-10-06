@@ -7,6 +7,32 @@ import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
 
+const filterList = {
+	text: [
+		'equals',
+		'not equals',
+		'contains',
+		'not contains',
+		'starts with',
+		'ends with',
+		'is null',
+		'is not null',
+		'regex',
+	],
+	number: [
+		'equals',
+		'not equals',
+		'greater than',
+		'greater than or equal',
+		'less than',
+		'less than or equal',
+		'is null',
+		'is not null',
+		'regex',
+	],
+	boolean: ['equals', 'not equals', 'is null', 'is not null'],
+}
+
 function FilterNode({ id, selected, data }) {
 	const [error, setError] = useState('connect a data source to select columns')
 	const [selectedColumn, setSelectedColumn] = useState(null)
@@ -14,7 +40,7 @@ function FilterNode({ id, selected, data }) {
 	const [columns, setColumns] = useState([])
 	const [filters, setFilters] = useState([])
 	const [types, setTypes] = useState([])
-	const [value, setValue] = useState([])
+	const [value, setValue] = useState('')
 
 	useEffect(() => {
 		const edge = Object.values(store.getState().edges).find(
@@ -26,19 +52,6 @@ function FilterNode({ id, selected, data }) {
 			if (file !== undefined && file?.data.length > 0) {
 				setColumns(file.meta.fields)
 				setTypes(file.data[0])
-
-				if (selectedFilter !== null) {
-					let filter = filters.find(item => item.name === selectedFilter)
-					if (filter !== undefined) {
-						let type = types[selectedColumn]
-						if (type === 'number') {
-							setValue([filter.min, filter.max])
-						} else if (type === 'string') {
-							setValue(filter.values)
-						}
-					}
-				}
-
 				setError('')
 				store.getState().storeFile(id, file)
 			} else {
@@ -48,7 +61,7 @@ function FilterNode({ id, selected, data }) {
 			store.getState().storeFile(id, undefined)
 			setError('connect a data source to slice data')
 		}
-	}, [id, selected, data, selectedFilter, filters, types, selectedColumn])
+	}, [id, data])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -113,51 +126,26 @@ function FilterNode({ id, selected, data }) {
 									}}
 									onChange={(_, newValue) => {
 										setSelectedColumn(newValue)
-
+										// secilen kolonun tipine gore filtreler set edildi
 										switch (types[newValue]) {
 											case 'DOUBLE':
 											case 'FLOAT':
 											case 'INT':
 											case 'LONG':
 											case 'SHORT':
-												setFilters([
-													'equals',
-													'not equals',
-													'greater than',
-													'greater than or equal',
-													'less than',
-													'less than or equal',
-													'is null',
-													'is not null',
-													'regex',
-												])
-
+												setFilters(filterList.number)
 												break
 											case 'BOOLEAN':
-												setFilters([
-													'equals',
-													'not equals',
-													'is null',
-													'is not null',
-												])
+												setFilters(filterList.boolean)
 												break
 											case 'DATE':
 											case 'STRING':
 											case 'TEXT':
-												setFilters([
-													'equals',
-													'not equals',
-													'contains',
-													'not contains',
-													'starts with',
-													'ends with',
-													'is null',
-													'is not null',
-													'regex',
-												])
+												setFilters(filterList.text)
 												break
 											default:
 												setFilters([])
+
 												setSelectedFilter(null)
 												break
 										}

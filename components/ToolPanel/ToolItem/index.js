@@ -2,11 +2,10 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Fade from '@mui/material/Fade'
 import { Card, CardActionArea, Stack, Typography } from '@mui/material'
 import store from 'lib/store/store.ts'
-import create from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 
 function ToolItem({ title, desc, input, output, group, type }) {
-	const { setNodes, handleModal } = create(store)()
+	const { setNodes, handleModal } = store(state => state)
 
 	const onSelectItem = (_, nodeGroup) => {
 		if (typeof type === 'undefined' || !type) {

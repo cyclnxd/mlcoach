@@ -1,10 +1,9 @@
 import { Session, User } from '@supabase/supabase-js'
-import create from 'zustand/vanilla'
+import create from 'zustand'
 import supabase from '../supabase'
 
 type authState = {
-	user: User | null
-	currentUserData: any
+	user: any
 	session: Session | null
 	authStateChange: any
 	setSession: any
@@ -17,30 +16,17 @@ type authState = {
 const useAuthStore = create<authState>((set, get) => ({
 	user: null,
 	session: null,
-	currentUserData: null,
 	setSession: async () => {
 		try {
-			const session = await supabase.auth.session()
-			set({ session })
-			try {
-				const user = await supabase.auth.user()
-				set({ user })
-				if (user?.id !== undefined) {
-					try {
-						const userData = await supabase
-							.from('profiles')
-							.select('*')
-							.eq('id', get().user?.id)
-							.single()
-						set({
-							currentUserData: userData?.data,
-						})
-					} catch (error) {
-						throw error
-					}
-				}
-			} catch (error) {
-				throw error
+			if (get()?.session !== supabase.auth.session()) {
+				const session = supabase.auth.session()
+				const { data: user } = await supabase
+					.from('profiles')
+					.select('*')
+					.match({ id: session?.user?.id })
+					.single()
+
+				set({ session, user: user || session.user })
 			}
 		} catch (error) {
 			throw error
@@ -59,19 +45,6 @@ const useAuthStore = create<authState>((set, get) => ({
 		})
 		if (error) {
 			throw error
-		}
-		if (user?.id !== undefined) {
-			const { data, error } = await supabase
-				.from('profiles')
-				.select('*')
-				.eq('id', user?.id)
-				.single()
-			if (error) {
-				throw error
-			}
-			set({
-				currentUserData: data,
-			})
 		}
 		set({ user, session })
 	},
@@ -93,19 +66,6 @@ const useAuthStore = create<authState>((set, get) => ({
 		if (error) {
 			throw error
 		}
-		if (user?.id !== undefined) {
-			const { data, error } = await supabase
-				.from('profiles')
-				.select('*')
-				.eq('id', user?.id)
-				.single()
-			if (error) {
-				throw error
-			}
-			set({
-				currentUserData: data,
-			})
-		}
 
 		set({
 			user,
@@ -118,7 +78,7 @@ const useAuthStore = create<authState>((set, get) => ({
 		} catch (error) {
 			throw error
 		}
-		set({ user: null, session: null, currentUserData: null })
+		set({ user: null, session: null })
 	},
 }))
 

@@ -1,66 +1,74 @@
 import { Box, Typography, Stack } from '@mui/material'
-import { useState, useEffect, useRef, memo } from 'react'
+import { useState, useEffect, useRef, memo, useCallback } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import store from 'lib/store/store.ts'
 import StormIcon from '@mui/icons-material/Storm'
-function Footer({ onDelete, isDisplay }) {
-	//store da seçilen node tutmak için
-	const [selectedNode, setSelectedNode] = useState()
-	const [fileMap, setFileMap] = useState()
+import localforage from 'localforage'
+import { unstable_batchedUpdates } from 'react-dom'
+function OutputPanel({ onDelete, isDisplay }) {
 	//okunan dosyanın satır ve sutünlarını footer a verebilmek için
 	const [gridRows, setGridRows] = useState([])
 	const [gridColumns, setGridColumns] = useState([])
 	// useState kullanınca bir önceki seçilen satır ve sutünları renderlıyor o yüzden use ref kullanarak ilk seçilenleri kaydediyor
 	const prevRows = useRef(gridRows)
 	const prevCol = useRef(gridColumns)
+	const clickedNodeRef = useRef(store.getState().clickedNode)
 
-	// sayfayı yeniden render almadan store içerisinde ki verileri subscribe ile çekip komponentin içerisine usestate veya benzeri hook ile kaydedersek useef rahatlıkla çalışıyor o yüzden bu var :D
-	store.subscribe(() => {
-		setSelectedNode(store.getState().clickedNode)
-		setFileMap(
-			store.getState().fileMap[store.getState().clickedNode]
-				? store.getState().fileMap[store.getState().clickedNode]
-				: undefined
-		)
-	})
 	useEffect(() => {
-		//satır ve sutünlar okunuyor
-		if (fileMap !== undefined && fileMap !== null) {
-			//max satır sayısını belirliyor
-			let numRows
-			numRows = fileMap.data.length
+		const sub = store.subscribe(() => {
+			const state = store.getState()
+			if (state.clickedNode !== clickedNodeRef.current) {
+				clickedNodeRef.current = state.clickedNode
+				if (state.clickedNode) {
+					const id = state.clickedNode
+					localforage.getItem(id).then(file => {
+						if (file !== undefined && file !== null) {
+							const { data, meta } = file
+							unstable_batchedUpdates(() => {
+								//max satır sayısını belirliyor
+								let numRows
+								numRows = data.length
+								const newCols = []
+								for (var i = 0; i < meta.fields.length; i++) {
+									if (meta.fields[i] !== undefined) {
+										newCols.push({
+											field: meta.fields[i],
+											headerName: meta.fields[i],
+											flex: 1,
+											maxWidth: 200,
+											minWidth: 200,
+										})
+									}
+								}
+								const newRows = []
+								for (var j = 1; j < numRows; j++) {
+									const newRow = data[j]
+									newRows.push({ ...newRow, id: j })
+								}
 
-			const newCols = []
-			for (var i = 0; i < fileMap.meta.fields.length; i++) {
-				if (fileMap.meta.fields[i] !== undefined) {
-					newCols.push({
-						field: fileMap.meta.fields[i],
-						headerName: fileMap.meta.fields[i],
-						flex: 1,
-						maxWidth: 200,
-						minWidth: 200,
+								//kaydediliyor
+								setGridColumns(newCols)
+								setGridRows(newRows)
+								prevRows.current = newRows
+								prevCol.current = newCols
+							})
+						} else {
+							//eğer dosya map undefined ise önceki satır ve sutünları gösteriyor
+							setGridColumns([])
+							setGridRows([])
+							prevRows.current = []
+							prevCol.current = []
+						}
 					})
 				}
 			}
-			const newRows = []
-			for (var j = 1; j < numRows; j++) {
-				const newRow = fileMap.data[j]
-				newRows.push({ ...newRow, id: j })
-			}
+		})
 
-			//kaydediliyor
-			setGridColumns(newCols)
-			setGridRows(newRows)
-			prevRows.current = newRows
-			prevCol.current = newCols
-		} else {
-			//eğer dosya map undefined ise önceki satır ve sutünları gösteriyor
-			setGridColumns([])
-			setGridRows([])
-			prevRows.current = []
-			prevCol.current = []
+		return () => {
+			sub()
 		}
-	}, [fileMap, selectedNode])
+	}, [])
+
 	return (
 		<Box
 			sx={{
@@ -88,6 +96,7 @@ function Footer({ onDelete, isDisplay }) {
 						flexDirection: 'row',
 						alignItems: 'center',
 						justifyContent: 'space-between',
+						height: '44px',
 					}}>
 					<Typography
 						fontSize={13}
@@ -115,6 +124,7 @@ function Footer({ onDelete, isDisplay }) {
 				</Box>
 				{store.getState().clickedNode !== -1 && prevRows.current.length > 0 ? (
 					<DataGrid
+						className='nodrag'
 						rows={prevRows.current}
 						columns={prevCol.current}
 						disableSelectionOnClick
@@ -125,6 +135,7 @@ function Footer({ onDelete, isDisplay }) {
 						headerHeight={36}
 						rowHeight={36}
 						sx={{
+							userSelect: 'none',
 							color: 'primary.contrastText',
 							border: 'none',
 							fontSize: 11,
@@ -169,4 +180,4 @@ function Footer({ onDelete, isDisplay }) {
 	)
 }
 
-export default memo(Footer)
+export default memo(OutputPanel)
