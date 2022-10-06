@@ -52,7 +52,7 @@ function PlotGraph({
   
     function ChartHandler  (data){
     if(data !== undefined){
-    
+      optionHandler(chartType)
         let scatterData = [[axisParams.xAxis.title, axisParams.yAxis.title]];
         for (var index in data.data) {
           scatterData.push([
