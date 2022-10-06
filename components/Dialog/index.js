@@ -19,7 +19,6 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useState, useEffect } from 'react'
 import useDataStore from 'lib/store/DataStore.ts'
-import create from 'zustand'
 import moment from 'moment/moment'
 
 function CustomDialog({
@@ -35,8 +34,9 @@ function CustomDialog({
 	const [description, setDescription] = useState('')
 	const [works, setWorks] = useState([])
 	const [loading, setLoading] = useState(false)
-	const { getWorksByUsername, deleteWorkByUsernameAndName } =
-		create(useDataStore)()
+	const { getWorksByUsername, deleteWorkByUsernameAndName } = useDataStore(
+		state => state
+	)
 
 	const handleDeleteWork = async value => {
 		await deleteWorkByUsernameAndName(username, value)

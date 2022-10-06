@@ -9,8 +9,7 @@ import {
 import { memo, useEffect, useState } from 'react'
 import LoginModal from './modals/LoginModal'
 import RegisterModal from './modals/RegisterModal'
-import store from 'lib/store/AuthStore.ts'
-import create from 'zustand'
+import useAuthStore from 'lib/store/AuthStore.ts'
 import { useRouter } from 'next/router'
 import PersonIcon from '@mui/icons-material/Person'
 import LoginIcon from '@mui/icons-material/Login'
@@ -26,8 +25,7 @@ function UserProfile() {
 	const router = useRouter({
 		isReady: true,
 	})
-	const { logout, currentUserData, user, session } = create(store)()
-
+	const { logout, user, session } = useAuthStore(state => state)
 	useEffect(() => {
 		if (user) {
 			setSettings([
@@ -42,7 +40,7 @@ function UserProfile() {
 				{
 					icon: <PersonIcon />,
 					name: 'Profile',
-					onClick: () => router.push(`/profile/${currentUserData?.username}`),
+					onClick: () => router.push(`/profile/${user?.username}`),
 				},
 			])
 		} else {
@@ -59,7 +57,7 @@ function UserProfile() {
 				},
 			])
 		}
-	}, [logout, router, user, session, currentUserData])
+	}, [logout, router, user, session])
 
 	const handleCloseUserMenu = () => {
 		setAnchorElUser(null)
@@ -79,8 +77,8 @@ function UserProfile() {
 		<Box sx={{ flexGrow: 0 }}>
 			<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 				<UserAvatar
-					src={currentUserData?.avatar_url}
-					username={currentUserData?.username}
+					src={user?.avatar_url}
+					username={user?.username}
 					size={50}
 				/>
 			</IconButton>

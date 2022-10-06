@@ -12,12 +12,11 @@ import {
 import { memo, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import useAuthStore from 'lib/store/AuthStore.ts'
-import create from 'zustand'
 
 const LoginModal = ({ open, handleModal }) => {
 	const [error, setError] = useState('')
 
-	const { login } = create(useAuthStore)()
+	const login = useAuthStore(state => state.login)
 
 	useEffect(() => {
 		if (error) {
