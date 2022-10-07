@@ -11,7 +11,7 @@ import store from 'lib/store/store.ts'
 import { useTranslations } from 'next-intl'
 
 const ACCEPTED_FILE_FORMATS =
-	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
+  ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel";
 
 function FileUpload({ id, selected }) {
 	const fu = useTranslations('editor.nodes.file')
@@ -151,15 +151,15 @@ function FileUpload({ id, selected }) {
 				</Stack>
 			</Card>
 
-			<CustomHandle
-				type='source'
-				position='right'
-				id={'file-out'}
-				key={`file-${id}-out`}
-				isConnectable={true}
-			/>
-		</Grid>
-	)
+      <CustomHandle
+        type="source"
+        position="right"
+        id={"file-out"}
+        key={`file-${id}-out`}
+        isConnectable={true}
+      />
+    </Grid>
+  );
 }
 
-export default memo(FileUpload)
+export default memo(FileUpload);

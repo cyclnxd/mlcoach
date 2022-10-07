@@ -19,7 +19,6 @@ function PlotGraph({
   const [option, setOption] = useState()
   const [chartData, setChartData] = useState()
   const optionHandler = (type) => {
-  
       var options = {
         title: chartParams.title,
         subtitle: chartParams.subtitle,
@@ -51,17 +50,17 @@ function PlotGraph({
     }, [data,update,width, axisChanged]);
   
     function ChartHandler  (data){
+     
     if(data !== undefined){
       optionHandler(chartType)
         let scatterData = [[axisParams.xAxis.title, axisParams.yAxis.title]];
-        for (var index in data.data) {
+        for (var index in data) {
           scatterData.push([
-            parseFloat(data.data[index][axisParams.xAxis.title]),
-            parseFloat(data.data[index][axisParams.yAxis.title]),
+            parseFloat(data[index][axisParams.xAxis.title]),
+            parseFloat(data[index][axisParams.yAxis.title]),
           ]);
-        
-        setChartData(scatterData)
       }
+      setChartData(scatterData)
     }
   }
     return (

@@ -84,11 +84,11 @@ export default function Editor() {
 							style={{
 								visibility: isRenderGraph ? 'visible' : 'hidden',
 							}}>
-							{/* <GraphPanel
+							 <GraphPanel
 								parentDimensions={dimensions}
 								onDelete={handleDeleteGraph}
 								isDisplay={isRenderGraph}
-							/> */}
+							/> 
 						</div>
 					</GridLayout>
 				</>

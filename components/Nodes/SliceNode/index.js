@@ -106,7 +106,7 @@ function SliceNode({ id, selected, data }) {
 							gap: '10px',
 							width: '200px',
 						}}>
-						{error.length === 0 ? (
+						{error === "" ? (
 							<>
 								<CustomTextField
 									fullWidth

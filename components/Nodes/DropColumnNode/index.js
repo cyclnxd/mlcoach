@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect, memo, useRef } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import store from 'lib/store/store.ts'
@@ -11,59 +11,64 @@ import {
 } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
+import localforage from "localforage";
 import { useTranslations } from 'next-intl'
 
 function DropColumnNode({ id, selected, data }) {
-	const e = useTranslations('editor.nodes.errors')
-	const dc = useTranslations('editor.nodes.dropColumn')
-	// store the columns of DataFrame
-	const [keys, setKeys] = useState([])
-	// store the selected unique columns
-	const [selectedColumns, setSelectedColumns] = useState(() => [])
-	const [error, setError] = useState('')
-	// takes the selected columns and adds it to end of the Set structure
-	const handleSelected = (_, columns) => {
-		setSelectedColumns(columns)
-	}
-	useEffect(() => {
-		const edge = Object.values(store.getState().edges).find(
-			item => item.target === id
-		)
-		const sourceId = edge !== undefined ? edge.source : undefined
+  // store the columns of DataFrame
+  const [keys, setKeys] = useState([]);
+  // store the selected unique columns
+  const [selectedColumns, setSelectedColumns] = useState(() => []);
+  const selectedColRef = useRef(selectedColumns);
+  const [error, setError] = useState("connect a data source to select columns");
+  // takes the selected columns and adds it to end of the Set structure
+  const handleSelected = (_, columns) => {
+    selectedColRef.current = columns;
+    setSelectedColumns(columns);
+  };
+useEffect(() => {
+  async function deleteFile() {
+    await localforage.removeItem(id);
+  }
+  const edge = Object.values(store.getState().edges).find(
+    (item) => item.target === id
+  );
+  const sourceId = edge !== undefined ? edge.source : undefined;
+  if (sourceId !== undefined) {
+    localforage.getItem(sourceId).then((file) => {
+      if (file !== undefined && file?.data.length > 0) {
+        setError("");
+        // store the all column to the keys state
+        setKeys(Object.keys(file.data[0]));
 
-		// if the user has created a valid edge, then we update the fileMap
-		if (sourceId !== undefined) {
-			// structuredClone() used for deep cloning of file source
-			const file = structuredClone(store.getState().fileMap[sourceId])
+        // deletes the selected columns from the file
+        for (var row in file.data) {
+          for (const column of selectedColumns) {
+            delete file.data[row][column];
+          }
+        }
+        for (var field in file.meta.fields) {
+          for (const column of selectedColumns) {
+            if (file.meta.fields[field] === column) {
+              delete file.meta.fields[field];
+            }
+          }
+        }
+        localforage.setItem(id, file);
+      } else {
+        deleteFile();
+        setKeys([]);
+        setError(e('noData'))
+      }
+    });
+  } else {
+    deleteFile();
+    setKeys([])
+    setError(e('noData'))
+  }
+}, [id, selected, data, selectedColumns]);
 
-			if (file !== undefined && file?.data.length > 0) {
-				setError('')
-				// store the all column to the keys state
-				setKeys(Object.keys(store.getState().fileMap[sourceId].data[0]))
-				// deletes the selected columns from the file
-				for (var row in file.data) {
-					for (const column of selectedColumns) {
-						delete file.data[row][column]
-					}
-				}
-				for (var field in file.meta.fields) {
-					for (const column of selectedColumns) {
-						if (file.meta.fields[field] === column) {
-							delete file.meta.fields[field]
-						}
-					}
-				}
-				store.getState().storeFile(id, file)
-			} else {
-				setKeys([])
-				setError(e('noData'))
-			}
-		} else {
-			store.getState().storeFile(id, undefined)
-			setKeys([])
-			setError(e('noConnection'))
-		}
-	}, [selectedColumns, id, selected, data, e])
+	
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -123,7 +128,7 @@ function DropColumnNode({ id, selected, data }) {
 								},
 							},
 						}}>
-						{error.length === 0 ? (
+						{error.length === "" ? (
 							<>
 								<Typography
 									fontSize={11}
@@ -183,4 +188,4 @@ function DropColumnNode({ id, selected, data }) {
 	)
 }
 
-export default memo(DropColumnNode)
+export default memo(DropColumnNode);
