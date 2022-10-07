@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react'
 function UserAvatar({ username, src, size }) {
 	const [loading, setLoading] = useState(true)
 	useEffect(() => {
-		if (src === undefined || src === null) {
-			setLoading(true)
-			if (username) {
+		try {
+			if (src === undefined || src === null) {
+				setLoading(true)
+			} else {
 				setLoading(false)
 			}
-		} else {
+		} catch (error) {
+		} finally {
 			setLoading(false)
 		}
 	}, [src, username])
@@ -38,7 +40,7 @@ function UserAvatar({ username, src, size }) {
 						height: size || 50,
 					}}
 				/>
-			) : (
+			) : username?.length > 0 ? (
 				<Avatar
 					alt={username}
 					sx={{
@@ -47,6 +49,14 @@ function UserAvatar({ username, src, size }) {
 					}}>
 					{username.charAt(0).toUpperCase()}
 				</Avatar>
+			) : (
+				<Avatar
+					alt={'Avatar'}
+					sx={{
+						width: size || 50,
+						height: size || 50,
+					}}
+				/>
 			)}
 		</>
 	)

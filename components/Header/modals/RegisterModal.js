@@ -12,6 +12,7 @@ import {
 import { memo, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import useAuthStore from 'lib/store/AuthStore.ts'
+import CustomTextField from 'components/CustomTextField'
 
 const RegisterModal = ({ open, handleModal }) => {
 	const register = useAuthStore(state => state.register)
@@ -43,7 +44,7 @@ const RegisterModal = ({ open, handleModal }) => {
 						transform: 'translate(-50%, -50%)',
 						width: '40%',
 						height: '70%',
-						bgcolor: '#F5761A',
+						bgcolor: '#222138',
 						color: 'primary.contrastText',
 						px: 8,
 						outline: 'none',
@@ -64,17 +65,19 @@ const RegisterModal = ({ open, handleModal }) => {
 						<Formik
 							initialValues={{ username: '', password: '', email: '' }}
 							validate={values => {
-								const errors = {}
-								if (!values.email) {
-									errors.email = 'Required'
+								let errors = {}
+								if (!values.username || !values.email || !values.password) {
+									errors = {
+										username: username ? null : 'Required',
+										password: password ? null : 'Required',
+										email: email ? null : 'Required',
+									}
+								} else if (values.username.length < 3) {
+									errors.username = 'Username must be at least 3 characters'
 								} else if (
 									!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
 								) {
 									errors.email = 'Invalid email address'
-								} else if (!values.username) {
-									errors.username = 'Required'
-								} else if (!values.password) {
-									errors.password = 'Required'
 								} else if (values.password.length < 6) {
 									errors.password = 'Password must be at least 6 characters'
 								}
@@ -108,7 +111,7 @@ const RegisterModal = ({ open, handleModal }) => {
 									sx={{ mt: 3 }}>
 									<Grid container spacing={2}>
 										<Grid item xs={12}>
-											<TextField
+											<CustomTextField
 												error={errors.username && touched.username}
 												autoComplete='given-username'
 												name='username'
@@ -123,7 +126,7 @@ const RegisterModal = ({ open, handleModal }) => {
 											/>
 										</Grid>
 										<Grid item xs={12}>
-											<TextField
+											<CustomTextField
 												error={errors.email && touched.email}
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -137,7 +140,7 @@ const RegisterModal = ({ open, handleModal }) => {
 											/>
 										</Grid>
 										<Grid item xs={12}>
-											<TextField
+											<CustomTextField
 												error={errors.password && touched.password}
 												required
 												fullWidth
@@ -158,7 +161,7 @@ const RegisterModal = ({ open, handleModal }) => {
 									<Button
 										type='submit'
 										fullWidth
-										disabled={isSubmitting || Object.keys(errors).length > 0}
+										disabled={isSubmitting}
 										variant='contained'
 										sx={{ mt: 3, mb: 2 }}>
 										Sign Up

@@ -46,7 +46,7 @@ const LoginModal = ({ open, handleModal }) => {
 						transform: 'translate(-50%, -50%)',
 						width: '40%',
 						height: '70%',
-						bgcolor: '#F5761A',
+						bgcolor: '#222138',
 						color: 'primary.contrastText',
 						px: 8,
 						outline: 'none',
