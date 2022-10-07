@@ -1,19 +1,20 @@
 import { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
-import { Button, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import store from 'lib/store/store.ts'
 import { Card, Stack } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
-import CustomTextField from 'components/CustomTextField'
+import CustomTextField from 'components/base/CustomTextField'
 import localforage from 'localforage'
 
 function SliceNode({ id, selected, data }) {
+	const e = useTranslations('editor.nodes.errors')
 	//holding slicing index values
 	const [startSlice, setStartSlice] = useState(0)
 	const [endSlice, setEndSlice] = useState(-1)
-	const [error, setError] = useState('connect a data source to select columns')
+	const [error, setError] = useState()
 	const fileLengthRef = useRef(null)
 	// takes an event from text field and updates the startSliceRef state
 	// if event target value is NaN then saves all element from source
@@ -62,14 +63,14 @@ function SliceNode({ id, selected, data }) {
 					setError('')
 				} else {
 					deleteFile()
-					setError('data source has no data')
+					setError(e('noData'))
 				}
 			})
 		} else {
 			deleteFile()
-			setError('connect a data source to slice data')
+			setError(e('noConnection'))
 		}
-	}, [id, selected, data, startSlice, endSlice])
+	}, [id, selected, data, startSlice, endSlice, e])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>

@@ -3,7 +3,7 @@ import Backdrop from '@mui/material/Backdrop'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import Fade from '@mui/material/Fade'
-import ToolPanel from '../ToolPanel'
+import ToolPanel from '../..'
 
 export default function ToolModal({ open, handleModal }) {
 	return (

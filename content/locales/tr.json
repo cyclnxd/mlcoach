@@ -1,0 +1,116 @@
+{
+	"lang": "tr",
+	"errors": {
+		"wentWrong": "Bir şeyler yanlış gitti!(kangal kural1: hatayı kontrol etmek yerine bunu yazın)"
+	},
+	"profile": {
+		"follow": "takipçi",
+		"works": "çalışmalar",
+		"work": "çalışma",
+		"forks": "forks",
+		"editProfile": "Profili Düzenle",
+		"manageWorks": "Çalışmaları Yönet"
+	},
+	"editor": {
+		"buttonMenu": {
+			"save": "Kaydet",
+			"open": "Aç",
+			"tooltip": "Bu özelliği kullanabilmek için giriş yapmanız ve en az 1 adet node eklemeniz gerekmektedir."
+		},
+		"editorDialog": {
+			"open": "Editörü Aç",
+			"save": "Editörü Kaydet",
+			"works": "Çalışmalarınız",
+			"cancel": "İptal Et",
+			"placeholder1": "Başlık giriniz",
+			"placeholder2": "Açıklama giriniz",
+			"desc1": "Daha önceden kaydettiğiniz bir çalışmanın başlığını giriniz.",
+			"desc2": "Kaydetmek istediğiniz çalışmanın başlığını giriniz.",
+			"desc3": "Açıklama giriniz. (isteğe bağlı)",
+			"desc4": "Kayıtlı çalışmanız bulunmamaktadır."
+		},
+		"toolbox": {
+			"name": "Araçlar",
+			"all": "Tümü",
+			"input": "Input",
+			"transform": "Transform",
+			"visualization": "Görselleştirme"
+		},
+		"buttons": {
+			"editor": "Editor",
+			"output": "Output Paneli",
+			"graph": "Grafik Paneli",
+			"toolbox": "Toolbox"
+		},
+		"nodes": {
+			"errors": {
+				"noData": "bağlı node'dan veri alınamadı",
+				"noConnection": "kullanabilmek için bir node bağlayın"
+			},
+			"file": {
+				"name": "Dosya",
+				"desc": "csv, excel gibi formatlarda dosya yükleyebilirsiniz.",
+				"group": "input",
+				"alert": "Dosya boyutu aşırı büyük! `max 10mb`",
+				"placeholder": "Yükle",
+				"formats": "İzin verilen formatlar: csv, xls, xlsx"
+			},
+			"dropColumn": {
+				"name": "Drop Column",
+				"desc": "verisetinden sütun siler.",
+				"group": "transform",
+				"content": "bir kolon seçin"
+			},
+			"slice": {
+				"name": "Böl",
+				"desc": "belirtilen index aralığına göre verisetini böler.",
+				"group": "transform"
+			},
+			"fillWithConstant": {
+				"name": "Sabit ile Doldur",
+				"desc": "verisetindeki boş değerleri belirtilen sabit ile doldurur.",
+				"group": "transform"
+			},
+			"fillWithStatistics": {
+				"name": "İstatistikler ile Doldur",
+				"desc": "verisetindeki boş değerleri seçilen istatistik değeri ile doldurur.",
+				"group": "transform"
+			},
+			"filter": {
+				"name": "Filtre",
+				"desc": "verisetindeki değerleri filtreler.",
+				"group": "transform"
+			}
+		}
+	},
+	"workCard": {
+		"like": "beğeni",
+		"forks": "forks",
+		"view": "görüntülenme",
+		"noneDescription": "'Açıklama bulunamadı.'",
+		"report": "Raporla",
+		"changePublic": "Görünürlüğü değiştir"
+	},
+	"header": {
+		"profile": "Profil",
+		"logout": "Çıkış yap",
+		"login": "Giriş yap",
+		"register": "Kayıt ol",
+		"loginDialog": {
+			"login": "Giriş yap",
+			"email": "Mail adresi",
+			"password": "Şifre",
+			"forgotPassword": "Şifremi unuttum",
+			"notHaveAnAccount": "Henüz bir hesabınız yok mu?"
+		},
+		"registerDialog": {
+			"register": "Kayıt ol",
+			"username": "Kullanıcı adı",
+			"email": "Mail adresi",
+			"password": "Şifre",
+			"confirmPassword": "Şifreyi onayla",
+			"cancel": "İptal Et",
+			"haveAnAccount": "Zaten bir hesabınız var mı?"
+		}
+	}
+}

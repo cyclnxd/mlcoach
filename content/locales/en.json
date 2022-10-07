@@ -1,0 +1,120 @@
+{
+	"lang": "en",
+	"errors": {
+		"wentWrong": "Something went wrong!"
+	},
+	"profile": {
+		"follow": "follower",
+		"works": "works",
+		"work": "work",
+		"forks": "forks",
+		"editProfile": "Edit Profile",
+		"manageWorks": "Manage Works"
+	},
+	"editor": {
+		"errors": {
+			"emptyFlow": "You need to add at least one node to save your work",
+			"notFound": "Work not found"
+		},
+		"buttonMenu": {
+			"save": "Save",
+			"open": "Open",
+			"tooltip": "You must be logged in to use this feature or need to add at least one node to save your work"
+		},
+		"editorDialog": {
+			"open": "Open Editor",
+			"save": "Save Editor",
+			"works": "Your Works",
+			"cancel": "Cancel",
+			"placeholder1": "Enter a title",
+			"placeholder2": "Enter a description",
+			"desc1": "Enter the title of the editor you saved earlier.",
+			"desc2": "Enter the title of the editor you want to save.",
+			"desc3": "Enter the description of the editor. (optional)",
+			"desc4": "You don't have any saved work"
+		},
+		"toolbox": {
+			"name": "Tools",
+			"all": "All",
+			"input": "Input",
+			"transform": "Transform",
+			"visualization": "Visualization"
+		},
+		"buttons": {
+			"editor": "Editor",
+			"output": "Output Panel",
+			"graph": "Graph Panel",
+			"toolbox": "Toolbox"
+		},
+		"nodes": {
+			"errors": {
+				"noData": "data source has no data",
+				"noConnection": "connect a data source to select columns"
+			},
+			"file": {
+				"name": "File",
+				"desc": "To upload files such as csv, excel",
+				"group": "input",
+				"alert": "File size is too large `max 10mb`",
+				"placeholder": "Upload",
+				"formats": "Allowed file types: csv, xls, xlsx"
+			},
+			"dropColumn": {
+				"name": "Drop Column",
+				"desc": "Drop column`s` from dataframe",
+				"group": "transform",
+				"content": "Select columns to drop"
+			},
+			"slice": {
+				"name": "Slice",
+				"desc": "Slicing data frames given indexes",
+				"group": "transform"
+			},
+			"fillWithConstant": {
+				"name": "Fill With Constant",
+				"desc": "Filling missing values with constant",
+				"group": "transform"
+			},
+			"fillWithStatistics": {
+				"name": "Fill With Statistics Values",
+				"desc": "Filling missing values with statistics values",
+				"group": "transform"
+			},
+			"filter": {
+				"name": "Filter Node",
+				"desc": "Filtering data frames given conditions",
+				"group": "transform"
+			}
+		}
+	},
+	"workCard": {
+		"like": "like",
+		"forks": "forks",
+		"view": "views",
+		"noneDescription": "'No Description.'",
+		"report": "Report",
+		"changePublic": "Change Public"
+	},
+	"header": {
+		"profile": "Profile",
+		"logout": "Logout",
+		"login": "Login",
+		"register": "Register",
+		"loginDialog": {
+			"login": "Sign in",
+			"email": "Email Adress",
+			"password": "Password",
+			"forgotPassword": "Forgot Password",
+			"haveAccount": "Don't have an account?"
+		},
+		"registerDialog": {
+			"register": "Sign up",
+			"username": "Username",
+			"email": "Email Adress",
+			"password": "Password",
+			"confirmPassword": "Confirm Password",
+			"cancel": "Cancel",
+			"login": "Login"
+		}
+	}
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react'
+import { useState, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import store from 'lib/store/store.ts'
@@ -11,13 +11,16 @@ import {
 } from '@mui/material'
 import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
+import { useTranslations } from 'next-intl'
 
 function DropColumnNode({ id, selected, data }) {
+	const e = useTranslations('editor.nodes.errors')
+	const dc = useTranslations('editor.nodes.dropColumn')
 	// store the columns of DataFrame
 	const [keys, setKeys] = useState([])
 	// store the selected unique columns
 	const [selectedColumns, setSelectedColumns] = useState(() => [])
-	const [error, setError] = useState('connect a data source to select columns')
+	const [error, setError] = useState('')
 	// takes the selected columns and adds it to end of the Set structure
 	const handleSelected = (_, columns) => {
 		setSelectedColumns(columns)
@@ -53,14 +56,14 @@ function DropColumnNode({ id, selected, data }) {
 				store.getState().storeFile(id, file)
 			} else {
 				setKeys([])
-				setError('data source has no data')
+				setError(e('noData'))
 			}
 		} else {
 			store.getState().storeFile(id, undefined)
 			setKeys([])
-			setError('connect a data source to select columns')
+			setError(e('noConnection'))
 		}
-	}, [selectedColumns, id, selected, data])
+	}, [selectedColumns, id, selected, data, e])
 
 	return (
 		<Grid container direction='row' justifyContent='center' alignItems='center'>
@@ -84,7 +87,7 @@ function DropColumnNode({ id, selected, data }) {
 						: { border: '0.5px solid #333154' }
 				}>
 				<Stack spacing={1}>
-					<HeaderLayout title='Drop' id={id} />
+					<HeaderLayout title={dc('name')} id={id} />
 					<Box
 						sx={{
 							display: 'flex',
@@ -125,7 +128,7 @@ function DropColumnNode({ id, selected, data }) {
 								<Typography
 									fontSize={11}
 									sx={{ color: 'primary.contrastText' }}>
-									Select Columns to Drop
+									{dc('content')}
 								</Typography>
 								<ToggleButtonGroup
 									className='nodrag'

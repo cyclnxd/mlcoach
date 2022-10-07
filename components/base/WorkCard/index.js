@@ -25,15 +25,18 @@ import ForkLeftIcon from '@mui/icons-material/ForkLeft'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt'
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import UserAvatar from 'components/UserAvatar'
+import UserAvatar from 'components/base/UserAvatar'
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PublicIcon from '@mui/icons-material/Public'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import moment from 'moment'
+import { useTranslations } from 'next-intl'
 
 function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
+	const e = useTranslations('errors')
+	const t = useTranslations('workCard')
 	const [open, setOpen] = useState(false)
 	const [error, setError] = useState(null)
 	const [avatarUrl, setAvatarUrl] = useState(null)
@@ -74,7 +77,7 @@ function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 		<>
 			{error ? (
 				<Box sx={{}}>
-					<h1>Something went wrong</h1>
+					<h1>{e('wentWrong')}</h1>
 				</Box>
 			) : (
 				<Box {...props}>
@@ -104,7 +107,7 @@ function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 									fontSize: 10,
 									mt: -1,
 								}}>
-								{moment(createdAt).fromNow()}
+								{moment(createdAt, null, 'tr').fromNow()}
 							</Typography>
 							<Box
 								sx={{
@@ -155,14 +158,14 @@ function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 
 							<Typography
 								variant='body2'
-								color='text.secondary'
+								color={description ? 'text.primary' : 'text.secondary'}
 								sx={{
 									overflow: 'clip',
 									whiteSpace: 'nowrap',
 									textOverflow: 'ellipsis',
 									mb: 2,
 								}}>
-								{description || 'No description'}
+								{description || t('noneDescription')}
 							</Typography>
 
 							<Typography
@@ -173,8 +176,9 @@ function WorkCard({ work, props, isOwner = false, type = 'profile' }) {
 									whiteSpace: 'nowrap',
 									textOverflow: 'ellipsis',
 								}}>
-								<strong>like:</strong> {like} <strong>forked:</strong> {forked}{' '}
-								<strong>view:</strong> {view}
+								<strong>{t('like')}:</strong> {like || 0}{' '}
+								<strong>{t('forks')}:</strong> {forked || 0}{' '}
+								<strong>{t('view')}:</strong> {view || 0}
 							</Typography>
 						</CardContent>
 					</Card>
@@ -207,7 +211,7 @@ const WorkDetails = ({
 		description,
 		username,
 	} = work
-
+	const t = useTranslations('workCard')
 	const [anchorEl, setAnchorEl] = useState(null)
 	const openMenu = !!anchorEl
 	const handleOpenMenu = event => {
@@ -253,7 +257,7 @@ const WorkDetails = ({
 										<ListItemIcon>
 											<PublicIcon />
 										</ListItemIcon>
-										<ListItemText>Change public</ListItemText>
+										<ListItemText>{t('changePublic')}</ListItemText>
 									</MenuItem>
 								)}
 
@@ -261,7 +265,7 @@ const WorkDetails = ({
 									<ListItemIcon>
 										<ReportGmailerrorredIcon />
 									</ListItemIcon>
-									<ListItemText>Report</ListItemText>
+									<ListItemText>{t('report')}</ListItemText>
 								</MenuItem>
 							</MenuList>
 						</Menu>
@@ -306,7 +310,7 @@ const WorkDetails = ({
 							wordWrap: 'break-word',
 						}}>
 						<Typography variant='body2' paragraph color='text.secondary'>
-							{description || 'No description'}
+							{description || t('changePublic')}
 						</Typography>
 					</DialogContentText>
 				</DialogContent>
@@ -339,7 +343,7 @@ const WorkDetails = ({
 								<ThumbUpOffAltIcon />
 							</IconButton>
 							<Typography marginLeft={1} variant='body2' color='text.secondary'>
-								{like}
+								{like || 0}
 							</Typography>
 						</Box>
 						<Box
@@ -354,7 +358,7 @@ const WorkDetails = ({
 								<ForkLeftIcon sx={{ width: 24, height: 24 }} />
 							</IconButton>
 							<Typography marginLeft={1} variant='body2' color='text.secondary'>
-								{forked}
+								{forked || 0}
 							</Typography>
 						</Box>
 					</div>
@@ -372,7 +376,7 @@ const WorkDetails = ({
 							sx={{ width: 24, height: 24, color: 'text.secondary' }}
 						/>
 						<Typography marginLeft={1} variant='body2' color='text.secondary'>
-							{view}
+							{view || 0}
 						</Typography>
 					</Box>
 				</Box>

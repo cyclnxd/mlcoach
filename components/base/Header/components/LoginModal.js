@@ -5,18 +5,21 @@ import {
 	Backdrop,
 	Button,
 	Grid,
-	TextField,
 	Typography,
 	Alert,
 } from '@mui/material'
 import { memo, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import useAuthStore from 'lib/store/AuthStore.ts'
-import CustomTextField from 'components/CustomTextField'
+import CustomTextField from 'components/base/CustomTextField'
+import { useTranslations } from 'next-intl'
 
-const RegisterModal = ({ open, handleModal }) => {
-	const register = useAuthStore(state => state.register)
+const LoginModal = ({ open, handleModal }) => {
+	const t = useTranslations('header.loginDialog')
 	const [error, setError] = useState('')
+
+	const login = useAuthStore(state => state.login)
+
 	useEffect(() => {
 		if (error) {
 			setTimeout(() => {
@@ -24,6 +27,7 @@ const RegisterModal = ({ open, handleModal }) => {
 			}, 3000)
 		}
 	}, [error])
+
 	return (
 		<Modal
 			aria-labelledby='transition-modal-title'
@@ -60,33 +64,27 @@ const RegisterModal = ({ open, handleModal }) => {
 							justifyContent: 'center',
 						}}>
 						<Typography component='h1' variant='h5'>
-							Sign up
+							{t('login')}
 						</Typography>
 						<Formik
-							initialValues={{ username: '', password: '', email: '' }}
+							initialValues={{ email: '', password: '' }}
 							validate={values => {
-								let errors = {}
-								if (!values.username || !values.email || !values.password) {
-									errors = {
-										username: username ? null : 'Required',
-										password: password ? null : 'Required',
-										email: email ? null : 'Required',
-									}
-								} else if (values.username.length < 3) {
-									errors.username = 'Username must be at least 3 characters'
+								const errors = {}
+								if (!values.email) {
+									errors.email = 'Required'
 								} else if (
 									!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
 								) {
 									errors.email = 'Invalid email address'
-								} else if (values.password.length < 6) {
-									errors.password = 'Password must be at least 6 characters'
+								} else if (!values.password) {
+									errors.password = 'Required'
 								}
 
 								return errors
 							}}
 							onSubmit={async (values, { setSubmitting }) => {
 								try {
-									await register(values.email, values.password, values.username)
+									await login(values.email, values.password)
 									setError('')
 									handleModal(false)
 								} catch (error) {
@@ -112,21 +110,6 @@ const RegisterModal = ({ open, handleModal }) => {
 									<Grid container spacing={2}>
 										<Grid item xs={12}>
 											<CustomTextField
-												error={errors.username && touched.username}
-												autoComplete='given-username'
-												name='username'
-												required
-												fullWidth
-												onChange={handleChange}
-												onBlur={handleBlur}
-												value={values.username}
-												id='username'
-												label='Username'
-												autoFocus
-											/>
-										</Grid>
-										<Grid item xs={12}>
-											<CustomTextField
 												error={errors.email && touched.email}
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -134,7 +117,7 @@ const RegisterModal = ({ open, handleModal }) => {
 												required
 												fullWidth
 												id='email'
-												label='Email Address'
+												label={t('email')}
 												name='email'
 												autoComplete='email'
 											/>
@@ -148,12 +131,13 @@ const RegisterModal = ({ open, handleModal }) => {
 												onBlur={handleBlur}
 												value={values.password}
 												name='password'
-												label='Password'
+												label={t('password')}
 												type='password'
 												id='password'
 												autoComplete='new-password'
 											/>
 										</Grid>
+
 										<Grid item xs={12}>
 											{error && <Alert severity='error'>{error}</Alert>}
 										</Grid>
@@ -163,8 +147,9 @@ const RegisterModal = ({ open, handleModal }) => {
 										fullWidth
 										disabled={isSubmitting}
 										variant='contained'
+										upperCase={false}
 										sx={{ mt: 3, mb: 2 }}>
-										Sign Up
+										{t('login')}
 									</Button>
 								</Box>
 							)}
@@ -176,4 +161,4 @@ const RegisterModal = ({ open, handleModal }) => {
 	)
 }
 
-export default memo(RegisterModal)
+export default memo(LoginModal)

@@ -1,6 +1,6 @@
 import { Box, Grid, Stack, Typography } from '@mui/material'
-import Loading from 'components/Loading'
-import WorkCard from 'components/WorkCard'
+import Loading from 'components/base/Loading'
+import WorkCard from 'components/base/WorkCard'
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { useState } from 'react'

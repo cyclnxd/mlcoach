@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, memo } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -8,11 +8,13 @@ import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
 import localforage from 'localforage'
 import store from 'lib/store/store.ts'
+import { useTranslations } from 'next-intl'
 
 const ACCEPTED_FILE_FORMATS =
 	'.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
 
 function FileUpload({ id, selected }) {
+	const fu = useTranslations('editor.nodes.file')
 	const [fileMetaData, setFileMetaData] = useState(null)
 	const [fileUploaded, setFileUploaded] = useState(false)
 	const inputRef = useRef()
@@ -48,7 +50,7 @@ function FileUpload({ id, selected }) {
 				},
 			})
 		} else {
-			alert('File size is too large `max 10mb`')
+			alert(fu('alert'))
 			inputRef.current.value = null
 		}
 	}
@@ -76,7 +78,7 @@ function FileUpload({ id, selected }) {
 					maxWidth: '200px',
 				}}>
 				<Stack spacing={0}>
-					<HeaderLayout title='File' id={id} />
+					<HeaderLayout title={fu('name')} id={id} />
 					<Box
 						sx={{
 							display: 'flex',
@@ -91,7 +93,6 @@ function FileUpload({ id, selected }) {
 								<Button
 									variant='contained'
 									component='label'
-									value='Upload'
 									size='small'
 									sx={{
 										backgroundColor: 'primary.light',
@@ -99,7 +100,7 @@ function FileUpload({ id, selected }) {
 											backgroundColor: 'primary.darkLight',
 										},
 									}}>
-									Upload
+									{fu('placeholder')}
 									<input
 										id='contained-button-file'
 										type='file'
@@ -120,7 +121,7 @@ function FileUpload({ id, selected }) {
 									sx={{
 										color: 'primary.darkText',
 									}}>
-									allowed types csv, excel
+									{fu('formats')}
 								</Typography>
 							</>
 						) : (
