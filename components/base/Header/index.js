@@ -132,6 +132,16 @@ const Header = () => {
 									</MenuItem>
 								</Link>
 							))}
+							<Box
+								sx={{
+									display: { xs: 'flex', md: 'none' },
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}>
+								{intls.map((lang, i) => (
+									<IntlButton key={i} lang={lang} />
+								))}
+							</Box>
 						</Menu>
 					</Box>
 					{/*responsive layout for desktop or nonsmall devices */}
@@ -162,7 +172,7 @@ const Header = () => {
 							</Link>
 						))}
 					</Box>
-					<Box sx={{ mr: 5 }}>
+					<Box sx={{ mr: 5, display: { xs: 'none', md: 'flex' } }}>
 						{intls.map((lang, i) => (
 							<IntlButton key={i} lang={lang} />
 						))}

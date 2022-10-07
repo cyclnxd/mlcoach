@@ -8,13 +8,14 @@ import HeaderLayout from '../HeaderLayout'
 import CustomHandle from '../CustomHandle'
 import CustomTextField from 'components/base/CustomTextField'
 import localforage from 'localforage'
+import { useTranslations } from 'next-intl'
 
 function SliceNode({ id, selected, data }) {
 	const e = useTranslations('editor.nodes.errors')
 	//holding slicing index values
 	const [startSlice, setStartSlice] = useState(0)
 	const [endSlice, setEndSlice] = useState(-1)
-	const [error, setError] = useState()
+	const [error, setError] = useState('')
 	const fileLengthRef = useRef(null)
 	// takes an event from text field and updates the startSliceRef state
 	// if event target value is NaN then saves all element from source
@@ -38,7 +39,7 @@ function SliceNode({ id, selected, data }) {
 	// used to delete file stored in global storage when a node is deleted
 
 	useEffect(() => {
-		async function deleteFile() {
+		const deleteFile = async id => {
 			await localforage.removeItem(id)
 		}
 		// checking if the user has created a valid edge between two nodes
@@ -62,12 +63,12 @@ function SliceNode({ id, selected, data }) {
 					})
 					setError('')
 				} else {
-					deleteFile()
+					deleteFile(id)
 					setError(e('noData'))
 				}
 			})
 		} else {
-			deleteFile()
+			deleteFile(id)
 			setError(e('noConnection'))
 		}
 	}, [id, selected, data, startSlice, endSlice, e])

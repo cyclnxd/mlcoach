@@ -4,7 +4,6 @@ import { memo } from 'react'
 
 function IntlButton({ lang }) {
 	const router = useRouter()
-	console.log(router)
 	const handleChange = (_, newLang) => {
 		if (newLang !== null) {
 			if (router.pathname === '/profile/[...username]') {
