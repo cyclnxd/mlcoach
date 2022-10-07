@@ -8,8 +8,11 @@ import TextField from '@mui/material/TextField'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
-import PlotGraph from './PlotGraph'
+import PlotGraph from './plotgraph'
 import Button from '@mui/material/Button'
+import localforage from 'localforage'
+import { FiveK } from '@mui/icons-material'
+import { unstable_batchedUpdates } from 'react-dom'
 
 const checkedIcon = <CheckBoxIcon fontSize='small' />
 const icon = <CheckBoxOutlineBlankIcon fontSize='small' />
@@ -25,7 +28,7 @@ let charts = [
 	'Histogram',
 ]
 let axisChanged = false
-let chartType = 'Table'
+let chartType = 'ScatterChart'
 let chartParams = { title: 'deneme', subtitle: 'deneme' }
 let axisParams = {
 	xAxis: { title: ' ', minValue: 0, maxValue: 0 },
@@ -34,36 +37,50 @@ let axisParams = {
 function Graph({ onDelete, isDisplay, parentDimensions }) {
 	const [openDialog, setOpenDialog] = useState(false)
 
-	const [selectedNode, setSelectedNode] = useState()
+	const [render, setRender] = useState(false)
 	const [fileMap, setFileMap] = useState()
-	const [columns, setColumns] = useState()
-	const prevCol = useRef(columns)
+	const prevCol = useRef([])
+
 	const dialogHandler = () => {
 		setOpenDialog(!openDialog)
 	}
 
-	store.subscribe(() => {
-		setSelectedNode(store.getState().clickedNode)
-		setFileMap(
-			store.getState().fileMap[store.getState().clickedNode]
-				? store.getState().fileMap[store.getState().clickedNode]
-				: undefined
-		)
-	})
-	useEffect(() => {
-		if (fileMap !== undefined && fileMap !== null) {
-			if (fileMap.data[0] !== undefined) {
-				const col = []
-				for (const [key, _] of Object.entries(fileMap.data[0])) {
-					col.push(key)
-				}
-				setColumns(col)
-				prevCol.current = col
-			}
-		} else {
-			prevCol.current = []
-		}
-	}, [fileMap])
+  const clickedNodeRef = useRef(store.getState().clickedNode)
+	const fileMapRef = useRef(store.getState().fileMap)
+
+  useEffect(() => {
+    const sub = store.subscribe(() => {
+      const state = store.getState()
+      if (
+				state.clickedNode !== clickedNodeRef.current ||
+				JSON.stringify(state.fileMap) !== JSON.stringify(fileMapRef.current)
+			){
+        clickedNodeRef.current = state.clickedNode
+        if(state.clickedNode && typeof state.clickedNode === 'string'){
+          const id = state.clickedNode
+          localforage.getItem(id).then(file =>{
+            if(file !== undefined && file !== null){
+              const {data, meta} = file
+              unstable_batchedUpdates(() => {
+              const columns = []
+              Object.entries(meta.fields).forEach(([key, value]) => {
+                columns.push(value)
+              })
+              setFileMap(data)
+              prevCol.current = columns
+              setRender(true)
+            })
+            }
+          })
+        }
+        else{
+          setRender(false)
+        }
+      }
+    })
+    return () => sub()
+  }, [render])
+
 	return (
 		<Stack sx={{ color: 'primary.dark' }} spacing={0} direction='column'>
 			<Box
@@ -137,7 +154,7 @@ function Graph({ onDelete, isDisplay, parentDimensions }) {
 						height={parentDimensions.height * 10}
 						chartParams={chartParams}
 						axisParams={axisParams}
-						update={selectedNode}
+						update={render}
 						axisChanged={axisChanged}
 						style={{
 							width: '100%',
