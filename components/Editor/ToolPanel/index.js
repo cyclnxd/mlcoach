@@ -4,60 +4,12 @@ import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Grid2 from '@mui/material/Unstable_Grid2'
-import ToolItem from './ToolItem'
+import ToolItem from './components/ToolItem'
+import { useMemo } from 'react'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 
 const nodeGroups = ['all', 'input', 'transform', 'visualization']
-
-const nodeTypes = [
-	{
-		title: 'File',
-		type: 'fileUpload',
-		group: 'input',
-		desc: 'To upload files such as csv, excel',
-		input: '-',
-		output: 'DataFrame',
-	},
-	{
-		title: 'Drop Column',
-		type: 'dropColNode',
-		group: 'transform',
-		desc: 'Dropping column of dataframe',
-		input: 'DataFrame',
-		output: 'DataFrame',
-	},
-	{
-		title: 'Slice',
-		type: 'sliceNode',
-		group: 'transform',
-		desc: 'Slicing data frames given indexes',
-		input: 'DataFrame',
-		output: 'DataFrame',
-	},
-	{
-		title: 'Fill With Constant',
-		type: 'fillWithConstantNode',
-		group: 'transform',
-		desc: 'Filling missing values with constant',
-		input: 'DataFrame',
-		output: 'DataFrame',
-	},
-	{
-		title: 'Fill With Statistics Values',
-		type: 'fillWithStatisticsNode',
-		group: 'transform',
-		desc: 'Filling missing values with statistics values',
-		input: 'DataFrame',
-		output: 'DataFrame',
-	},
-	{
-		title: 'Filter Node',
-		type: 'filterNode',
-		group: 'transform',
-		desc: 'Filtering data frames given conditions',
-		input: 'DataFrame',
-		output: 'DataFrame',
-	},
-]
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props
@@ -87,8 +39,62 @@ function a11yProps(index) {
 }
 
 export default function ToolPanel() {
-	const [value, setValue] = React.useState('all')
+	const t = useTranslations('editor.nodes')
+	const tb = useTranslations('editor.toolbox')
+	const [value, setValue] = useState('all')
 
+	const nodeTypes = useMemo(() => {
+		return [
+			{
+				title: t('file.name'),
+				type: 'fileUpload',
+				group: t('file.group'),
+				desc: t('file.desc'),
+				input: '-',
+				output: 'DataFrame',
+			},
+			{
+				title: t('dropColumn.name'),
+				type: 'dropColNode',
+				group: t('dropColumn.group'),
+				desc: t('dropColumn.desc'),
+				input: 'DataFrame',
+				output: 'DataFrame',
+			},
+			{
+				title: t('slice.name'),
+				type: 'sliceNode',
+				group: t('slice.group'),
+				desc: t('slice.desc'),
+				input: 'DataFrame',
+				output: 'DataFrame',
+			},
+			{
+				title: t('fillWithConstant.name'),
+				type: 'fillWithConstantNode',
+				group: t('fillWithConstant.group'),
+				desc: t('fillWithConstant.desc'),
+				input: 'DataFrame',
+				output: 'DataFrame',
+			},
+			{
+				title: t('fillWithStatistics.name'),
+				type: 'fillWithStatisticsNode',
+				group: t('fillWithStatistics.group'),
+				desc: t('fillWithStatistics.desc'),
+				input: 'DataFrame',
+				output: 'DataFrame',
+			},
+			{
+				title: t('filter.name'),
+				type: 'filterNode',
+				group: t('filter.group'),
+				desc: t('filter.desc'),
+				input: 'DataFrame',
+				output: 'DataFrame',
+			},
+		]
+	}, [t])
 	const handleChange = (_, newValue) => {
 		setValue(newValue)
 	}
@@ -105,7 +111,7 @@ export default function ToolPanel() {
 					variant='h5'
 					component='div'
 					sx={{ flexGrow: 1, marginBottom: '10px', textAlign: 'center' }}>
-					Tools
+					{tb('name')}
 				</Typography>
 				<Tabs
 					orientation='vertical'
@@ -116,14 +122,17 @@ export default function ToolPanel() {
 					onChange={(_, newValue) => handleChange(_, nodeGroups[newValue])}
 					aria-label='Vertical tabs example'
 					sx={{ borderRight: 1, borderColor: 'divider' }}>
-					<Tab label='All' {...a11yProps(nodeGroups.indexOf('all'))} />
-					<Tab label='Input' {...a11yProps(nodeGroups.indexOf('input'))} />
+					<Tab label={tb('all')} {...a11yProps(nodeGroups.indexOf('all'))} />
 					<Tab
-						label='Transform'
+						label={tb('input')}
+						{...a11yProps(nodeGroups.indexOf('input'))}
+					/>
+					<Tab
+						label={tb('transform')}
 						{...a11yProps(nodeGroups.indexOf('transform'))}
 					/>
 					<Tab
-						label='Visualization'
+						label={tb('visualization')}
 						{...a11yProps(nodeGroups.indexOf('visualization'))}
 					/>
 				</Tabs>

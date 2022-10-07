@@ -16,12 +16,14 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import SimpleImputation from "lib/utils/simpleImputation";
 import localforage from "localforage";
+import { useTranslations } from 'next-intl'
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 import HeaderLayout from "../../HeaderLayout";
 import CustomHandle from "components/Nodes/CustomHandle";
-
+ 
 function FillWithStatsNode({ id, selected, data }) {
+  const e = useTranslations('editor.nodes.errors')
   const [columns, setColumns] = useState(() => []);
   const [selectedColumn, setSelectedColumn] = useState(() => []);
   const prevSelectedColumn = useRef(selectedColumn);
@@ -165,12 +167,12 @@ function FillWithStatsNode({ id, selected, data }) {
           setRender(true);
         } else {
           deleteFile();
-          setError("data source has no data");
+          setError(e("noData"));
         }
       });
     } else {
       deleteFile();
-      setError("connect a data source to fill data");
+      setError(e('noConnection'));
     }
     setRender(false);
   }, [
@@ -188,7 +190,7 @@ function FillWithStatsNode({ id, selected, data }) {
       return (
         <>
           <Typography fontSize={11} sx={{ color: "primary.contrastText" }}>
-            Fill data with selected mode
+          { e("Fill data with selected mode")}
           </Typography>
 
           <Autocomplete
@@ -394,7 +396,7 @@ function FillWithStatsNode({ id, selected, data }) {
               },
             }}
           >
-            {error.length === 0 ? (
+            {error === "" ? (
               mainBody(page)
             ) : (
               <Typography>{error}</Typography>

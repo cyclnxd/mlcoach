@@ -1,6 +1,7 @@
 import { Button, Menu, MenuItem, Tooltip, Typography } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { memo } from 'react'
+import { useTranslations } from 'next-intl'
 
 function ButtonMenu({
 	anchorEl,
@@ -11,14 +12,16 @@ function ButtonMenu({
 	disabled,
 	menuDisabled,
 }) {
+	const t = useTranslations('editor.buttonMenu')
 	const open = Boolean(anchorEl)
 	return (
 		<>
 			<Tooltip
-				title={
-					'You must be logged in to use this feature or need to add at least one node to save your work'
-				}
-				disableHoverListener={!disabled}>
+				title={t('tooltip')}
+				PopperProps={{
+					disablePortal: true,
+				}}
+				TransitionProps={{ timeout: 700 }}>
 				<span>
 					<Button
 						disabled={disabled}

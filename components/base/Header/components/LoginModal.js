@@ -5,17 +5,21 @@ import {
 	Backdrop,
 	Button,
 	Grid,
-	TextField,
 	Typography,
 	Alert,
 } from '@mui/material'
 import { memo, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import useAuthStore from 'lib/store/AuthStore.ts'
+import CustomTextField from 'components/base/CustomTextField'
+import { useTranslations } from 'next-intl'
 
-const RegisterModal = ({ open, handleModal }) => {
-	const register = useAuthStore(state => state.register)
+const LoginModal = ({ open, handleModal }) => {
+	const t = useTranslations('header.loginDialog')
 	const [error, setError] = useState('')
+
+	const login = useAuthStore(state => state.login)
+
 	useEffect(() => {
 		if (error) {
 			setTimeout(() => {
@@ -23,6 +27,7 @@ const RegisterModal = ({ open, handleModal }) => {
 			}, 3000)
 		}
 	}, [error])
+
 	return (
 		<Modal
 			aria-labelledby='transition-modal-title'
@@ -43,7 +48,7 @@ const RegisterModal = ({ open, handleModal }) => {
 						transform: 'translate(-50%, -50%)',
 						width: '40%',
 						height: '70%',
-						bgcolor: '#F5761A',
+						bgcolor: '#222138',
 						color: 'primary.contrastText',
 						px: 8,
 						outline: 'none',
@@ -59,10 +64,10 @@ const RegisterModal = ({ open, handleModal }) => {
 							justifyContent: 'center',
 						}}>
 						<Typography component='h1' variant='h5'>
-							Sign up
+							{t('login')}
 						</Typography>
 						<Formik
-							initialValues={{ username: '', password: '', email: '' }}
+							initialValues={{ email: '', password: '' }}
 							validate={values => {
 								const errors = {}
 								if (!values.email) {
@@ -71,19 +76,15 @@ const RegisterModal = ({ open, handleModal }) => {
 									!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
 								) {
 									errors.email = 'Invalid email address'
-								} else if (!values.username) {
-									errors.username = 'Required'
 								} else if (!values.password) {
 									errors.password = 'Required'
-								} else if (values.password.length < 6) {
-									errors.password = 'Password must be at least 6 characters'
 								}
 
 								return errors
 							}}
 							onSubmit={async (values, { setSubmitting }) => {
 								try {
-									await register(values.email, values.password, values.username)
+									await login(values.email, values.password)
 									setError('')
 									handleModal(false)
 								} catch (error) {
@@ -108,22 +109,7 @@ const RegisterModal = ({ open, handleModal }) => {
 									sx={{ mt: 3 }}>
 									<Grid container spacing={2}>
 										<Grid item xs={12}>
-											<TextField
-												error={errors.username && touched.username}
-												autoComplete='given-username'
-												name='username'
-												required
-												fullWidth
-												onChange={handleChange}
-												onBlur={handleBlur}
-												value={values.username}
-												id='username'
-												label='Username'
-												autoFocus
-											/>
-										</Grid>
-										<Grid item xs={12}>
-											<TextField
+											<CustomTextField
 												error={errors.email && touched.email}
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -131,13 +117,13 @@ const RegisterModal = ({ open, handleModal }) => {
 												required
 												fullWidth
 												id='email'
-												label='Email Address'
+												label={t('email')}
 												name='email'
 												autoComplete='email'
 											/>
 										</Grid>
 										<Grid item xs={12}>
-											<TextField
+											<CustomTextField
 												error={errors.password && touched.password}
 												required
 												fullWidth
@@ -145,12 +131,13 @@ const RegisterModal = ({ open, handleModal }) => {
 												onBlur={handleBlur}
 												value={values.password}
 												name='password'
-												label='Password'
+												label={t('password')}
 												type='password'
 												id='password'
 												autoComplete='new-password'
 											/>
 										</Grid>
+
 										<Grid item xs={12}>
 											{error && <Alert severity='error'>{error}</Alert>}
 										</Grid>
@@ -158,10 +145,11 @@ const RegisterModal = ({ open, handleModal }) => {
 									<Button
 										type='submit'
 										fullWidth
-										disabled={isSubmitting || Object.keys(errors).length > 0}
+										disabled={isSubmitting}
 										variant='contained'
+										upperCase={false}
 										sx={{ mt: 3, mb: 2 }}>
-										Sign Up
+										{t('login')}
 									</Button>
 								</Box>
 							)}
@@ -173,4 +161,4 @@ const RegisterModal = ({ open, handleModal }) => {
 	)
 }
 
-export default memo(RegisterModal)
+export default memo(LoginModal)

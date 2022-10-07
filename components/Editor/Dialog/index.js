@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useState, useEffect } from 'react'
 import useDataStore from 'lib/store/DataStore.ts'
 import moment from 'moment/moment'
+import { useTranslations } from 'next-intl'
 
 function CustomDialog({
 	open,
@@ -30,6 +31,7 @@ function CustomDialog({
 	label,
 	username,
 }) {
+	const t = useTranslations('editor.editorDialog')
 	const [value, setValue] = useState('')
 	const [description, setDescription] = useState('')
 	const [works, setWorks] = useState([])
@@ -75,7 +77,7 @@ function CustomDialog({
 				<Dialog open={open} onClose={handleClose}>
 					<DialogTitle>{title}</DialogTitle>
 					<DialogContent>
-						{works.length > 0 || title === 'Save Editor' ? (
+						{works.length > 0 || title === t('save') ? (
 							<>
 								{works.length > 0 && (
 									<List
@@ -97,7 +99,7 @@ function CustomDialog({
 												display: 'flex',
 												pb: 1,
 											}}>
-											Your Works
+											{t('works')}
 										</Typography>
 										<Divider width={'100%'} />
 										{works.map(work => (
@@ -132,7 +134,11 @@ function CustomDialog({
 															{work.name}
 														</Typography>
 													}
-													secondary={moment(work.created_at).fromNow()}
+													secondary={moment(
+														work.created_at,
+														null,
+														'tr'
+													).fromNow()}
 													sx={{
 														overflow: 'clip',
 														whiteSpace: 'nowrap',
@@ -200,18 +206,18 @@ function CustomDialog({
 
 								<DialogContentText
 									sx={{
-										display: title === 'Open Editor' ? 'none' : 'block',
+										display: title === t('open') ? 'none' : 'block',
 										color: 'primary.main',
 										mb: 1,
 									}}>
-									{'Enter the description of the editor(optional)'}
+									{t('desc3')}
 								</DialogContentText>
 								<TextField
-									disabled={title === 'Open Editor'}
+									disabled={title === t('open')}
 									fullWidth
 									multiline
 									value={description}
-									label='Description'
+									label={t('placeholder2')}
 									type='text'
 									variant='standard'
 									onChange={e => {
@@ -220,13 +226,11 @@ function CustomDialog({
 								/>
 							</>
 						) : (
-							<DialogContentText>
-								You don&apos;t have any saved work
-							</DialogContentText>
+							<DialogContentText>{t('desc4')}</DialogContentText>
 						)}
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={handleClose}>Cancel</Button>
+						<Button onClick={handleClose}>{t('cancel')}</Button>
 						<Button
 							disabled={!value || works.length < 0}
 							onClick={async () => {

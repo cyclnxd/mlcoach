@@ -6,6 +6,11 @@ const nextConfig = {
 	images: {
 		domains: ['gswycufnfuvoqnrdopna.supabase.co'],
 	},
+	i18n: {
+		locales: ['en', 'tr'],
+		defaultLocale: 'en',
+	},
+	trailingSlash: true,
 }
 
 module.exports = nextConfig

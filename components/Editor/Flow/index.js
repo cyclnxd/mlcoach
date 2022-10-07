@@ -7,18 +7,20 @@ import ReactFlow, {
 import store from 'lib/store/store.ts'
 import useAuthStore from 'lib/store/AuthStore.ts'
 import useDataStore from 'lib/store/DataStore.ts'
-import ToolModal from 'components/Modal'
-import ConnectionLine from 'components/ConnectionLine'
+import ToolModal from 'components/Editor/ToolPanel/components/ToolModal'
+import ConnectionLine from 'components/Editor/ConnectionLine'
 import { Box, Stack } from '@mui/system'
 import { Alert, Button } from '@mui/material'
-import CustomDialog from 'components/Dialog'
+import CustomDialog from 'components/Editor/Dialog'
 import { v4 as uuidv4 } from 'uuid'
-import ButtonMenu from 'components/ButtonMenu'
+import ButtonMenu from 'components/Editor/ButtonMenu'
 import SaveIcon from '@mui/icons-material/Save'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import html2canvas from 'html2canvas'
+import { useTranslations } from 'next-intl'
 
 const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
+	const t = useTranslations('editor')
 	const [rfInstance, setRfInstance] = useState(null)
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
@@ -109,7 +111,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 				if (rfInstance) {
 					const flow = rfInstance.toObject()
 					if (!flow.nodes.length) {
-						setError('You need to add at least one node to save your work')
+						setError(t('errors.emptyFlow'))
 						return
 					}
 					try {
@@ -155,6 +157,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 		[
 			getPublicUrl,
 			rfInstance,
+			t,
 			takeScreenshot,
 			updateWorkByUsername,
 			user?.username,
@@ -181,7 +184,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 				} catch (error) {
 					switch (error.code) {
 						case 'PGRST116':
-							setError('Not found')
+							setError(t('errors.notFound'))
 							break
 						default:
 							setError(error.message)
@@ -193,7 +196,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 
 			restoreFlow()
 		},
-		[getWorkByUsernameAndName, user?.username]
+		[getWorkByUsernameAndName, t, user?.username]
 	)
 
 	return (
@@ -243,15 +246,15 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							anchorEl={anchorEl}
 							handleClose={handleClose}
 							handleOpen={handleOpen}
-							title='Editor'
+							title={t('buttons.editor')}
 							options={[
 								{
-									label: 'Save',
+									label: t('buttonMenu.save'),
 									icon: <SaveIcon />,
 									onClick: () => handleOpenSaveMenu(),
 								},
 								{
-									label: 'Open',
+									label: t('buttonMenu.open'),
 									icon: <FileOpenIcon />,
 									onClick: () => handleOpenOpenMenu(),
 								},
@@ -261,18 +264,18 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							open={openOpenMenu}
 							handleClose={handleCloseOpenMenu}
 							callback={handleOpenEditor}
-							title='Open Editor'
-							content='Enter the name of the editor you saved earlier'
-							label='Editor Name'
+							title={t('editorDialog.open')}
+							content={t('editorDialog.desc1')}
+							label={t('editorDialog.placeholder1')}
 							username={user?.username}
 						/>
 						<CustomDialog
 							open={openSaveMenu}
 							handleClose={handleCloseSaveMenu}
 							callback={handleSaveEditor}
-							title='Save Editor'
-							content='Enter the name of the editor you want to save'
-							label='Editor Name'
+							title={t('editorDialog.save')}
+							content={t('editorDialog.desc2')}
+							label={t('editorDialog.placeholder1')}
 							username={user?.username}
 						/>
 
@@ -284,7 +287,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							}}
 							size='small'
 							onClick={handleDeleteLog}>
-							Output Panel
+							{t('buttons.output')}
 						</Button>
 						<Button
 							variant='contained'
@@ -294,7 +297,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							}}
 							size='small'
 							onClick={handleDeleteGraph}>
-							Graph Panel
+							{t('buttons.graph')}
 						</Button>
 						<Button
 							variant='contained'
@@ -304,7 +307,7 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							}}
 							size='small'
 							onClick={() => handleModal(true)}>
-							ToolBox
+							{t('buttons.toolbox')}
 						</Button>
 					</Stack>
 					{error ? (

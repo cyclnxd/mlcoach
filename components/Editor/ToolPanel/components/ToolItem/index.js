@@ -23,7 +23,6 @@ function ToolItem({ title, desc, input, output, group, type }) {
 
 		handleModal(false)
 	}
-
 	return (
 		<Fade in={true}>
 			<Grid2 xs={2} sm={4} md={4}>
@@ -61,7 +60,7 @@ function ToolItem({ title, desc, input, output, group, type }) {
 									maxHeight: '25px',
 								}}>
 								<strong>Inputs:</strong> {input} <br />
-								<strong>Output:</strong> {output}
+								<strong>Outputs:</strong> {output}
 							</Typography>
 						</Stack>
 					</Card>

@@ -1,11 +1,12 @@
 import Head from 'next/head'
-import Flow from 'components/Editor'
-import OutputPanel from 'components/OutputPanel'
+import Flow from 'components/Editor/Flow'
+import OutputPanel from 'components/Editor/OutputPanel'
 import GridLayout from 'react-grid-layout'
 import { useState } from 'react'
 import useWindowSize from 'lib/hooks/useWindowSize'
-import Loading from 'components/Loading'
-import GraphPanel from 'components/GraphPanel'
+import Loading from 'components/base/Loading'
+import GraphPanel from 'components/Editor/GraphPanel'
+
 const layout = [
 	{ i: 'a', x: 0, y: 0, w: 12, h: 12, static: true },
 	{ i: 'b', x: 4, y: 7, w: 7, h: 4, minW: 5, minH: 4 },

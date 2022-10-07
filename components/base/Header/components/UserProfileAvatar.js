@@ -7,17 +7,19 @@ import {
 	Box,
 } from '@mui/material'
 import { memo, useEffect, useState } from 'react'
-import LoginModal from './modals/LoginModal'
-import RegisterModal from './modals/RegisterModal'
+import LoginModal from './LoginModal'
+import RegisterModal from './RegisterModal'
 import useAuthStore from 'lib/store/AuthStore.ts'
 import { useRouter } from 'next/router'
 import PersonIcon from '@mui/icons-material/Person'
 import LoginIcon from '@mui/icons-material/Login'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import LogoutIcon from '@mui/icons-material/Logout'
-import UserAvatar from 'components/UserAvatar'
+import UserAvatar from 'components/base/UserAvatar'
+import { useTranslations } from 'next-intl'
 
 function UserProfile() {
+	const t = useTranslations('header')
 	const [anchorElUser, setAnchorElUser] = useState(undefined)
 	const [registerOpenModal, setRegisterOpenModal] = useState(false)
 	const [loginOpenModal, setLoginOpenModal] = useState(false)
@@ -31,7 +33,7 @@ function UserProfile() {
 			setSettings([
 				{
 					icon: <LogoutIcon />,
-					name: 'Logout',
+					name: t('logout'),
 					onClick: () => {
 						logout()
 						router.push('/editor')
@@ -39,7 +41,7 @@ function UserProfile() {
 				},
 				{
 					icon: <PersonIcon />,
-					name: 'Profile',
+					name: t('profile'),
 					onClick: () => router.push(`/profile/${user?.username}`),
 				},
 			])
@@ -47,17 +49,17 @@ function UserProfile() {
 			setSettings([
 				{
 					icon: <LoginIcon />,
-					name: 'Login',
+					name: t('login'),
 					onClick: () => loginHandleModal(true),
 				},
 				{
 					icon: <PersonAddIcon />,
-					name: 'Register',
+					name: t('register'),
 					onClick: () => registerHandleModal(true),
 				},
 			])
 		}
-	}, [logout, router, user, session])
+	}, [logout, router, user, session, t])
 
 	const handleCloseUserMenu = () => {
 		setAnchorElUser(null)

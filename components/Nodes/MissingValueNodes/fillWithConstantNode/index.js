@@ -6,7 +6,7 @@ import { Card, Stack, Typography, TextField } from "@mui/material";
 import HeaderLayout from "../../HeaderLayout";
 import CustomHandle from "components/Nodes/CustomHandle";
 import localforage from "localforage";
-
+import { useTranslations } from 'next-intl'
 function FillingConstantNode({ id, selected, data }) {
   const [fillingValue, setFillingValue] = useState(0);
 
@@ -116,7 +116,7 @@ function FillingConstantNode({ id, selected, data }) {
               },
             }}
           >
-            {error.length === 0 ? (
+            {error.length === "" ? (
               <>
                 <TextField
                   id="outlined-name"

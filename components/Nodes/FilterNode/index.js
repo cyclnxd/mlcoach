@@ -7,7 +7,7 @@ import { Card, Stack } from "@mui/material";
 import HeaderLayout from "../HeaderLayout";
 import CustomHandle from "../CustomHandle";
 import localforage from "localforage";
-
+import { useTranslations } from 'next-intl'
 const filterList = {
   text: [
     "equals",
@@ -107,7 +107,7 @@ function FilterNode({ id, selected, data }) {
               width: "200px",
             }}
           >
-            {error.length === 0 ? (
+            {error.length === "" ? (
               <>
                 <Typography
                   variant="h6"

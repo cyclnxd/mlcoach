@@ -1,12 +1,11 @@
 import DesignServicesIcon from '@mui/icons-material/DesignServices'
 import WorkspacesIcon from '@mui/icons-material/Workspaces'
-import React, { memo, useState } from 'react'
+import { memo, useState } from 'react'
 import {
 	AppBar,
 	Box,
 	Button,
 	Container,
-	Icon,
 	IconButton,
 	Menu,
 	MenuItem,
@@ -15,7 +14,8 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
-import UserProfile from './UserProfile'
+import UserProfile from './components/UserProfileAvatar'
+import IntlButton from './components/IntlButton'
 
 const pages = [
 	{
@@ -25,6 +25,17 @@ const pages = [
 	{
 		name: 'Workplace',
 		icon: <WorkspacesIcon />,
+	},
+]
+
+const intls = [
+	{
+		name: 'English',
+		code: 'en',
+	},
+	{
+		name: 'Turkish',
+		code: 'tr',
 	},
 ]
 
@@ -151,7 +162,11 @@ const Header = () => {
 							</Link>
 						))}
 					</Box>
-
+					<Box sx={{ mr: 5 }}>
+						{intls.map((lang, i) => (
+							<IntlButton key={i} lang={lang} />
+						))}
+					</Box>
 					{/* navbar right side */}
 					<UserProfile />
 				</Toolbar>
