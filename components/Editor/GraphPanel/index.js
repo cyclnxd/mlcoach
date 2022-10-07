@@ -8,10 +8,9 @@ import TextField from '@mui/material/TextField'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
-import PlotGraph from './plotgraph'
+import PlotGraph from './PlotGraph'
 import Button from '@mui/material/Button'
 import localforage from 'localforage'
-import { FiveK } from '@mui/icons-material'
 import { unstable_batchedUpdates } from 'react-dom'
 
 const checkedIcon = <CheckBoxIcon fontSize='small' />
@@ -45,41 +44,40 @@ function Graph({ onDelete, isDisplay, parentDimensions }) {
 		setOpenDialog(!openDialog)
 	}
 
-  const clickedNodeRef = useRef(store.getState().clickedNode)
+	const clickedNodeRef = useRef(store.getState().clickedNode)
 	const fileMapRef = useRef(store.getState().fileMap)
 
-  useEffect(() => {
-    const sub = store.subscribe(() => {
-      const state = store.getState()
-      if (
+	useEffect(() => {
+		const sub = store.subscribe(() => {
+			const state = store.getState()
+			if (
 				state.clickedNode !== clickedNodeRef.current ||
 				JSON.stringify(state.fileMap) !== JSON.stringify(fileMapRef.current)
-			){
-        clickedNodeRef.current = state.clickedNode
-        if(state.clickedNode && typeof state.clickedNode === 'string'){
-          const id = state.clickedNode
-          localforage.getItem(id).then(file =>{
-            if(file !== undefined && file !== null){
-              const {data, meta} = file
-              unstable_batchedUpdates(() => {
-              const columns = []
-              Object.entries(meta.fields).forEach(([key, value]) => {
-                columns.push(value)
-              })
-              setFileMap(data)
-              prevCol.current = columns
-              setRender(true)
-            })
-            }
-          })
-        }
-        else{
-          setRender(false)
-        }
-      }
-    })
-    return () => sub()
-  }, [render])
+			) {
+				clickedNodeRef.current = state.clickedNode
+				if (state.clickedNode && typeof state.clickedNode === 'string') {
+					const id = state.clickedNode
+					localforage.getItem(id).then(file => {
+						if (file !== undefined && file !== null) {
+							const { data, meta } = file
+							unstable_batchedUpdates(() => {
+								const columns = []
+								Object.entries(meta.fields).forEach(([key, value]) => {
+									columns.push(value)
+								})
+								setFileMap(data)
+								prevCol.current = columns
+								setRender(true)
+							})
+						}
+					})
+				} else {
+					setRender(false)
+				}
+			}
+		})
+		return () => sub()
+	}, [render])
 
 	return (
 		<Stack sx={{ color: 'primary.dark' }} spacing={0} direction='column'>
