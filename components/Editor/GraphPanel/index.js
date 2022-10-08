@@ -11,6 +11,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import PlotGraph from './PlotGraph'
 import Button from '@mui/material/Button'
 import localforage from 'localforage'
+ 
 import { unstable_batchedUpdates } from 'react-dom'
 
 const checkedIcon = <CheckBoxIcon fontSize='small' />
@@ -80,6 +81,7 @@ function Graph({ onDelete, isDisplay, parentDimensions }) {
 	}, [render])
 
 	return (
+    <div id = "plot">
 		<Stack sx={{ color: 'primary.dark' }} spacing={0} direction='column'>
 			<Box
 				sx={{
@@ -167,6 +169,7 @@ function Graph({ onDelete, isDisplay, parentDimensions }) {
 				)}
 			</Box>
 		</Stack>
+    </div>
 	)
 }
 function GraphEditor({ onClose, columns }) {

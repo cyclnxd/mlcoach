@@ -15,6 +15,8 @@ import localforage from "localforage";
 import { useTranslations } from 'next-intl'
 
 function DropColumnNode({ id, selected, data }) {
+	const dc = useTranslations('editor.nodes.dropColumn')
+	const e = useTranslations('editor.nodes.errors')
   // store the columns of DataFrame
   const [keys, setKeys] = useState([]);
   // store the selected unique columns
@@ -40,7 +42,7 @@ useEffect(() => {
         setError("");
         // store the all column to the keys state
         setKeys(Object.keys(file.data[0]));
-
+		console.log(keys)
         // deletes the selected columns from the file
         for (var row in file.data) {
           for (const column of selectedColumns) {
@@ -128,7 +130,7 @@ useEffect(() => {
 								},
 							},
 						}}>
-						{error.length === "" ? (
+						{error === "" ? (
 							<>
 								<Typography
 									fontSize={11}

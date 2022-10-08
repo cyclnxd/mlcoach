@@ -116,7 +116,7 @@ function FillingConstantNode({ id, selected, data }) {
               },
             }}
           >
-            {error.length === "" ? (
+            {error === "" ? (
               <>
                 <TextField
                   id="outlined-name"
