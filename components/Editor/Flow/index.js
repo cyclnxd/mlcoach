@@ -230,6 +230,8 @@ const Flow = ({ handleDeleteLog, handleDeleteGraph }) => {
 							cursor: 'pointer',
 						},
 					}}
+					snapGrid={[16, 16]}
+					snapToGrid={true}
 					onPaneContextMenu={e => handleContextMenu(e)}>
 					<Stack
 						direction='row'

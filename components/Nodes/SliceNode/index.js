@@ -50,17 +50,20 @@ function SliceNode({ id, selected, data }) {
 		if (sourceId !== undefined) {
 			localforage.getItem(sourceId).then(file => {
 				if (file !== undefined && file?.data.length > 0) {
-					fileLengthRef.current = file?.data.length + 1 // +1 for slice to include last element
-					let newFile = {
-						...file,
-						data: file.data.slice(
-							startSlice,
-							endSlice === -1 ? file.data.length : endSlice
-						),
-					}
-					localforage.setItem(id, newFile).then(() => {
-						store.getState().storeFile(id)
-					})
+					setTimeout(() => {
+						fileLengthRef.current = file?.data.length + 1 // +1 for slice to include last element
+						let newFile = {
+							...file,
+							data: file.data.slice(
+								startSlice,
+								endSlice === -1 ? file.data.length : endSlice
+							),
+						}
+
+						localforage.setItem(id, newFile).then(() => {
+							store.getState().storeFile(id)
+						})
+					}, 500)
 					setError('')
 				} else {
 					deleteFile(id)
@@ -106,7 +109,7 @@ function SliceNode({ id, selected, data }) {
 							gap: '10px',
 							width: '200px',
 						}}>
-						{error === "" ? (
+						{error === '' ? (
 							<>
 								<CustomTextField
 									fullWidth

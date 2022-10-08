@@ -20,6 +20,7 @@ function OutputPanel({ onDelete, isDisplay }) {
 				state.clickedNode !== clickedNodeRef.current ||
 				JSON.stringify(state.fileMap) !== JSON.stringify(fileMapRef.current)
 			) {
+				fileMapRef.current = state.fileMap
 				clickedNodeRef.current = state.clickedNode
 				if (state.clickedNode && typeof state.clickedNode === 'string') {
 					const id = state.clickedNode
