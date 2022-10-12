@@ -10,11 +10,7 @@ class Model(BaseModel):
 
 @app.get('/')
 def index():
-  model = joblib.load('./test_model')
-  print(model)
-  prediction = model.predict(np.array(5).reshape(-1, 1))
-  print(prediction)
-  return str(prediction)
+  return {"message": 'is ok'}
 
 
 
@@ -26,9 +22,4 @@ def predict(data: Model):
   return str(prediction)
 
 if __name__ == '__main__':
-  uvicorn.run(app, host='127.0.0.1', port=8000)
-
-
-
-
-
+  uvicorn.run(app, host='127.0.0.1', port=80)
