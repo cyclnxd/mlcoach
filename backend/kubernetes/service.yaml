@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlcoach-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mlcoach-app
+  ports:
+    - port: 5000

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlcoach-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: mlcoach-app
+  template:
+    metadata:
+      labels:
+        app: mlcoach-app
+    spec:
+      containers:
+        - name: mlcoach-app-container
+          image: mlcoach
+          imagePullPolicy: Never
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '500m'
+          ports:
+            - containerPort: 5000
+              protocol: TCP
