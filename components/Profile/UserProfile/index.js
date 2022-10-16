@@ -34,7 +34,7 @@ const UserProfile = ({ user, works, isOwner, session }) => {
 			setIsFollowing(!!followers.find(f => f.follower === session?.user?.id))
 		}
 		fetchFollowers()
-	}, [getFollowers, session?.user?.id, user.id, works])
+	}, [getFollowers, session?.user?.id, user?.id, works])
 
 	return (
 		<Box
@@ -56,7 +56,7 @@ const UserProfile = ({ user, works, isOwner, session }) => {
 					alignItems: 'center',
 					gap: { xs: 4, md: 2 },
 				}}>
-				<UserAvatar src={user?.avatar_url} username={user.username} />
+				<UserAvatar src={user?.avatar_url} username={user?.username} />
 				<Typography variant='h5'>{user.username}</Typography>
 				{isOwner && (
 					<>

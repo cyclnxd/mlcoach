@@ -32,17 +32,16 @@ function UserProfile() {
 		if (user) {
 			setSettings([
 				{
+					icon: <PersonIcon />,
+					name: t('profile'),
+					onClick: () => router.push(`/profile/${user?.username}`),
+				},
+				{
 					icon: <LogoutIcon />,
 					name: t('logout'),
 					onClick: () => {
 						logout()
-						router.push('/editor')
 					},
-				},
-				{
-					icon: <PersonIcon />,
-					name: t('profile'),
-					onClick: () => router.push(`/profile/${user?.username}`),
 				},
 			])
 		} else {
@@ -74,7 +73,6 @@ function UserProfile() {
 	const loginHandleModal = state => {
 		setLoginOpenModal(state)
 	}
-
 	return (
 		<Box sx={{ flexGrow: 0 }}>
 			<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

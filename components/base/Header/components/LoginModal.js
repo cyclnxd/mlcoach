@@ -147,7 +147,6 @@ const LoginModal = ({ open, handleModal }) => {
 										fullWidth
 										disabled={isSubmitting}
 										variant='contained'
-										upperCase={false}
 										sx={{ mt: 3, mb: 2 }}>
 										{t('login')}
 									</Button>
