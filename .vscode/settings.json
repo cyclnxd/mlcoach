@@ -13,7 +13,7 @@
 		"**/yarn-debug.log*": true,
 		"**/yarn-error.log*": true,
 		"**/.pnpm-debug.log*": true,
-		// "**/.env*.local": true,
+		"**/.env*.local": true,
 		"**/.vercel": true,
 		"**/*.tsbuildinfo": true,
 		"**/next-env.d.ts": true
