@@ -34,31 +34,27 @@ type RFState = {
 	modalOpen: boolean
 	nodes: Node[]
 	edges: Edge[]
-	globalNodeStates: any[]
 	nodeTypes: any
 	fileMap: {}
 	setNodes: (node: Node) => void
 	onNodesChange: OnNodesChange
 	onEdgesChange: OnEdgesChange
-	onEdgesDelete: any
+	onEdgesDelete: (edges: Edge[]) => void
 	onConnect: OnConnect
-	changeNodeState: any
+	changeNodeState: (edges: Edge[]) => [Node<any>, Node<any>]
 	onNodesDelete: any
 	onPaneClick: any
 	onNodeClick: any
-	storeFile: any
-	clickedNode: any
+	storeFile: (ref: string) => void
+	clickedNode: number | string
 	handleModal: any
 }
-
-// this is our useStore hook that we can use in our components to get parts of the store and call actions
 
 const store = create<RFState>((set, get) => ({
 	modalOpen: false,
 	nodes: [],
 	edges: [],
 	nodeTypes: nodeTypes,
-	globalNodeStates: [],
 	fileMap: {},
 	clickedNode: -1,
 	onPaneClick: (_: any) => {
@@ -112,13 +108,18 @@ const store = create<RFState>((set, get) => ({
 			fileMap: { ...get().fileMap, [ref]: uuidv4() },
 		})
 	},
+	calculate: () => {
+		get().edges.forEach(edge => {
+			console.log(edge)
+		})
+	},
 	onEdgesDelete: (edges: Edge[]) => {
 		const [sourceNode, targetNode] = get().changeNodeState(edges)
 		get().onNodesDelete([sourceNode, targetNode])
 	},
-	onNodesDelete: changes => {
+	onNodesDelete: (changes: any[]) => {
 		if (changes.length > 0) {
-			changes.forEach(change => {
+			changes.forEach((change: { id: string }) => {
 				if (localforage.getItem(change?.id)) {
 					set({ fileMap: { ...get().fileMap, [change?.id]: null } })
 					localforage.removeItem(change?.id)
@@ -126,17 +127,17 @@ const store = create<RFState>((set, get) => ({
 			})
 		}
 	},
-	handleModal: state => {
+	handleModal: (state: any) => {
 		set({
 			modalOpen: state,
 		})
 	},
-	changeNodeState: edges => {
-		var sourceNode
-		var targetNode
-		edges.forEach(edge => {
-			let sourceNode = get().nodes.find(node => node.id === edge.source)
-			let targetNode = get().nodes.find(node => node.id === edge.target)
+	changeNodeState: (edges: any[]) => {
+		var sourceNode: Node | null
+		var targetNode: Node | null
+		edges.forEach((edge: { source: string; target: string }) => {
+			sourceNode = get().nodes.find(node => node.id === edge.source)
+			targetNode = get().nodes.find(node => node.id === edge.target)
 			if (sourceNode !== undefined && targetNode !== undefined) {
 				get().setNodes({
 					...sourceNode,

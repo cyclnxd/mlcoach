@@ -1,13 +1,11 @@
-import { Session, User } from '@supabase/supabase-js'
+import { Session } from '@supabase/supabase-js'
 import create from 'zustand'
 import supabase from '../supabase'
 
 type authState = {
 	user: any
 	session: Session | null
-	authStateChange: any
 	setSession: any
-	setUserSession: any
 	login: any
 	register: any
 	logout: any
@@ -18,47 +16,45 @@ const useAuthStore = create<authState>((set, get) => ({
 	session: null,
 	setSession: async () => {
 		try {
-			if (get()?.session !== supabase.auth.session()) {
-				const session = supabase.auth.session()
+			const { data } = await supabase.auth.getSession()
+			if (get()?.session !== data.session) {
 				const { data: user } = await supabase
 					.from('profiles')
 					.select('*')
-					.match({ id: session?.user?.id })
+					.match({ id: data.session?.user?.id })
 					.single()
-
-				set({ session, user: user || session.user })
+				set({ session: data.session, user: user || data.session.user })
 			}
 		} catch (error) {
 			throw error
 		}
 	},
-	setUserSession: (user: User, session: Session) => {
-		set({ user, session })
-	},
-	authStateChange: callback => {
-		return supabase.auth.onAuthStateChange(callback)
-	},
+
 	login: async (email: string, password: string) => {
-		const { user, session, error } = await supabase.auth.signIn({
+		const { data, error } = await supabase.auth.signInWithPassword({
 			email,
 			password,
 		})
 		if (error) {
 			throw error
 		}
-		set({ user, session })
+		get().setSession()
 	},
 	register: async (email: string, password: string, username: string) => {
-		const {
-			user,
-			session,
-			error: signUpError,
-		} = await supabase.auth.signUp({ email, password }, { data: { username } })
+		const { data, error: signUpError } = await supabase.auth.signUp({
+			email,
+			password,
+			options: {
+				data: {
+					username,
+				},
+			},
+		})
 		if (signUpError) {
 			throw signUpError
 		}
 		const { error } = await supabase.from('profiles').insert({
-			id: user?.id,
+			id: data.user?.id,
 			username,
 			avatar_url: null,
 			is_active: true,
@@ -67,10 +63,7 @@ const useAuthStore = create<authState>((set, get) => ({
 			throw error
 		}
 
-		set({
-			user,
-			session,
-		})
+		get().setSession()
 	},
 	logout: async () => {
 		try {

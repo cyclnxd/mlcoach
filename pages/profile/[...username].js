@@ -12,8 +12,8 @@ function Profile() {
 	const router = useRouter()
 	const { username } = router.query
 	const { getUserByUsername, getWorksByUsername } = useDataStore(state => state)
+	const userData = useAuthStore(state => state.user)
 	const session = useAuthStore(state => state.session)
-
 	const [user, setUser] = useState(null)
 	const [works, setWorks] = useState([])
 	const [error, setError] = useState('')
@@ -22,30 +22,34 @@ function Profile() {
 	const [isOwner, setIsOwner] = useState(false)
 
 	useEffect(() => {
-		async function getUser() {
-			setLoading(true)
-			if (username) {
-				setTitle(`MLCoach ${username}'s profile`)
-				try {
-					const data = await getUserByUsername(username)
-					const works = await getWorksByUsername(username)
-					setUser(data)
-					setWorks(works)
-					setError('')
-				} catch (error) {
-					setError(error.message)
-					setUser(null)
-					setTitle('Profile not found')
-				} finally {
-					setLoading(false)
-				}
-			}
-		}
-		getUser()
-	}, [getUserByUsername, getWorksByUsername, username])
-	useEffect(() => {
 		setIsOwner(session?.user?.id === user?.id)
 	}, [session?.user?.id, user])
+	useEffect(() => {
+		async function getUser() {
+			setLoading(true)
+			setTitle(`MLCoach ${username}'s profile`)
+			try {
+				if (isOwner) {
+					setUser(userData)
+				} else {
+					const user = await getUserByUsername(username)
+					setUser(user)
+				}
+				const works = await getWorksByUsername(username)
+				setWorks(works)
+				setError('')
+			} catch (error) {
+				setError(error.message)
+				setUser(null)
+				setTitle('Profile not found')
+			} finally {
+				setLoading(false)
+			}
+		}
+		if (username) {
+			getUser()
+		}
+	}, [username, session])
 
 	return (
 		<>

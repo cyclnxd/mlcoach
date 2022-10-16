@@ -36,7 +36,7 @@ const useDataStore = create<userState>(() => ({
 		return data
 	},
 	getAllUserData: async () => {
-		const { data, error } = await await supabase.from('profiles').select()
+		const { data, error } = await supabase.from('profiles').select()
 		if (error) throw error
 		return data
 	},
@@ -94,9 +94,8 @@ const useDataStore = create<userState>(() => ({
 		if (error) throw error
 		return data
 	},
-	getPublicUrl: async (id: string, from: string) => {
-		const { data, error } = await supabase.storage.from(from).getPublicUrl(id)
-		if (error) throw error
+	getPublicUrl: (id: string, from: string) => {
+		const { data } = supabase.storage.from(from).getPublicUrl(id)
 		return data
 	},
 	followUser: async (
