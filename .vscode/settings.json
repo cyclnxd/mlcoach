@@ -17,5 +17,6 @@
 		"**/.vercel": true,
 		"**/*.tsbuildinfo": true,
 		"**/next-env.d.ts": true
-	}
+	},
+	"python.analysis.typeCheckingMode": "basic"
 }

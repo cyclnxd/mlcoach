@@ -1,0 +1,13 @@
+<html>
+	<head>
+		<title>Real time streaming</title>
+	</head>
+	<body>
+		<script>
+			const ws = new WebSocket('ws://127.0.0.1:8080/ws')
+			ws.onmessage = function (event) {
+				console.log(event.data)
+			}
+		</script>
+	</body>
+</html>
